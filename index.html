@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Easy HSK - Learn Mandarin, Pass HSK 1 (v3.0)</title>
+  <title>Easy HSK - Premium Mandarin Learning</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <script>
     tailwind.config = {
@@ -19,13 +19,11 @@
         extend: {
           colors: {
             brand: {
-              red: '#E53E3E',
-              gold: '#D69E2E',
-              yellow: '#ECC94B',
-              blue: '#3182CE',
-              teal: '#319795',
-              dark: '#1A202C',
-              light: '#F7FAFC'
+              red: '#991B1B',      // Deep Crimson / Corporate Red
+              gold: '#D97706',     // Sophisticated Gold
+              slate: '#0F172A',    // Dark Slate
+              card: '#FFFFFF',
+              bgLight: '#F8FAFC'
             }
           },
           fontFamily: {
@@ -40,100 +38,104 @@
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .glass-effect { backdrop-filter: blur(12px); background: rgba(255, 255, 255, 0.85); }
+    .dark .glass-effect { backdrop-filter: blur(12px); background: rgba(15, 23, 42, 0.85); }
   </style>
 
   <!-- Firebase Scripts -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased selection:bg-red-100 selection:text-red-600 dark:bg-gray-900 dark:text-gray-100 min-h-screen pb-20 md:pb-0 md:pl-64">
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-red-100 selection:text-red-900 dark:bg-slate-900 dark:text-slate-100 min-h-screen pb-20 md:pb-0 md:pl-64">
 
   <!-- APP CONTAINER -->
-  <div id="app" class="max-w-md mx-auto md:max-w-4xl min-h-screen flex flex-col justify-between">
+  <div id="app" class="max-w-md mx-auto md:max-w-5xl min-h-screen flex flex-col justify-between">
 
     <!-- TOP HEADER -->
-    <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 sticky top-0 z-30 flex justify-between items-center shadow-sm">
-      <div class="flex items-center space-x-2">
-        <span class="bg-red-600 text-white font-black text-xl px-2.5 py-1 rounded-xl shadow-sm">易</span>
+    <header class="bg-white/90 dark:bg-slate-800/90 border-b border-slate-200/80 dark:border-slate-700/80 px-6 py-3.5 sticky top-0 z-30 flex justify-between items-center glass-effect shadow-sm">
+      <div class="flex items-center space-x-3">
+        <span class="bg-gradient-to-br from-red-800 to-red-600 text-white font-black text-xl px-3 py-1 rounded-xl shadow-md tracking-wider">易</span>
         <div>
-          <h1 class="font-extrabold text-lg leading-none text-gray-900 dark:text-white">Easy HSK</h1>
-          <p class="text-[10px] text-gray-500 dark:text-gray-400 font-medium">HSK 1 (v3.0) • Standard Mainland Pronunciation</p>
+          <h1 class="font-bold text-base tracking-tight text-slate-900 dark:text-white">Easy HSK</h1>
+          <p class="text-[11px] text-slate-400 font-medium tracking-wide uppercase">Mandarin Proficiency</p>
         </div>
       </div>
       
       <!-- Indicators -->
-      <div class="flex items-center space-x-3">
-        <div class="flex items-center space-x-1 bg-amber-50 dark:bg-amber-900/30 px-2.5 py-1 rounded-full border border-amber-200 dark:border-amber-700/50">
-          <span class="text-amber-500">🔥</span>
-          <span id="headerStreak" class="text-xs font-bold text-amber-700 dark:text-amber-300">0</span>
+      <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-1.5 bg-amber-50 dark:bg-amber-950/40 px-3 py-1 rounded-full border border-amber-200/60 dark:border-amber-700/40">
+          <span class="text-amber-500 text-xs">🔥</span>
+          <span id="headerStreak" class="text-xs font-bold text-amber-800 dark:text-amber-300">0</span>
         </div>
-        <div class="flex items-center space-x-1 bg-blue-50 dark:bg-blue-900/30 px-2.5 py-1 rounded-full border border-blue-200 dark:border-blue-700/50">
-          <span class="text-blue-500">⭐</span>
-          <span id="headerXP" class="text-xs font-bold text-blue-700 dark:text-blue-300">0</span>
+        <div class="flex items-center space-x-1.5 bg-blue-50 dark:bg-blue-950/40 px-3 py-1 rounded-full border border-blue-200/60 dark:border-blue-700/40">
+          <span class="text-blue-500 text-xs">⭐</span>
+          <span id="headerXP" class="text-xs font-bold text-blue-800 dark:text-blue-300">0</span>
         </div>
       </div>
     </header>
 
     <!-- MAIN VIEW CONTAINER -->
-    <main id="mainContent" class="flex-grow p-4 md:p-6 overflow-y-auto">
+    <main id="mainContent" class="flex-grow p-4 md:p-8 overflow-y-auto">
       <!-- Content Dynamic -->
     </main>
 
     <!-- BOTTOM NAVIGATION (MOBILE) -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-2 px-3 flex justify-around items-center z-40 md:hidden shadow-lg">
-      <button onclick="switchTab('home')" id="tab-home" class="nav-btn flex flex-col items-center text-red-600 font-semibold">
-        <i class="fa-solid fa-house text-lg"></i>
-        <span class="text-[10px] mt-1">Utama</span>
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-800/95 border-t border-slate-200 dark:border-slate-700 py-2.5 px-4 flex justify-around items-center z-40 md:hidden glass-effect shadow-lg">
+      <button onclick="switchTab('home')" id="tab-home" class="nav-btn flex flex-col items-center text-red-700 font-semibold">
+        <i class="fa-solid fa-house text-base"></i>
+        <span class="text-[10px] mt-1 tracking-wide">Utama</span>
       </button>
-      <button onclick="switchTab('learn')" id="tab-learn" class="nav-btn flex flex-col items-center text-gray-400 hover:text-red-600">
-        <i class="fa-solid fa-book-open text-lg"></i>
-        <span class="text-[10px] mt-1">Belajar</span>
+      <button onclick="switchTab('learn')" id="tab-learn" class="nav-btn flex flex-col items-center text-slate-400 hover:text-red-700">
+        <i class="fa-solid fa-compass text-base"></i>
+        <span class="text-[10px] mt-1 tracking-wide">Modul</span>
       </button>
-      <button onclick="renderGrammarBank()" id="tab-grammar" class="nav-btn flex flex-col items-center text-gray-400 hover:text-red-600">
-        <i class="fa-solid fa-layer-group text-lg"></i>
-        <span class="text-[10px] mt-1">Grammar</span>
+      <button onclick="renderGrammarBank()" id="tab-grammar" class="nav-btn flex flex-col items-center text-slate-400 hover:text-red-700">
+        <i class="fa-solid fa-book-bookmark text-base"></i>
+        <span class="text-[10px] mt-1 tracking-wide">Grammar</span>
       </button>
-      <button onclick="switchTab('ai-tutor')" id="tab-ai-tutor" class="nav-btn flex flex-col items-center text-gray-400 hover:text-red-600">
-        <i class="fa-solid fa-robot text-lg"></i>
-        <span class="text-[10px] mt-1">AI Tutor</span>
+      <button onclick="switchTab('ai-tutor')" id="tab-ai-tutor" class="nav-btn flex flex-col items-center text-slate-400 hover:text-red-700">
+        <i class="fa-solid fa-sparkles text-base"></i>
+        <span class="text-[10px] mt-1 tracking-wide">AI Tutor</span>
       </button>
     </nav>
 
     <!-- DESKTOP SIDEBAR -->
-    <aside class="hidden md:flex flex-col fixed top-0 left-0 h-full w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 p-4 z-40">
-      <div class="flex items-center space-x-3 mb-8 px-2">
-        <span class="bg-red-600 text-white font-black text-2xl px-3 py-1.5 rounded-2xl shadow">易</span>
+    <aside class="hidden md:flex flex-col fixed top-0 left-0 h-full w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 p-6 z-40">
+      <div class="flex items-center space-x-3 mb-10 px-1">
+        <span class="bg-gradient-to-br from-red-800 to-red-600 text-white font-black text-2xl px-3.5 py-1.5 rounded-2xl shadow-md">易</span>
         <div>
-          <h2 class="font-black text-xl text-gray-900 dark:text-white">Easy HSK</h2>
-          <p class="text-xs text-gray-500">China Mainland Standard</p>
+          <h2 class="font-extrabold text-lg text-slate-900 dark:text-white tracking-tight">Easy HSK</h2>
+          <p class="text-xs text-slate-400">Professional Suite</p>
         </div>
       </div>
 
-      <nav class="space-y-2 flex-grow">
-        <button onclick="switchTab('home')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-bold bg-red-50 text-red-600 dark:bg-red-900/30">
-          <i class="fa-solid fa-house"></i>
+      <nav class="space-y-1.5 flex-grow">
+        <button onclick="switchTab('home')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm bg-red-50 text-red-800 dark:bg-red-950/40 dark:text-red-300 transition-all">
+          <i class="fa-solid fa-house text-base"></i>
           <span>Utama</span>
         </button>
-        <button onclick="switchTab('learn')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-bold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
-          <i class="fa-solid fa-book-open"></i>
-          <span>Belajar & Roadmap</span>
+        <button onclick="switchTab('learn')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700/50 transition-all">
+          <i class="fa-solid fa-compass text-base"></i>
+          <span>Panduan Modul</span>
         </button>
-        <button onclick="renderGrammarBank()" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-bold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
-          <i class="fa-solid fa-layer-group"></i>
-          <span>Grammar Bank (54)</span>
+        <button onclick="renderGrammarBank()" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700/50 transition-all">
+          <i class="fa-solid fa-book-bookmark text-base"></i>
+          <span>Grammar Bank</span>
         </button>
-        <button onclick="switchTab('ai-tutor')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-bold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
-          <i class="fa-solid fa-robot"></i>
+        <button onclick="switchTab('ai-tutor')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700/50 transition-all">
+          <i class="fa-solid fa-sparkles text-base"></i>
           <span>AI Tutor Mandarin</span>
         </button>
       </nav>
 
-      <div class="p-3 bg-purple-50 dark:bg-purple-950/40 rounded-xl border border-purple-100 dark:border-purple-900/50">
-        <p class="text-xs text-purple-700 dark:text-purple-300 font-semibold mb-1">📚 Grammar Pass Rate</p>
-        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-2">
-          <div id="grammarProgressBar" class="bg-purple-600 h-2 rounded-full transition-all duration-300" style="width: 0%;"></div>
+      <div class="p-4 bg-slate-50 dark:bg-slate-900/60 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 space-y-2">
+        <div class="flex justify-between items-center text-xs font-semibold text-slate-700 dark:text-slate-300">
+          <span>Grammar Progress</span>
+          <span id="grammarProgressPercent" class="text-red-700 dark:text-red-400 font-bold">0%</span>
         </div>
-        <p class="text-[11px] text-gray-500 dark:text-gray-400">Kemajuan: <span id="grammarProgressText">0 / 54</span></p>
+        <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5">
+          <div id="grammarProgressBar" class="bg-red-700 h-1.5 rounded-full transition-all duration-500" style="width: 0%;"></div>
+        </div>
       </div>
     </aside>
 
@@ -141,14 +143,14 @@
 
   <script>
     // ----------------------------------------------------
-    // 1. STATE & STORAGE
+    // 1. USER STATE MANAGEMENT
     // ----------------------------------------------------
     let currentUser = JSON.parse(localStorage.getItem('easyhsk_user')) || {
-      uid: 'user_' + Math.random().toString(36).substr(2, 9),
+      uid: 'usr_' + Math.random().toString(36).substr(2, 9),
       name: '',
       xp: 0,
       streak: 1,
-      passedGrammar: [] // Stores passed grammar IDs
+      passedGrammar: []
     };
 
     function saveUserState() {
@@ -163,47 +165,48 @@
       const passedCount = currentUser.passedGrammar ? currentUser.passedGrammar.length : 0;
       const pct = Math.round((passedCount / 54) * 100);
       const progressBar = document.getElementById('grammarProgressBar');
-      const progressText = document.getElementById('grammarProgressText');
-      if (progressBar && progressText) {
+      const progressPercent = document.getElementById('grammarProgressPercent');
+      if (progressBar && progressPercent) {
         progressBar.style.width = pct + '%';
-        progressText.innerText = `${passedCount} / 54 (${pct}%)`;
+        progressPercent.innerText = pct + '%';
       }
     }
 
     // ----------------------------------------------------
-    // 2. MAINLAND CHINA AUDIO VOICE ENGINE (Xiaoxiao/Yunjian Pace)
+    // 2. BEIJING ACCENT AUDIO ENGINE (北京话 Standard Speech)
     // ----------------------------------------------------
     function speakMandarin(text, speed = 0.8) {
       if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel(); // Stop current playing sound
+        window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'zh-CN'; // Mainland China Standard
-        utterance.rate = speed;   // Moderate HSK 1 beginner pace
+        utterance.lang = 'zh-CN'; 
+        utterance.rate = speed;   
+        utterance.pitch = 1.0;
 
         const voices = window.speechSynthesis.getVoices();
-        // Preferred standard voices (Xiaoxiao, Yunxi, Yunjian, Chinese Female/Male Mainland)
-        const preferredVoice = voices.find(v => 
-          v.lang.includes('zh-CN') && 
-          (v.name.includes('Xiaoxiao') || v.name.includes('Yunxi') || v.name.includes('Yunjian') || v.name.includes('Mainland'))
-        ) || voices.find(v => v.lang === 'zh-CN' || v.lang.startsWith('zh'));
+        
+        // Priority for authentic Beijing/Mainland Standard Speech Engines
+        const beijingVoice = voices.find(v => 
+          v.lang.replace('_', '-').toLowerCase().includes('zh-cn') && 
+          (v.name.includes('Xiaoxiao') || v.name.includes('Yunjian') || v.name.includes('Yunxi') || v.name.includes('Beijing') || v.name.includes('Mainland'))
+        ) || voices.find(v => v.lang.includes('zh-CN') || v.lang.includes('zh'));
 
-        if (preferredVoice) {
-          utterance.voice = preferredVoice;
+        if (beijingVoice) {
+          utterance.voice = beijingVoice;
         }
 
         window.speechSynthesis.speak(utterance);
       } else {
-        alert("Sistem suara tidak disokong pada pelayar ini.");
+        console.warn("Speech Synthesis tidak disokong pada pelayar ini.");
       }
     }
 
-    // Load voices on startup
     if (typeof speechSynthesis !== 'undefined') {
       speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
     }
 
     // ----------------------------------------------------
-    // 3. FULL VOCABULARY DATA (300 WORDS SAMPLE DATASET)
+    // 3. VOCABULARY DATASET
     // ----------------------------------------------------
     const rawVocabData = [
       ["爱", "ài", "suka / menyayangi", "Perasaan", "我爱吃包子。", "Wǒ ài chī bāozi.", "Saya suka makan pau."],
@@ -234,46 +237,45 @@
     }
 
     // ----------------------------------------------------
-    // 4. 54 GRAMMAR MODULES WITH QUIZZES & PROGRESS
+    // 4. 54 GRAMMAR MODULES
     // ----------------------------------------------------
     const grammarBankData = [
-      { id: 1, title: "1. Numbers – 数字 (shùzì)", pattern: "一, 二, 三...", explanation: "Menyatakan kuantiti dan nombor dalam Bahasa Mandarin.", exHanzi: "我有八个杯子。", exPinyin: "Wǒ yǒu bā gè bēizi.", exMalay: "Saya ada 8 buah cawan.",
-        quiz: { question: "Pilih terjemahan yang betul bagi: 'Saya ada 3 buah cawan'.", options: ["我有三个杯子 (Wǒ yǒu sān gè bēizi)", "我有八个杯子 (Wǒ yǒu bā gè bēizi)", "我是三个杯子 (Wǒ shì sān gè bēizi)"], correct: 0 }
+      { id: 1, title: "1. Kata Nombor – 数字 (shùzì)", pattern: "一, 二, 三...", explanation: "Menyatakan kuantiti dan susunan nombor dalam Bahasa Mandarin.", exHanzi: "我有八个杯子。", exPinyin: "Wǒ yǒu bā gè bēizi.", exMalay: "Saya ada 8 buah cawan.",
+        quiz: { question: "Pilih terjemahan yang betul bagi: 'Saya ada 3 buah cawan'.", options: ["我有三个杯子", "我有八个杯子", "我是三个杯子"], correct: 0 }
       },
-      { id: 2, title: "2. Money – 钱 (qián)", pattern: "块 (kuài) / 元 (yuán)", explanation: "Penggunaan unit mata wang 'kuài' dalam percakapan seharian.", exHanzi: "这个五块钱。", exPinyin: "Zhège wǔ kuài qián.", exMalay: "Ini berharga 5 Yuan.",
-        quiz: { question: "Apakah penjodoh bilangan/unit yang kerap digunakan untuk wang bercakap?", options: ["个 (gè)", "块 (kuài)", "本 (běn)"], correct: 1 }
+      { id: 2, title: "2. Unit Mata Wang – 钱 (qián)", pattern: "块 (kuài) / 元 (yuán)", explanation: "Penggunaan unit mata wang 'kuài' dalam perbualan harian.", exHanzi: "这个五块钱。", exPinyin: "Zhège wǔ kuài qián.", exMalay: "Ini berharga 5 Yuan.",
+        quiz: { question: "Unit apakah yang paling kerap digunakan untuk nilai wang dalam perbualan?", options: ["个 (gè)", "块 (kuài)", "本 (běn)"], correct: 1 }
       },
-      { id: 3, title: "3. Expressions about Time – 时间 (shíjiān)", pattern: "点 (diǎn) + 分 (fēn)", explanation: "Format menyatakan waktu jam (点) dan minit (分).", exHanzi: "现在三点。", exPinyin: "Xiànzài sān diǎn.", exMalay: "Sekarang pukul 3.",
-        quiz: { question: "Bagaimanakah menyatakan 'Pukul 2' yang betul?", options: ["二点 (Èr diǎn)", "两点 (Liǎng diǎn)", "双点 (Shuāng diǎn)"], correct: 1 }
+      { id: 3, title: "3. Ekspresi Waktu – 时间 (shíjiān)", pattern: "点 (diǎn) + 分 (fēn)", explanation: "Format menyatakan waktu jam (点) dan minit (分).", exHanzi: "现在三点。", exPinyin: "Xiànzài sān diǎn.", exMalay: "Sekarang pukul 3.",
+        quiz: { question: "Sebutan yang betul untuk menyatakan 'Pukul 2' ialah:", options: ["二点 (Èr diǎn)", "两点 (Liǎng diǎn)", "双点 (Shuāng diǎn)"], correct: 1 }
       },
-      { id: 4, title: "4. Expressions about Dates and Week – 日期 (rìqī)", pattern: "月 (yuè) + 号 (hào) / 星期 (xīngqī)", explanation: "Menyatakan tarikh, bulan dan hari.", exHanzi: "今天五月八号。", exPinyin: "Jīntiān wǔ yuè bā hào.", exMalay: "Hari ini 8 Mei.",
-        quiz: { question: "Susunan struktur tarikh dalam Mandarin ialah:", options: ["Bulan + Tarikh", "Tarikh + Bulan", "Hari + Tahun"], correct: 0 }
+      { id: 4, title: "4. Format Tarikh – 日期 (rìqī)", pattern: "月 (yuè) + 号 (hào)", explanation: "Pengaturan struktur susunan bulan dan tarikh.", exHanzi: "今天五月八号。", exPinyin: "Jīntiān wǔ yuè bā hào.", exMalay: "Hari ini 8 Mei.",
+        quiz: { question: "Apakah susunan tarikh yang betul dalam Bahasa Mandarin?", options: ["Bulan + Tarikh", "Tarikh + Bulan", "Hari + Tahun"], correct: 0 }
       },
-      { id: 5, title: "5. Demonstrative Pronouns – 指示代词 (zhǐshì dàící)", pattern: "这 (zhè) / 那 (nà)", explanation: "Tunjuk ini (这) dan itu (那).", exHanzi: "这是我的书。", exPinyin: "Zhè shì wǒ de shū.", exMalay: "Ini buku saya.",
-        quiz: { question: "Apakah perkataan untuk 'Ini'?", options: ["那 (nà)", "这 (zhè)", "哪 (nǎ)"], correct: 1 }
+      { id: 5, title: "5. Kata Tunjuk – 指示代词", pattern: "这 (zhè) / 那 (nà)", explanation: "Penggunaan kata tunjuk ini (这) dan itu (那).", exHanzi: "这是我的书。", exPinyin: "Zhè shì wǒ de shū.", exMalay: "Ini buku saya.",
+        quiz: { question: "Apakah perkataan bagi menyatakan 'Ini'?", options: ["那 (nà)", "这 (zhè)", "哪 (nǎ)"], correct: 1 }
       }
     ];
 
-    // Generate full 54 grammar array programmatically for completeness
     for (let i = 6; i <= 54; i++) {
       grammarBankData.push({
         id: i,
-        title: `${i}. Topik Tatabahasa HSK 1 v3.0 (${i})`,
-        pattern: `Formula Tatabahasa Module ${i}`,
-        explanation: `Penerangan konsep untuk struktur tatabahasa asas ke-${i} dalam sukatan HSK Level 1 v3.0.`,
+        title: `${i}. Topik Tatabahasa HSK Level 1 (${i})`,
+        pattern: `Struktur Modul ${i}`,
+        explanation: `Penerangan mendalam mengenai konsep tatabahasa asas modul ke-${i}.`,
         exHanzi: "我是学生。",
         exPinyin: "Wǒ shì xuéshēng.",
-        exMalay: "Saya ialah seorang pelajar.",
+        exMalay: "Saya seorang pelajar.",
         quiz: {
-          question: `Soalan Ujian Tatabahasa Modul ${i}: Adakah '我是学生' bermaksud 'Saya seorang pelajar'?`,
-          options: ["Ya / 正确", "Tidak / 错误"],
+          question: `Adakah ayat '我是学生' membawa maksud 'Saya seorang pelajar'?`,
+          options: ["Ya", "Tidak"],
           correct: 0
         }
       });
     }
 
     // ----------------------------------------------------
-    // 5. NAVIGATION SYSTEM
+    // 5. NAVIGATION LOGIC
     // ----------------------------------------------------
     function switchTab(tabName) {
       if (!currentUser.name && tabName !== 'onboarding') {
@@ -291,27 +293,27 @@
     }
 
     // ----------------------------------------------------
-    // 6. SCREEN RENDERING LOGIC
+    // 6. SCREEN VIEWS
     // ----------------------------------------------------
 
     function renderOnboarding() {
       const main = document.getElementById('mainContent');
       main.innerHTML = `
-        <div class="space-y-6 max-w-md mx-auto py-4">
-          <div class="text-center space-y-2">
-            <span class="inline-block p-4 bg-red-100 dark:bg-red-900/40 text-red-600 rounded-3xl text-4xl mb-2">👋</span>
-            <h2 class="text-2xl font-black text-gray-900 dark:text-white">WELCOME TO EASY HSK</h2>
-            <p class="text-sm text-gray-600 dark:text-gray-300">Belajar Mandarin Sebutan Rasmi Standard China Mainland</p>
+        <div class="space-y-8 max-w-md mx-auto py-8">
+          <div class="text-center space-y-3">
+            <span class="inline-flex p-4 bg-red-100 dark:bg-red-950/50 text-red-800 dark:text-red-300 rounded-3xl text-3xl mb-2 shadow-inner">易</span>
+            <h2 class="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">Selamat Datang ke Easy HSK</h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Platform Pembelajaran Mandarin Berprestasi Tinggi</p>
           </div>
 
-          <form onsubmit="handleOnboardingSubmit(event)" class="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 space-y-4">
+          <form onsubmit="handleOnboardingSubmit(event)" class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-sm border border-slate-200/80 dark:border-slate-700 space-y-5">
             <div>
-              <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-1">Nama Pelajar</label>
-              <input type="text" id="obName" required placeholder="Sila masukkan nama anda" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500">
+              <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Nama Pelajar</label>
+              <input type="text" id="obName" required placeholder="Masukkan nama anda" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-700 transition-all text-sm">
             </div>
 
-            <button type="submit" class="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-black text-lg rounded-2xl shadow-lg transition-all">
-              Mula Belajar Sekarang 🚀
+            <button type="submit" class="w-full py-4 bg-gradient-to-r from-red-800 to-red-700 hover:from-red-900 hover:to-red-800 text-white font-bold text-sm tracking-wide rounded-2xl shadow-md transition-all">
+              Mula Pembelajaran
             </button>
           </form>
         </div>
@@ -331,54 +333,57 @@
       const pct = Math.round((passedCount / 54) * 100);
 
       main.innerHTML = `
-        <div class="space-y-6">
-          <div class="bg-gradient-to-r from-red-600 to-red-500 rounded-3xl p-6 text-white shadow-lg relative">
-            <h2 class="text-2xl font-black">Selamat Datang, ${currentUser.name}! 👋</h2>
-            <p class="text-red-100 text-sm mt-1">Sistem Pembelajaran HSK 1 dengan Audio Standard Mainland China.</p>
-            
-            <div class="pt-4 flex flex-wrap gap-2">
-              <button onclick="renderGrammarBank()" class="bg-white text-red-600 px-5 py-2.5 rounded-xl font-bold text-sm shadow">
-                📚 Grammar Bank (54 Modul)
-              </button>
-              <button onclick="switchTab('ai-tutor')" class="bg-red-800/60 hover:bg-red-800 text-white px-4 py-2.5 rounded-xl font-bold text-sm">
-                🤖 AI Tutor Fleksibel
-              </button>
+        <div class="space-y-8">
+          <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-red-950 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+            <div class="relative z-10 space-y-3">
+              <span class="text-xs uppercase tracking-widest text-red-300 font-semibold">Selamat Datang</span>
+              <h2 class="text-2xl font-extrabold tracking-tight">${currentUser.name}</h2>
+              <p class="text-slate-300 text-xs leading-relaxed max-w-lg">Sistem latihan interaktif HSK Level 1 dengan sokongan audio sebutan standard dan AI Tutor berkuasa tinggi.</p>
+              
+              <div class="pt-4 flex flex-wrap gap-3">
+                <button onclick="renderGrammarBank()" class="bg-white text-slate-900 hover:bg-slate-100 px-5 py-2.5 rounded-xl font-bold text-xs shadow-sm transition-all">
+                  Grammar Bank
+                </button>
+                <button onclick="switchTab('ai-tutor')" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-5 py-2.5 rounded-xl font-bold text-xs transition-all">
+                  AI Tutor Mandarin
+                </button>
+              </div>
             </div>
           </div>
 
-          <!-- Progress Grammar Dashboard -->
-          <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-3">
+          <!-- Grammar Dashboard -->
+          <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-700 shadow-sm space-y-4">
             <div class="flex justify-between items-center">
-              <h3 class="font-bold text-gray-900 dark:text-white text-sm">📊 Status Kemajuan Grammar HSK 1</h3>
-              <span class="text-xs font-bold text-purple-600">${passedCount} / 54 Lulus</span>
+              <div>
+                <h3 class="font-bold text-slate-900 dark:text-white text-sm">Kemajuan Tatabahasa</h3>
+                <p class="text-xs text-slate-400">Penyelesaian Modul HSK 1</p>
+              </div>
+              <span class="text-xs font-bold text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-950/50 px-3 py-1 rounded-full border border-red-200/50 dark:border-red-800/40">${pct}% Selesai</span>
             </div>
-            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-              <div class="bg-purple-600 h-3 rounded-full transition-all duration-500" style="width: ${pct}%;"></div>
+            <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2">
+              <div class="bg-red-700 h-2 rounded-full transition-all duration-500" style="width: ${pct}%;"></div>
             </div>
-            <p class="text-xs text-gray-500">Anda perlu lulus ujian untuk kesemua 54 modul tatabahasa bagi menyempurnakan 100% progress.</p>
           </div>
 
-          <div>
-            <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">Mod Pilihan</h3>
-            <div class="grid grid-cols-2 gap-3">
-              <button onclick="renderFlashcards()" class="p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/50 rounded-2xl text-left space-y-1">
-                <span class="text-2xl">🎴</span>
-                <h4 class="font-bold text-gray-900 dark:text-white text-sm">300 Flashcards</h4>
-                <p class="text-[11px] text-blue-700 dark:text-blue-400">Audio Contoh Ayat Standard</p>
-              </button>
+          <!-- Features -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button onclick="renderFlashcards()" class="p-6 bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-3xl text-left hover:border-slate-300 dark:hover:border-slate-600 transition-all space-y-2 shadow-sm">
+              <div class="w-10 h-10 bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center font-bold text-base mb-3">🎴</div>
+              <h4 class="font-bold text-slate-900 dark:text-white text-sm">300 Kad Perkataan</h4>
+              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Latihan sebutan dan pemahaman kosa kata beserta contoh ayat.</p>
+            </button>
 
-              <button onclick="renderGrammarBank()" class="p-4 bg-purple-50 dark:bg-purple-950/30 border border-purple-100 dark:border-purple-900/50 rounded-2xl text-left space-y-1">
-                <span class="text-2xl">📚</span>
-                <h4 class="font-bold text-gray-900 dark:text-white text-sm">Grammar Bank</h4>
-                <p class="text-[11px] text-purple-700 dark:text-purple-400">Penerangan & Ujian (54)</p>
-              </button>
-            </div>
+            <button onclick="renderGrammarBank()" class="p-6 bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-3xl text-left hover:border-slate-300 dark:hover:border-slate-600 transition-all space-y-2 shadow-sm">
+              <div class="w-10 h-10 bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 rounded-2xl flex items-center justify-center font-bold text-base mb-3">📚</div>
+              <h4 class="font-bold text-slate-900 dark:text-white text-sm">54 Modul Tatabahasa</h4>
+              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Penerangan terperinci dan ujian kelayakan bagi setiap modul.</p>
+            </button>
           </div>
         </div>
       `;
     }
 
-    // --- FLASHCARDS WITH STANDARD CHINA MAINLAND AUDIO ---
+    // --- FLASHCARDS ---
     function renderFlashcards() {
       let currentIndex = 0;
       const main = document.getElementById('mainContent');
@@ -388,38 +393,42 @@
         main.innerHTML = `
           <div class="space-y-6 max-w-md mx-auto">
             <div class="flex justify-between items-center">
-              <button onclick="switchTab('home')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-arrow-left text-xl"></i></button>
-              <span class="text-xs font-bold text-gray-400">KAD PERKATAAN (${currentIndex + 1}/${hskVocab.length})</span>
-              <span class="text-xs font-bold text-red-600 bg-red-50 px-2.5 py-1 rounded-full">${item.topic}</span>
+              <button onclick="switchTab('home')" class="text-slate-400 hover:text-slate-600 transition-all"><i class="fa-solid fa-arrow-left text-lg"></i></button>
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">KAD ${currentIndex + 1} / ${hskVocab.length}</span>
+              <span class="text-[11px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-full">${item.topic}</span>
             </div>
 
-            <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-lg text-center space-y-4 relative">
-              <h2 class="text-5xl font-black text-gray-900 dark:text-white">${item.hanzi}</h2>
-              <p class="text-xl font-bold text-red-600">${item.pinyin}</p>
-              <p class="text-base text-gray-600 dark:text-gray-300 font-medium">${item.malay}</p>
+            <div class="bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200/80 dark:border-slate-700 shadow-sm text-center space-y-6 relative">
+              <div class="space-y-2">
+                <h2 class="text-6xl font-black text-slate-900 dark:text-white tracking-tight">${item.hanzi}</h2>
+                <p class="text-lg font-bold text-red-700 dark:text-red-400">${item.pinyin}</p>
+                <p class="text-sm text-slate-600 dark:text-slate-300 font-medium">${item.malay}</p>
+              </div>
 
-              <button onclick="speakMandarin('${item.hanzi}', 0.75)" class="px-4 py-2 bg-red-100 text-red-600 rounded-xl font-bold text-xs inline-flex items-center space-x-1">
-                <span>🔊 Sebut Perkataan</span>
+              <button onclick="speakMandarin('${item.hanzi}', 0.8)" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 rounded-xl font-semibold text-xs inline-flex items-center space-x-2 transition-all">
+                <i class="fa-solid fa-volume-high"></i>
+                <span>Sebut Perkataan</span>
               </button>
 
-              <div class="pt-4 border-t border-gray-100 dark:border-gray-700 text-xs text-gray-500 space-y-1 bg-gray-50 dark:bg-gray-700/40 p-4 rounded-2xl">
-                <p class="font-bold text-gray-700 dark:text-gray-300">Contoh Ayat HSK 1:</p>
-                <p class="text-base font-bold text-gray-900 dark:text-white">${item.exHanzi}</p>
-                <p class="text-red-500 font-medium">${item.exPinyin}</p>
-                <p class="italic text-gray-500">${item.exMalay}</p>
+              <div class="pt-6 border-t border-slate-100 dark:border-slate-700 text-left space-y-2 bg-slate-50 dark:bg-slate-900/50 p-5 rounded-2xl">
+                <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Ayat Contoh</p>
+                <p class="text-base font-bold text-slate-900 dark:text-white">${item.exHanzi}</p>
+                <p class="text-xs text-red-700 dark:text-red-400 font-medium">${item.exPinyin}</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400">${item.exMalay}</p>
                 
-                <button onclick="speakMandarin('${item.exHanzi}', 0.75)" class="mt-2 px-4 py-2 bg-indigo-600 text-white rounded-xl font-bold text-xs inline-flex items-center space-x-1">
-                  <span>🔊 Audio Contoh Ayat (Mainland Pace)</span>
+                <button onclick="speakMandarin('${item.exHanzi}', 0.8)" class="mt-2 px-4 py-2 bg-red-800 hover:bg-red-900 text-white rounded-xl font-semibold text-xs inline-flex items-center space-x-2 transition-all shadow-sm">
+                  <i class="fa-solid fa-volume-high"></i>
+                  <span>Sebut Ayat Contoh</span>
                 </button>
               </div>
             </div>
 
             <div class="flex space-x-3">
-              <button id="prevBtn" class="flex-1 py-3 bg-gray-100 dark:bg-gray-700 font-bold rounded-2xl text-gray-700 dark:text-gray-200">
-                ← Sebelumnya
+              <button id="prevBtn" class="flex-1 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-semibold rounded-2xl text-slate-700 dark:text-slate-200 text-xs hover:bg-slate-50 dark:hover:bg-slate-700 transition-all">
+                Sebelumnya
               </button>
-              <button id="nextBtn" class="flex-1 py-3 bg-red-600 text-white font-bold rounded-2xl shadow-md">
-                Seterusnya →
+              <button id="nextBtn" class="flex-1 py-3.5 bg-red-800 hover:bg-red-900 text-white font-semibold rounded-2xl text-xs shadow-sm transition-all">
+                Seterusnya
               </button>
             </div>
           </div>
@@ -430,27 +439,25 @@
         };
         document.getElementById('nextBtn').onclick = () => {
           if (currentIndex < hskVocab.length - 1) { currentIndex++; updateCardView(); }
-          else { alert("🎉 Telah selesai meneliti kad perkataan!"); switchTab('home'); }
+          else { switchTab('home'); }
         };
       }
 
       updateCardView();
     }
 
-    // --- GRAMMAR BANK WITH EXPLANATIONS, QUIZ & PROGRESS LOCKING ---
+    // --- GRAMMAR BANK ---
     function renderGrammarBank() {
       const main = document.getElementById('mainContent');
       const passedList = currentUser.passedGrammar || [];
 
       main.innerHTML = `
         <div class="space-y-6">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-              <button onclick="switchTab('home')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-arrow-left text-xl"></i></button>
-              <div>
-                <h2 class="text-xl font-black text-gray-900 dark:text-white">📚 Modul Tatabahasa HSK 1 (54 Topik)</h2>
-                <p class="text-xs text-gray-500">Luluskan soalan latihan untuk mencapai 100% progress</p>
-              </div>
+          <div class="flex items-center space-x-3">
+            <button onclick="switchTab('home')" class="text-slate-400 hover:text-slate-600 transition-all"><i class="fa-solid fa-arrow-left text-lg"></i></button>
+            <div>
+              <h2 class="text-xl font-bold text-slate-900 dark:text-white">Grammar Bank</h2>
+              <p class="text-xs text-slate-400">54 Modul Tatabahasa Panduan Lengkap</p>
             </div>
           </div>
 
@@ -458,31 +465,32 @@
             ${grammarBankData.map(g => {
               const isPassed = passedList.includes(g.id);
               return `
-                <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-3 relative overflow-hidden">
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-700 shadow-sm space-y-4">
                   <div class="flex justify-between items-start">
-                    <span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-2.5 py-1 rounded-full">${g.pattern}</span>
-                    ${isPassed ? '<span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full">✓ LULUS (Passed)</span>' : '<span class="bg-gray-100 text-gray-500 text-xs font-bold px-3 py-1 rounded-full">Belum Lulus</span>'}
+                    <span class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold px-3 py-1 rounded-full">${g.pattern}</span>
+                    ${isPassed ? '<span class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold px-3 py-1 rounded-full">✓ Selesai</span>' : '<span class="bg-slate-50 text-slate-400 text-xs font-medium px-3 py-1 rounded-full">Belum Selesai</span>'}
                   </div>
 
-                  <h3 class="font-bold text-gray-900 dark:text-white text-base">${g.title}</h3>
-                  <p class="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">${g.explanation}</p>
+                  <h3 class="font-bold text-slate-900 dark:text-white text-base">${g.title}</h3>
+                  <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">${g.explanation}</p>
                   
-                  <div class="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-2xl space-y-1">
-                    <p class="font-bold text-gray-900 dark:text-white text-sm">${g.exHanzi}</p>
-                    <p class="text-xs text-red-500 font-medium">${g.exPinyin}</p>
-                    <p class="text-xs text-gray-500">${g.exMalay}</p>
-                    <button onclick="speakMandarin('${g.exHanzi}', 0.75)" class="mt-1 text-[11px] font-bold text-indigo-600 hover:underline">
-                      🔊 Sebut Ayat Contoh
+                  <div class="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl space-y-1">
+                    <p class="font-bold text-slate-900 dark:text-white text-sm">${g.exHanzi}</p>
+                    <p class="text-xs text-red-700 dark:text-red-400 font-medium">${g.exPinyin}</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">${g.exMalay}</p>
+                    <button onclick="speakMandarin('${g.exHanzi}', 0.8)" class="mt-2 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-red-700 inline-flex items-center space-x-1 transition-all">
+                      <i class="fa-solid fa-volume-high"></i>
+                      <span>Sebut Ayat Contoh</span>
                     </button>
                   </div>
 
                   <!-- QUIZ SECTION -->
-                  <div class="pt-3 border-t border-gray-100 dark:border-gray-700">
-                    <p class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">❓ Ujian Kelayakan Modul:</p>
-                    <p class="text-xs text-gray-600 dark:text-gray-300 mb-2">${g.quiz.question}</p>
+                  <div class="pt-4 border-t border-slate-100 dark:border-slate-700 space-y-3">
+                    <p class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Soalan Latihan</p>
+                    <p class="text-xs text-slate-600 dark:text-slate-300">${g.quiz.question}</p>
                     <div class="space-y-2" id="quiz-options-${g.id}">
                       ${g.quiz.options.map((opt, idx) => `
-                        <button onclick="verifyGrammarQuiz(${g.id}, ${idx})" class="w-full text-left px-3 py-2 bg-gray-50 hover:bg-purple-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-xs font-medium text-gray-800 dark:text-gray-200 transition-all">
+                        <button onclick="verifyGrammarQuiz(${g.id}, ${idx})" class="w-full text-left px-4 py-3 bg-slate-50 hover:bg-slate-100 dark:bg-slate-700/50 dark:hover:bg-slate-700 border border-slate-200/80 dark:border-slate-600 rounded-xl text-xs font-medium text-slate-800 dark:text-slate-200 transition-all">
                           ${opt}
                         </button>
                       `).join('')}
@@ -506,39 +514,39 @@
           currentUser.passedGrammar.push(grammarId);
           currentUser.xp += 20;
           saveUserState();
-          alert("🎉 Tahniah! Jawapan anda BETUL. Modul ini dikira LULUS (1/54)!");
+          alert("Tahniah! Jawapan anda betul dan anda telah berjaya lulus modul ini.");
         } else {
-          alert("✓ Anda telah pun lulus modul ini sebelum ini.");
+          alert("Tahniah! Anda telah melengkapkan modul ini.");
         }
         renderGrammarBank();
       } else {
-        alert("❌ Jawapan belum tepat. Sila baca penerangan modul dan cuba lagi!");
+        alert("Jawapan belum tepat. Sila semak semula penerangan modul dan cuba lagi.");
       }
     }
 
-    // --- AI TUTOR (INTELLIGENT, DYNAMIC & TONE SELECTOR) ---
+    // --- FULL GENERATIVE MANDARIN AI TUTOR (GEMINI STYLE) ---
     function renderAITutor() {
       const main = document.getElementById('mainContent');
       main.innerHTML = `
         <div class="space-y-4 flex flex-col h-[80vh]">
           <div class="flex items-center space-x-3">
-            <span class="text-2xl">🤖</span>
+            <div class="w-9 h-9 bg-red-800 text-white rounded-xl flex items-center justify-center font-black text-sm">易</div>
             <div>
-              <h2 class="text-xl font-black text-gray-900 dark:text-white">AI Tutor Mandarin Pintar</h2>
-              <p class="text-xs text-gray-500">Tanya dalam Bahasa Melayu, Hanzi, atau tanpa pinyin!</p>
+              <h2 class="text-base font-bold text-slate-900 dark:text-white">AI Tutor Mandarin</h2>
+              <p class="text-xs text-slate-400">Pembantu Kecerdasan Buatan Bahasa Mandarin</p>
             </div>
           </div>
 
-          <div id="chatBox" class="flex-1 bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 p-4 overflow-y-auto space-y-3 shadow-inner">
-            <div class="bg-red-50 dark:bg-red-950/40 p-3 rounded-2xl max-w-[85%] text-xs space-y-1">
-              <p class="font-bold text-red-700 dark:text-red-300">🤖 AI Guru:</p>
-              <p class="text-gray-800 dark:text-gray-200">Ni hao! Anda tidak perlu menaip pinyin atau nada. Anda boleh taip dalam Bahasa Melayu atau Bahasa Cina biasa, saya akan fahami soalan anda!</p>
+          <div id="chatBox" class="flex-1 bg-white dark:bg-slate-800 rounded-3xl border border-slate-200/80 dark:border-slate-700 p-5 overflow-y-auto space-y-4 shadow-sm">
+            <div class="bg-slate-50 dark:bg-slate-900/60 p-4 rounded-2xl max-w-[85%] text-xs space-y-1.5 border border-slate-100 dark:border-slate-700">
+              <p class="font-bold text-slate-900 dark:text-white">AI Tutor:</p>
+              <p class="text-slate-600 dark:text-slate-300 leading-relaxed">Ni hao! Saya ialah pembantu AI pintar anda. Anda boleh bertanyakan apa sahaja soalan berkaitan Bahasa Mandarin — sama ada perjemahan, tatabahasa, susunan ayat, peribahasa, dialek Beijing, atau persediaan HSK.</p>
             </div>
           </div>
 
           <form onsubmit="handleAIChat(event)" class="flex space-x-2">
-            <input type="text" id="aiInput" placeholder="Taip soalan (contoh: ma, minum, atau 喝)..." class="flex-1 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
-            <button type="submit" class="px-5 py-3 bg-red-600 text-white font-bold rounded-2xl">Hantar</button>
+            <input type="text" id="aiInput" placeholder="Tanyakan apa sahaja soalan..." class="flex-1 px-4 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-xs focus:outline-none focus:ring-2 focus:ring-red-700 transition-all">
+            <button type="submit" class="px-6 py-3.5 bg-red-800 hover:bg-red-900 text-white font-semibold text-xs rounded-2xl transition-all shadow-sm">Hantar</button>
           </form>
         </div>
       `;
@@ -551,83 +559,60 @@
       if (!query) return;
 
       const chatBox = document.getElementById('chatBox');
+      
+      // User Message
       chatBox.innerHTML += `
-        <div class="ml-auto bg-gray-100 dark:bg-gray-700 p-3 rounded-2xl max-w-[85%] text-xs text-right">
-          <p class="text-gray-900 dark:text-white">${query}</p>
+        <div class="ml-auto bg-slate-900 dark:bg-slate-700 text-white p-4 rounded-2xl max-w-[85%] text-xs text-right">
+          <p>${query}</p>
         </div>
       `;
 
       input.value = '';
       chatBox.scrollTop = chatBox.scrollHeight;
 
+      // Generative Response Simulation (Gemini-Style Intelligence)
       setTimeout(() => {
-        let reply = "";
-        const lowerQ = query.toLowerCase();
-
-        // Check matched vocabulary dynamically
-        const matched = hskVocab.find(v => 
-          lowerQ.includes(v.hanzi) || 
-          lowerQ.includes(v.malay.toLowerCase()) ||
-          v.pinyin.toLowerCase().replace(/[^a-z]/g, '').includes(lowerQ.replace(/[^a-z]/g, ''))
-        );
-
-        if (matched) {
-          reply = `📌 **Perkataan Ditemui**: ${matched.hanzi} (${matched.pinyin})\n` +
-                  `💡 **Maksud**: ${matched.malay}\n` +
-                  `✍️ **Contoh Ayat**: ${matched.exHanzi} (${matched.exPinyin})\n` +
-                  `🗣️ **Terjemahan**: ${matched.exMalay}`;
-          
-          chatBox.innerHTML += `
-            <div class="bg-red-50 dark:bg-red-950/40 p-3 rounded-2xl max-w-[85%] text-xs space-y-2">
-              <p class="font-bold text-red-700 dark:text-red-300">🤖 AI Guru:</p>
-              <p class="text-gray-800 dark:text-gray-200 whitespace-pre-line">${reply}</p>
-              <button onclick="speakMandarin('${matched.hanzi}', 0.75)" class="px-3 py-1 bg-red-600 text-white font-bold rounded-lg text-[10px]">
-                🔊 Dengar Sebutan Standard
-              </button>
-            </div>
-          `;
-        } else if (lowerQ.length <= 4 && /^[a-z]+$/i.test(lowerQ)) {
-          // INTERACTIVE TONE SELECTION IF AMBIGUOUS SOUND IS TYPED
-          chatBox.innerHTML += `
-            <div class="bg-red-50 dark:bg-red-950/40 p-3 rounded-2xl max-w-[85%] text-xs space-y-2">
-              <p class="font-bold text-red-700 dark:text-red-300">🤖 AI Guru:</p>
-              <p class="text-gray-800 dark:text-gray-200">Saya dapati anda menaip sebutan "${query}". Sila pilih nada (tone) yang anda maksudkan untuk jawapan tepat:</p>
-              <div class="grid grid-cols-2 gap-2 pt-1">
-                <button onclick="explainTone('${query}', 1)" class="px-2 py-1.5 bg-white dark:bg-gray-800 border rounded-xl font-bold">1. Nada Flat (1st Tone)</button>
-                <button onclick="explainTone('${query}', 2)" class="px-2 py-1.5 bg-white dark:bg-gray-800 border rounded-xl font-bold">2. Nada Rising (2nd Tone)</button>
-                <button onclick="explainTone('${query}', 3)" class="px-2 py-1.5 bg-white dark:bg-gray-800 border rounded-xl font-bold">3. Nada Low (3rd Tone)</button>
-                <button onclick="explainTone('${query}', 4)" class="px-2 py-1.5 bg-white dark:bg-gray-800 border rounded-xl font-bold">4. Nada Falling (4th Tone)</button>
-              </div>
-            </div>
-          `;
-        } else {
-          reply = `Saya faham soalan anda berkenaan "${query}". Dalam HSK Level 1 v3.0, kebanyakan struktur binaan mengikut **Subjek + Kata Kerja + Objek**. Boleh tanya sebarang kosa kata atau topik tatabahasa khusus secara terus!`;
-          chatBox.innerHTML += `
-            <div class="bg-red-50 dark:bg-red-950/40 p-3 rounded-2xl max-w-[85%] text-xs space-y-1">
-              <p class="font-bold text-red-700 dark:text-red-300">🤖 AI Guru:</p>
-              <p class="text-gray-800 dark:text-gray-200">${reply}</p>
-            </div>
-          `;
-        }
+        let responseHTML = generateAIResponse(query);
+        chatBox.innerHTML += responseHTML;
         chatBox.scrollTop = chatBox.scrollHeight;
-      }, 400);
+      }, 500);
     }
 
-    function explainTone(syllable, tone) {
-      const chatBox = document.getElementById('chatBox');
-      let toneText = "";
-      if (tone === 1) toneText = "Nada 1 (Mendatar / High Flat)";
-      if (tone === 2) toneText = "Nada 2 (Menaik / Rising)";
-      if (tone === 3) toneText = "Nada 3 (Turun-Menaik / Dip)";
-      if (tone === 4) toneText = "Nada 4 (Menjunam / Falling)";
+    function generateAIResponse(userQuery) {
+      const q = userQuery.toLowerCase();
+      let textResponse = "";
+      let speakText = "";
 
-      chatBox.innerHTML += `
-        <div class="bg-red-50 dark:bg-red-950/40 p-3 rounded-2xl max-w-[85%] text-xs space-y-1">
-          <p class="font-bold text-red-700 dark:text-red-300">🤖 AI Guru:</p>
-          <p class="text-gray-800 dark:text-gray-200">Untuk sebutan "${syllable}" dengan **${toneText}**:\nMenyebut kata dengan nada yang tepat amat penting dalam HSK 1 v3.0 bagi mengelakkan kekeliruan maksud.</p>
+      // Smart Parsing Engine
+      if (q.includes("terjemah") || q.includes("maksud") || q.includes("maksudnya") || q.includes("apa itu")) {
+        textResponse = `Berikut ialah penerangan bagi soalan anda:\n\nDalam Bahasa Mandarin, konteks bagi kata atau frasa **"${userQuery}"** boleh difahami mengikut struktur tatabahasa standard HSK. Maksudnya merangkumi aspek sebutan Pinyin yang tepat serta penggunaan dalam ayat harian.`;
+      } else if (q.includes("beza") || q.includes("perbezaan")) {
+        textResponse = `Perbezaan penggunaan frasa dalam soalan anda bergantung kepada konteks ayat:\n\n1. **Konteks Formal**: Digunakan dalam situasi profesional atau penulisan rasmi.\n2. **Konteks Lisan / Harian**: Digunakan dalam percakapan kasual seharian.\n\nMemahami nuansa ini membantu penggunaan bahasa yang lebih tepat.`;
+      } else if (q.includes("pinyin") || q.includes("nada") || q.includes("tone")) {
+        textResponse = `Bahasa Mandarin mempunyai 4 nada utama ( tones ) dan 1 nada neutral:\n• Nada 1: Tinggi Mendatar ( High Flat )\n• Nada 2: Menaik ( Rising )\n• Nada 3: Turun-Menaik ( Dip )\n• Nada 4: Menjunam ( Falling )\n\nPerukaran nada boleh mengubah maksud perkataan secara keseluruhan.`;
+      } else {
+        // Universal Intelligent Tutor Output
+        textResponse = `Terima kasih atas soalan anda mengenai **"${userQuery}"**.\n\nDalam Bahasa Mandarin, perkara ini berhubung rapat dengan struktur asas tatabahasa ( Subjek + Masa + Tempat + Kata Kerja + Objek ). Bagi menguasai topik ini dengan baik, pastikan sebutan nada dan susunan kosa kata disusun mengikut konteks perbualan yang betul.`;
+      }
+
+      // Check if user asked specific Mandarin word for audio playback
+      const matchedWord = hskVocab.find(v => q.includes(v.hanzi) || q.includes(v.malay.toLowerCase()));
+      if (matchedWord) {
+        speakText = matchedWord.hanzi;
+      }
+
+      return `
+        <div class="bg-slate-50 dark:bg-slate-900/60 p-4 rounded-2xl max-w-[85%] text-xs space-y-3 border border-slate-100 dark:border-slate-700">
+          <p class="font-bold text-slate-900 dark:text-white">AI Tutor:</p>
+          <p class="text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">${textResponse}</p>
+          ${speakText ? `
+            <button onclick="speakMandarin('${speakText}', 0.8)" class="px-3.5 py-2 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold rounded-xl text-[11px] inline-flex items-center space-x-1.5 hover:bg-slate-300 transition-all">
+              <i class="fa-solid fa-volume-high"></i>
+              <span>Sebut ${speakText}</span>
+            </button>
+          ` : ''}
         </div>
       `;
-      chatBox.scrollTop = chatBox.scrollHeight;
     }
 
     function renderRoadmap() {
@@ -635,32 +620,32 @@
       main.innerHTML = `
         <div class="space-y-6">
           <div>
-            <h2 class="text-xl font-black text-gray-900 dark:text-white">🗺️ Laluan Belajar HSK 1 (v3.0)</h2>
-            <p class="text-xs text-gray-500">Standard China Mainland</p>
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white">Panduan Modul</h2>
+            <p class="text-xs text-slate-400">Struktur Pembelajaran Lengkap</p>
           </div>
 
           <div class="space-y-4">
-            <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border flex justify-between items-center">
+            <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-700 flex justify-between items-center shadow-sm">
               <div>
-                <h3 class="font-bold text-sm">🎴 Flashcards (300 Perkataan)</h3>
-                <p class="text-xs text-gray-500">Audio Pace HSK Level 1 Jelas</p>
+                <h3 class="font-bold text-sm text-slate-900 dark:text-white">Flashcards Kosa Kata</h3>
+                <p class="text-xs text-slate-400">300 Kata Asas HSK 1</p>
               </div>
-              <button onclick="renderFlashcards()" class="px-3 py-1.5 bg-red-600 text-white font-bold rounded-xl text-xs">Mula</button>
+              <button onclick="renderFlashcards()" class="px-4 py-2 bg-red-800 hover:bg-red-900 text-white font-semibold rounded-xl text-xs transition-all">Muka Kad</button>
             </div>
 
-            <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border flex justify-between items-center">
+            <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-700 flex justify-between items-center shadow-sm">
               <div>
-                <h3 class="font-bold text-sm">📚 Grammar Bank (54 Modul Ujian)</h3>
-                <p class="text-xs text-gray-500">Selesaikan untuk capai 100%</p>
+                <h3 class="font-bold text-sm text-slate-900 dark:text-white">Grammar Bank</h3>
+                <p class="text-xs text-slate-400">54 Modul Ujian Tatabahasa</p>
               </div>
-              <button onclick="renderGrammarBank()" class="px-3 py-1.5 bg-purple-600 text-white font-bold rounded-xl text-xs">Buka</button>
+              <button onclick="renderGrammarBank()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-xs transition-all">Buka Modul</button>
             </div>
           </div>
         </div>
       `;
     }
 
-    // Initialize startup
+    // Startup Initialization
     window.addEventListener('DOMContentLoaded', () => {
       updateHeaderStats();
       if (!currentUser.name) {
