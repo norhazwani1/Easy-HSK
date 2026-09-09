@@ -10,7 +10,7 @@
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet">
   
   <script>
     tailwind.config = {
@@ -19,15 +19,14 @@
         extend: {
           colors: {
             brand: {
-              red: '#991B1B',      // Deep Crimson / Corporate Red
-              gold: '#D97706',     // Sophisticated Gold
-              slate: '#0F172A',    // Dark Slate
-              card: '#FFFFFF',
-              bgLight: '#F8FAFC'
+              red: '#8B0000',      // Deep Imperial Red
+              gold: '#D4AF37',     // Premium Metallic Gold
+              slate: '#0F172A',
             }
           },
           fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif']
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            chinese: ['"Noto Serif SC"', 'serif']
           }
         }
       }
@@ -35,41 +34,81 @@
   </script>
 
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .hide-scrollbar::-webkit-scrollbar { display: none; }
-    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .glass-effect { backdrop-filter: blur(12px); background: rgba(255, 255, 255, 0.85); }
-    .dark .glass-effect { backdrop-filter: blur(12px); background: rgba(15, 23, 42, 0.85); }
+    body { 
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      /* Watermark Great Wall & Chinese Pattern Background */
+      background-color: #F8FAFC;
+      background-image: 
+        radial-gradient(rgba(139, 0, 0, 0.03) 1px, transparent 0),
+        linear-gradient(to bottom, rgba(255,255,255,0.85), rgba(248,250,252,0.95)),
+        url('https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&q=80&w=1600');
+      background-repeat: repeat, no-repeat, no-repeat;
+      background-position: center center;
+      background-size: 24px 24px, cover, cover;
+      background-attachment: fixed;
+    }
+
+    .dark body {
+      background-color: #0B1120;
+      background-image: 
+        radial-gradient(rgba(212, 175, 55, 0.05) 1px, transparent 0),
+        linear-gradient(to bottom, rgba(11,17,32,0.92), rgba(15,23,42,0.98)),
+        url('https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&q=80&w=1600');
+    }
+
+    .chinese-border {
+      border-image: linear-gradient(to right, #8B0000, #D4AF37, #8B0000) 1;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px -10px rgba(139, 0, 0, 0.08);
+    }
+
+    .dark .glass-card {
+      background: rgba(15, 23, 42, 0.88);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    canvas {
+      touch-action: none;
+    }
   </style>
 
   <!-- Firebase Scripts -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased selection:bg-red-100 selection:text-red-900 dark:bg-slate-900 dark:text-slate-100 min-h-screen pb-20 md:pb-0 md:pl-64">
+<body class="text-slate-800 antialiased selection:bg-red-100 selection:text-red-900 dark:text-slate-100 min-h-screen pb-20 md:pb-0 md:pl-64">
 
   <!-- APP CONTAINER -->
   <div id="app" class="max-w-md mx-auto md:max-w-5xl min-h-screen flex flex-col justify-between">
 
     <!-- TOP HEADER -->
-    <header class="bg-white/90 dark:bg-slate-800/90 border-b border-slate-200/80 dark:border-slate-700/80 px-6 py-3.5 sticky top-0 z-30 flex justify-between items-center glass-effect shadow-sm">
+    <header class="bg-white/90 dark:bg-slate-900/90 border-b border-amber-900/10 dark:border-amber-500/20 px-6 py-3.5 sticky top-0 z-30 flex justify-between items-center backdrop-blur-md shadow-sm">
       <div class="flex items-center space-x-3">
-        <span class="bg-gradient-to-br from-red-800 to-red-600 text-white font-black text-xl px-3 py-1 rounded-xl shadow-md tracking-wider">易</span>
+        <!-- Logo Perkembangan "中" dengan Background Great Wall Style -->
+        <div class="relative w-10 h-10 rounded-xl overflow-hidden shadow-md flex items-center justify-center bg-gradient-to-br from-red-900 to-red-700 border border-amber-400/40">
+          <span class="font-chinese font-black text-2xl text-amber-300 relative z-10 drop-shadow-sm">中</span>
+        </div>
         <div>
-          <h1 class="font-bold text-base tracking-tight text-slate-900 dark:text-white">Easy HSK</h1>
-          <p class="text-[11px] text-slate-400 font-medium tracking-wide uppercase">Mandarin Proficiency</p>
+          <h1 class="font-bold text-base tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
+            Easy HSK <span class="text-[10px] font-semibold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 px-2 py-0.5 rounded-full">中文字</span>
+          </h1>
+          <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium tracking-wide uppercase">Mandarin Proficiency Suite</p>
         </div>
       </div>
       
       <!-- Indicators -->
-      <div class="flex items-center space-x-4">
-        <div class="flex items-center space-x-1.5 bg-amber-50 dark:bg-amber-950/40 px-3 py-1 rounded-full border border-amber-200/60 dark:border-amber-700/40">
+      <div class="flex items-center space-x-3">
+        <div class="flex items-center space-x-1.5 bg-amber-50/90 dark:bg-amber-950/40 px-3 py-1 rounded-full border border-amber-300/50">
           <span class="text-amber-500 text-xs">🔥</span>
-          <span id="headerStreak" class="text-xs font-bold text-amber-800 dark:text-amber-300">0</span>
+          <span id="headerStreak" class="text-xs font-bold text-amber-900 dark:text-amber-300">0</span>
         </div>
-        <div class="flex items-center space-x-1.5 bg-blue-50 dark:bg-blue-950/40 px-3 py-1 rounded-full border border-blue-200/60 dark:border-blue-700/40">
-          <span class="text-blue-500 text-xs">⭐</span>
-          <span id="headerXP" class="text-xs font-bold text-blue-800 dark:text-blue-300">0</span>
+        <div class="flex items-center space-x-1.5 bg-red-50/90 dark:bg-red-950/40 px-3 py-1 rounded-full border border-red-200/60 dark:border-red-800/40">
+          <span class="text-red-600 dark:text-red-400 text-xs">⭐</span>
+          <span id="headerXP" class="text-xs font-bold text-red-900 dark:text-red-300">0</span>
         </div>
       </div>
     </header>
@@ -80,61 +119,63 @@
     </main>
 
     <!-- BOTTOM NAVIGATION (MOBILE) -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-800/95 border-t border-slate-200 dark:border-slate-700 py-2.5 px-4 flex justify-around items-center z-40 md:hidden glass-effect shadow-lg">
-      <button onclick="switchTab('home')" id="tab-home" class="nav-btn flex flex-col items-center text-red-700 font-semibold">
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 border-t border-slate-200/80 dark:border-slate-800 py-2.5 px-4 flex justify-around items-center z-40 md:hidden backdrop-blur-md shadow-lg">
+      <button onclick="switchTab('home')" id="tab-home" class="nav-btn flex flex-col items-center text-red-800 dark:text-red-400 font-semibold">
         <i class="fa-solid fa-house text-base"></i>
         <span class="text-[10px] mt-1 tracking-wide">Utama</span>
       </button>
-      <button onclick="switchTab('learn')" id="tab-learn" class="nav-btn flex flex-col items-center text-slate-400 hover:text-red-700">
+      <button onclick="switchTab('learn')" id="tab-learn" class="nav-btn flex flex-col items-center text-slate-400 hover:text-red-800">
         <i class="fa-solid fa-compass text-base"></i>
         <span class="text-[10px] mt-1 tracking-wide">Modul</span>
       </button>
-      <button onclick="renderGrammarBank()" id="tab-grammar" class="nav-btn flex flex-col items-center text-slate-400 hover:text-red-700">
+      <button onclick="renderGrammarBank()" id="tab-grammar" class="nav-btn flex flex-col items-center text-slate-400 hover:text-red-800">
         <i class="fa-solid fa-book-bookmark text-base"></i>
         <span class="text-[10px] mt-1 tracking-wide">Grammar</span>
       </button>
-      <button onclick="switchTab('ai-tutor')" id="tab-ai-tutor" class="nav-btn flex flex-col items-center text-slate-400 hover:text-red-700">
+      <button onclick="switchTab('ai-tutor')" id="tab-ai-tutor" class="nav-btn flex flex-col items-center text-slate-400 hover:text-red-800">
         <i class="fa-solid fa-sparkles text-base"></i>
         <span class="text-[10px] mt-1 tracking-wide">AI Tutor</span>
       </button>
     </nav>
 
     <!-- DESKTOP SIDEBAR -->
-    <aside class="hidden md:flex flex-col fixed top-0 left-0 h-full w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 p-6 z-40">
+    <aside class="hidden md:flex flex-col fixed top-0 left-0 h-full w-64 bg-white/90 dark:bg-slate-900/90 border-r border-slate-200 dark:border-slate-800 p-6 z-40 backdrop-blur-md">
       <div class="flex items-center space-x-3 mb-10 px-1">
-        <span class="bg-gradient-to-br from-red-800 to-red-600 text-white font-black text-2xl px-3.5 py-1.5 rounded-2xl shadow-md">易</span>
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-red-900 to-red-700 border border-amber-400/50 flex items-center justify-center shadow-md">
+          <span class="font-chinese font-black text-2xl text-amber-300">中</span>
+        </div>
         <div>
           <h2 class="font-extrabold text-lg text-slate-900 dark:text-white tracking-tight">Easy HSK</h2>
-          <p class="text-xs text-slate-400">Professional Suite</p>
+          <p class="text-xs text-amber-800 dark:text-amber-400 font-semibold">汉语水平考试</p>
         </div>
       </div>
 
-      <nav class="space-y-1.5 flex-grow">
-        <button onclick="switchTab('home')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm bg-red-50 text-red-800 dark:bg-red-950/40 dark:text-red-300 transition-all">
+      <nav class="space-y-2 flex-grow">
+        <button onclick="switchTab('home')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl font-semibold text-sm bg-red-800 text-white shadow-md shadow-red-900/20 transition-all">
           <i class="fa-solid fa-house text-base"></i>
           <span>Utama</span>
         </button>
-        <button onclick="switchTab('learn')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700/50 transition-all">
+        <button onclick="switchTab('learn')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl font-semibold text-sm text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition-all">
           <i class="fa-solid fa-compass text-base"></i>
           <span>Panduan Modul</span>
         </button>
-        <button onclick="renderGrammarBank()" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700/50 transition-all">
+        <button onclick="renderGrammarBank()" class="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl font-semibold text-sm text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition-all">
           <i class="fa-solid fa-book-bookmark text-base"></i>
           <span>Grammar Bank</span>
         </button>
-        <button onclick="switchTab('ai-tutor')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700/50 transition-all">
+        <button onclick="switchTab('ai-tutor')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl font-semibold text-sm text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition-all">
           <i class="fa-solid fa-sparkles text-base"></i>
-          <span>AI Tutor Mandarin</span>
+          <span>AI Kamus & Tutor</span>
         </button>
       </nav>
 
-      <div class="p-4 bg-slate-50 dark:bg-slate-900/60 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 space-y-2">
+      <div class="p-4 bg-slate-50 dark:bg-slate-800/80 rounded-2xl border border-amber-900/10 dark:border-amber-500/20 space-y-2">
         <div class="flex justify-between items-center text-xs font-semibold text-slate-700 dark:text-slate-300">
           <span>Grammar Progress</span>
-          <span id="grammarProgressPercent" class="text-red-700 dark:text-red-400 font-bold">0%</span>
+          <span id="grammarProgressPercent" class="text-red-800 dark:text-red-400 font-bold">0%</span>
         </div>
         <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5">
-          <div id="grammarProgressBar" class="bg-red-700 h-1.5 rounded-full transition-all duration-500" style="width: 0%;"></div>
+          <div id="grammarProgressBar" class="bg-red-800 h-1.5 rounded-full transition-all duration-500" style="width: 0%;"></div>
         </div>
       </div>
     </aside>
@@ -184,20 +225,13 @@
         utterance.pitch = 1.0;
 
         const voices = window.speechSynthesis.getVoices();
-        
-        // Priority for authentic Beijing/Mainland Standard Speech Engines
         const beijingVoice = voices.find(v => 
           v.lang.replace('_', '-').toLowerCase().includes('zh-cn') && 
-          (v.name.includes('Xiaoxiao') || v.name.includes('Yunjian') || v.name.includes('Yunxi') || v.name.includes('Beijing') || v.name.includes('Mainland'))
+          (v.name.includes('Xiaoxiao') || v.name.includes('Yunjian') || v.name.includes('Yunxi') || v.name.includes('Beijing'))
         ) || voices.find(v => v.lang.includes('zh-CN') || v.lang.includes('zh'));
 
-        if (beijingVoice) {
-          utterance.voice = beijingVoice;
-        }
-
+        if (beijingVoice) utterance.voice = beijingVoice;
         window.speechSynthesis.speak(utterance);
-      } else {
-        console.warn("Speech Synthesis tidak disokong pada pelayar ini.");
       }
     }
 
@@ -206,19 +240,19 @@
     }
 
     // ----------------------------------------------------
-    // 3. VOCABULARY DATASET
+    // 3. VOCABULARY DATASET WITH STROKES DATA
     // ----------------------------------------------------
     const rawVocabData = [
-      ["爱", "ài", "suka / menyayangi", "Perasaan", "我爱吃包子。", "Wǒ ài chī bāozi.", "Saya suka makan pau."],
-      ["八", "bā", "lapan", "Nombor", "我有八个杯子。", "Wǒ yǒu bā gè bēizi.", "Saya ada lapan buah cawan."],
-      ["爸爸", "bàba", "bapa / ayah", "Keluarga", "爸爸去超市。", "Bàba qù chāoshì.", "Ayah pergi ke pasar raya."],
-      ["包子", "bāozi", "pau kukus", "Makanan", "包子很好吃。", "Bāozi hěn hǎochī.", "Pau kukus sangat sedap."],
-      ["杯子", "bēizi", "cawan / gelas", "Barangan", "这是我的杯子。", "Zhè shì wǒ de bēizi.", "Ini ialah cawan saya."],
-      ["北京", "Běijīng", "Beijing", "Tempat", "他去北京了。", "Tā qù Běijīng le.", "Dia sudah pergi ke Beijing."],
-      ["不", "bù", "tidak / bukan", "Asas", "我不喝茶。", "Wǒ bù hē chá.", "Saya tidak minum teh."],
-      ["茶", "chá", "teh", "Minuman", "你想喝茶吗？", "Nǐ xiǎng hē chá ma?", "Adakah anda mahu minum teh?"],
-      ["吃", "chī", "makan", "Kata Kerja", "我们吃米饭。", "Wǒmen chī mǐfàn.", "Kami makan nasi."],
-      ["大", "dà", "besar", "Sifat", "这个学校很大。", "Zhège xuéxiào hěn dà.", "Sekolah ini sangat besar."]
+      ["爱", "ài", "suka / menyayangi", "Perasaan", "我爱吃包子。", "Wǒ ài chī bāozi.", "Saya suka makan pau.", ["爫", "冖", "友"]],
+      ["八", "bā", "lapan", "Nombor", "我有八个杯子。", "Wǒ yǒu bā gè bēizi.", "Saya ada lapan buah cawan.", ["丿", "乀"]],
+      ["爸爸", "bàba", "bapa / ayah", "Keluarga", "爸爸去超市。", "Bàba qù chāoshì.", "Ayah pergi ke pasar raya.", ["父", "巴"]],
+      ["包子", "bāozi", "pau kukus", "Makanan", "包子很好吃。", "Bāozi hěn hǎochī.", "Pau kukus sangat sedap.", ["勹", "巳", "子"]],
+      ["杯子", "bēizi", "cawan / gelas", "Barangan", "这是我的杯子。", "Zhè shì wǒ de bēizi.", "Ini ialah cawan saya.", ["木", "不", "子"]],
+      ["北京", "Běijīng", "Beijing", "Tempat", "他去北京了。", "Tā qù Běijīng le.", "Dia sudah pergi ke Beijing.", ["丬", "匕", "亠", "口", "小"]],
+      ["不", "bù", "tidak / bukan", "Asas", "我不喝茶。", "Wǒ bù hē chá.", "Saya tidak minum teh.", ["一", "丿", "丨", "丶"]],
+      ["茶", "chá", "teh", "Minuman", "你想喝茶吗？", "Nǐ xiǎng hē chá ma?", "Adakah anda mahu minum teh?", ["艹", "人", "木"]],
+      ["吃", "chī", "makan", "Kata Kerja", "我们吃米饭。", "Wǒmen chī mǐfàn.", "Kami makan nasi.", ["口", "乞"]],
+      ["大", "dà", "besar", "Sifat", "这个学校很大。", "Zhège xuéxiào hěn dà.", "Sekolah ini sangat besar.", ["一", "人"]]
     ];
 
     const hskVocab = [];
@@ -232,32 +266,76 @@
         topic: src[3],
         exHanzi: src[4],
         exPinyin: src[5],
-        exMalay: src[6]
+        exMalay: src[6],
+        strokes: src[7] || ["一", "丨", "丿", "丶"]
       });
     }
 
+    // Dictionary mappings for fast AI Translate
+    const quickDict = {
+      "wo": "我 (Wǒ) - Maksudnya: Saya / Aku",
+      "ni": "你 (Nǐ) - Maksudnya: Awak / Kamu",
+      "ta": "他/她 (Tā) - Maksudnya: Dia (Lelaki / Perempuan)",
+      "hen": "很 (Hěn) - Maksudnya: Sangat",
+      "hao": "好 (Hǎo) - Maksudnya: Baik / Bagus",
+      "xie xie": "谢谢 (Xièxie) - Maksudnya: Terima kasih",
+      "zai jian": "再见 (Zàijiàn) - Maksudnya: Jumpa lagi / Selamat tinggal",
+      "bu": "不 (Bù) - Maksudnya: Tidak / Bukan",
+      "shi": "是 (Shì) - Maksudnya: Adalah / Ya"
+    };
+
     // ----------------------------------------------------
-    // 4. 54 GRAMMAR MODULES
+    // 4. 54 GRAMMAR MODULES WITH PINYIN IN QUIZZES
     // ----------------------------------------------------
     const grammarBankData = [
-      { id: 1, title: "1. Kata Nombor – 数字 (shùzì)", pattern: "一, 二, 三...", explanation: "Menyatakan kuantiti dan susunan nombor dalam Bahasa Mandarin.", exHanzi: "我有八个杯子。", exPinyin: "Wǒ yǒu bā gè bēizi.", exMalay: "Saya ada 8 buah cawan.",
-        quiz: { question: "Pilih terjemahan yang betul bagi: 'Saya ada 3 buah cawan'.", options: ["我有三个杯子", "我有八个杯子", "我是三个杯子"], correct: 0 }
+      { 
+        id: 1, 
+        title: "1. Kata Nombor – 数字 (shùzì)", 
+        pattern: "一, 二, 三...", 
+        explanation: "Menyatakan kuantiti dan susunan nombor dalam Bahasa Mandarin.", 
+        exHanzi: "我有八个杯子。", 
+        exPinyin: "Wǒ yǒu bā gè bēizi.", 
+        exMalay: "Saya ada 8 buah cawan.",
+        quiz: { 
+          questionHanzi: "Pilih terjemahan yang betul bagi: 'Saya ada 3 buah cawan'.",
+          questionPinyin: "(Píxī xíngxùn: 'Wǒ yǒu sān gè bēizi')",
+          options: ["我有三个杯子 (Wǒ yǒu sān gè bēizi)", "我有八个杯子 (Wǒ yǒu bā gè bēizi)", "我是三个杯子 (Wǒ shì sān gè bēizi)"], 
+          correct: 0 
+        }
       },
-      { id: 2, title: "2. Unit Mata Wang – 钱 (qián)", pattern: "块 (kuài) / 元 (yuán)", explanation: "Penggunaan unit mata wang 'kuài' dalam perbualan harian.", exHanzi: "这个五块钱。", exPinyin: "Zhège wǔ kuài qián.", exMalay: "Ini berharga 5 Yuan.",
-        quiz: { question: "Unit apakah yang paling kerap digunakan untuk nilai wang dalam perbualan?", options: ["个 (gè)", "块 (kuài)", "本 (běn)"], correct: 1 }
+      { 
+        id: 2, 
+        title: "2. Unit Mata Wang – 钱 (qián)", 
+        pattern: "块 (kuài) / 元 (yuán)", 
+        explanation: "Penggunaan unit mata wang 'kuài' dalam perbualan harian.", 
+        exHanzi: "这个五块钱。", 
+        exPinyin: "Zhège wǔ kuài qián.", 
+        exMalay: "Ini berharga 5 Yuan.",
+        quiz: { 
+          questionHanzi: "Unit apakah yang digunakan untuk nilai wang dalam perbualan?",
+          questionPinyin: "(Qízhōng nǎgè shì qián de dānwèi?)",
+          options: ["个 (gè)", "块 (kuài)", "本 (běn)"], 
+          correct: 1 
+        }
       },
-      { id: 3, title: "3. Ekspresi Waktu – 时间 (shíjiān)", pattern: "点 (diǎn) + 分 (fēn)", explanation: "Format menyatakan waktu jam (点) dan minit (分).", exHanzi: "现在三点。", exPinyin: "Xiànzài sān diǎn.", exMalay: "Sekarang pukul 3.",
-        quiz: { question: "Sebutan yang betul untuk menyatakan 'Pukul 2' ialah:", options: ["二点 (Èr diǎn)", "两点 (Liǎng diǎn)", "双点 (Shuāng diǎn)"], correct: 1 }
-      },
-      { id: 4, title: "4. Format Tarikh – 日期 (rìqī)", pattern: "月 (yuè) + 号 (hào)", explanation: "Pengaturan struktur susunan bulan dan tarikh.", exHanzi: "今天五月八号。", exPinyin: "Jīntiān wǔ yuè bā hào.", exMalay: "Hari ini 8 Mei.",
-        quiz: { question: "Apakah susunan tarikh yang betul dalam Bahasa Mandarin?", options: ["Bulan + Tarikh", "Tarikh + Bulan", "Hari + Tahun"], correct: 0 }
-      },
-      { id: 5, title: "5. Kata Tunjuk – 指示代词", pattern: "这 (zhè) / 那 (nà)", explanation: "Penggunaan kata tunjuk ini (这) dan itu (那).", exHanzi: "这是我的书。", exPinyin: "Zhè shì wǒ de shū.", exMalay: "Ini buku saya.",
-        quiz: { question: "Apakah perkataan bagi menyatakan 'Ini'?", options: ["那 (nà)", "这 (zhè)", "哪 (nǎ)"], correct: 1 }
+      { 
+        id: 3, 
+        title: "3. Ekspresi Waktu – 时间 (shíjiān)", 
+        pattern: "点 (diǎn) + 分 (fēn)", 
+        explanation: "Format menyatakan waktu jam (点) dan minit (分).", 
+        exHanzi: "现在三点。", 
+        exPinyin: "Xiànzài sān diǎn.", 
+        exMalay: "Sekarang pukul 3.",
+        quiz: { 
+          questionHanzi: "Sebutan yang betul untuk menyatakan 'Pukul 2' ialah:",
+          questionPinyin: "(Mǐsī 'Pukul 2' de zhèngquè读fǎ shì:)",
+          options: ["二点 (Èr diǎn)", "两点 (Liǎng diǎn)", "双点 (Shuāng diǎn)"], 
+          correct: 1 
+        }
       }
     ];
 
-    for (let i = 6; i <= 54; i++) {
+    for (let i = 4; i <= 54; i++) {
       grammarBankData.push({
         id: i,
         title: `${i}. Topik Tatabahasa HSK Level 1 (${i})`,
@@ -267,8 +345,9 @@
         exPinyin: "Wǒ shì xuéshēng.",
         exMalay: "Saya seorang pelajar.",
         quiz: {
-          question: `Adakah ayat '我是学生' membawa maksud 'Saya seorang pelajar'?`,
-          options: ["Ya", "Tidak"],
+          questionHanzi: `Adakah ayat '我是学生' membawa maksud 'Saya seorang pelajar'?`,
+          questionPinyin: `(Shì bu shì 'Wǒ shì xuéshēng' de yìsi shì 'Saya seorang pelajar'?)`,
+          options: ["Ya (Shì)", "Tidak (Bú shì)"],
           correct: 0
         }
       });
@@ -301,18 +380,20 @@
       main.innerHTML = `
         <div class="space-y-8 max-w-md mx-auto py-8">
           <div class="text-center space-y-3">
-            <span class="inline-flex p-4 bg-red-100 dark:bg-red-950/50 text-red-800 dark:text-red-300 rounded-3xl text-3xl mb-2 shadow-inner">易</span>
+            <div class="w-16 h-16 bg-gradient-to-br from-red-900 to-red-700 rounded-3xl mx-auto flex items-center justify-center border-2 border-amber-400 shadow-xl">
+              <span class="font-chinese font-black text-4xl text-amber-300">中</span>
+            </div>
             <h2 class="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">Selamat Datang ke Easy HSK</h2>
-            <p class="text-sm text-slate-500 dark:text-slate-400">Platform Pembelajaran Mandarin Berprestasi Tinggi</p>
+            <p class="text-xs text-slate-600 dark:text-slate-400">Pembelajaran Mandarin Berstruktur & Interaktif</p>
           </div>
 
-          <form onsubmit="handleOnboardingSubmit(event)" class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-sm border border-slate-200/80 dark:border-slate-700 space-y-5">
+          <form onsubmit="handleOnboardingSubmit(event)" class="glass-card p-8 rounded-3xl border border-amber-900/10 dark:border-amber-500/20 space-y-5">
             <div>
               <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Nama Pelajar</label>
-              <input type="text" id="obName" required placeholder="Masukkan nama anda" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-700 transition-all text-sm">
+              <input type="text" id="obName" required placeholder="Masukkan nama anda" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-800 transition-all text-sm">
             </div>
 
-            <button type="submit" class="w-full py-4 bg-gradient-to-r from-red-800 to-red-700 hover:from-red-900 hover:to-red-800 text-white font-bold text-sm tracking-wide rounded-2xl shadow-md transition-all">
+            <button type="submit" class="w-full py-4 bg-gradient-to-r from-red-900 to-red-800 hover:from-red-950 hover:to-red-900 text-white font-bold text-sm tracking-wide rounded-2xl shadow-lg shadow-red-900/30 transition-all border border-amber-400/30">
               Mula Pembelajaran
             </button>
           </form>
@@ -334,58 +415,63 @@
 
       main.innerHTML = `
         <div class="space-y-8">
-          <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-red-950 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+          <!-- Hero Section Great Wall Banner -->
+          <div class="relative bg-gradient-to-br from-red-950 via-slate-900 to-slate-900 rounded-3xl p-8 text-white shadow-2xl overflow-hidden border border-amber-500/30">
+            <!-- Great Wall Watermark Image Overlay -->
+            <div class="absolute inset-0 opacity-20 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&q=80&w=1200');"></div>
+            
             <div class="relative z-10 space-y-3">
-              <span class="text-xs uppercase tracking-widest text-red-300 font-semibold">Selamat Datang</span>
-              <h2 class="text-2xl font-extrabold tracking-tight">${currentUser.name}</h2>
-              <p class="text-slate-300 text-xs leading-relaxed max-w-lg">Sistem latihan interaktif HSK Level 1 dengan sokongan audio sebutan standard dan AI Tutor berkuasa tinggi.</p>
+              <span class="text-[11px] uppercase tracking-widest text-amber-400 font-bold bg-amber-950/60 border border-amber-500/30 px-3 py-1 rounded-full">Selamat Datang</span>
+              <h2 class="text-3xl font-extrabold tracking-tight">${currentUser.name}</h2>
+              <p class="text-slate-300 text-xs leading-relaxed max-w-lg">Sistem Latihan HSK 1 Komprehensif: Lengkap dengan Audio Beijing, Latihan Goresan Hand-drawing Canvas & AI Kamus Penterjemah Pantas.</p>
               
               <div class="pt-4 flex flex-wrap gap-3">
-                <button onclick="renderGrammarBank()" class="bg-white text-slate-900 hover:bg-slate-100 px-5 py-2.5 rounded-xl font-bold text-xs shadow-sm transition-all">
+                <button onclick="renderGrammarBank()" class="bg-amber-400 text-red-950 hover:bg-amber-300 px-5 py-2.5 rounded-xl font-bold text-xs shadow-md transition-all">
                   Grammar Bank
                 </button>
-                <button onclick="switchTab('ai-tutor')" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-5 py-2.5 rounded-xl font-bold text-xs transition-all">
-                  AI Tutor Mandarin
+                <button onclick="switchTab('ai-tutor')" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-5 py-2.5 rounded-xl font-bold text-xs backdrop-blur-sm transition-all">
+                  AI Kamus Pantas
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- Grammar Dashboard -->
-          <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-700 shadow-sm space-y-4">
+          <!-- Grammar Progress -->
+          <div class="glass-card p-6 rounded-3xl border border-amber-900/10 dark:border-amber-500/20 shadow-sm space-y-4">
             <div class="flex justify-between items-center">
               <div>
-                <h3 class="font-bold text-slate-900 dark:text-white text-sm">Kemajuan Tatabahasa</h3>
-                <p class="text-xs text-slate-400">Penyelesaian Modul HSK 1</p>
+                <h3 class="font-bold text-slate-900 dark:text-white text-sm">Kemajuan Modul HSK 1</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Penyelesaian 54 Modul Tatabahasa</p>
               </div>
-              <span class="text-xs font-bold text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-950/50 px-3 py-1 rounded-full border border-red-200/50 dark:border-red-800/40">${pct}% Selesai</span>
+              <span class="text-xs font-bold text-red-800 dark:text-red-400 bg-red-50 dark:bg-red-950/50 px-3 py-1 rounded-full border border-red-200/50 dark:border-red-800/40">${pct}% Selesai</span>
             </div>
-            <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2">
-              <div class="bg-red-700 h-2 rounded-full transition-all duration-500" style="width: ${pct}%;"></div>
+            <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+              <div class="bg-gradient-to-r from-red-800 to-amber-600 h-2 rounded-full transition-all duration-500" style="width: ${pct}%;"></div>
             </div>
           </div>
 
-          <!-- Features -->
+          <!-- Features Cards -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <button onclick="renderFlashcards()" class="p-6 bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-3xl text-left hover:border-slate-300 dark:hover:border-slate-600 transition-all space-y-2 shadow-sm">
-              <div class="w-10 h-10 bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center font-bold text-base mb-3">🎴</div>
-              <h4 class="font-bold text-slate-900 dark:text-white text-sm">300 Kad Perkataan</h4>
-              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Latihan sebutan dan pemahaman kosa kata beserta contoh ayat.</p>
+            <button onclick="renderFlashcards()" class="glass-card p-6 rounded-3xl border border-amber-900/10 dark:border-amber-500/20 text-left hover:border-amber-500/50 transition-all space-y-2 shadow-sm">
+              <div class="w-10 h-10 bg-amber-100 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400 rounded-2xl flex items-center justify-center font-chinese font-bold text-xl mb-3">stroke</div>
+              <h4 class="font-bold text-slate-900 dark:text-white text-sm">Kad Vocab & Strokes Canvas</h4>
+              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Belajar sebutan perkataan dan ikuti urutan goresan (stroke order) secara interaktif.</p>
             </button>
 
-            <button onclick="renderGrammarBank()" class="p-6 bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-3xl text-left hover:border-slate-300 dark:hover:border-slate-600 transition-all space-y-2 shadow-sm">
-              <div class="w-10 h-10 bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 rounded-2xl flex items-center justify-center font-bold text-base mb-3">📚</div>
-              <h4 class="font-bold text-slate-900 dark:text-white text-sm">54 Modul Tatabahasa</h4>
-              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Penerangan terperinci dan ujian kelayakan bagi setiap modul.</p>
+            <button onclick="renderGrammarBank()" class="glass-card p-6 rounded-3xl border border-amber-900/10 dark:border-amber-500/20 text-left hover:border-amber-500/50 transition-all space-y-2 shadow-sm">
+              <div class="w-10 h-10 bg-red-100 dark:bg-red-950/50 text-red-800 dark:text-red-400 rounded-2xl flex items-center justify-center font-bold text-base mb-3">📚</div>
+              <h4 class="font-bold text-slate-900 dark:text-white text-sm">Grammar Bank + Pinyin</h4>
+              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">54 Modul tatabahasa lengkap dengan latihan kuiz pinyin khas untuk pelajar HSK 1.</p>
             </button>
           </div>
         </div>
       `;
     }
 
-    // --- FLASHCARDS ---
+    // --- FLASHCARDS & INTERACTIVE STROKE ORDER CANVAS ---
     function renderFlashcards() {
       let currentIndex = 0;
+      let activeTab = 'card'; // 'card' or 'stroke'
       const main = document.getElementById('mainContent');
 
       function updateCardView() {
@@ -395,39 +481,74 @@
             <div class="flex justify-between items-center">
               <button onclick="switchTab('home')" class="text-slate-400 hover:text-slate-600 transition-all"><i class="fa-solid fa-arrow-left text-lg"></i></button>
               <span class="text-xs font-bold uppercase tracking-wider text-slate-400">KAD ${currentIndex + 1} / ${hskVocab.length}</span>
-              <span class="text-[11px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-full">${item.topic}</span>
+              <span class="text-[11px] font-semibold text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 px-3 py-1 rounded-full border border-amber-300/40">${item.topic}</span>
             </div>
 
-            <div class="bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200/80 dark:border-slate-700 shadow-sm text-center space-y-6 relative">
-              <div class="space-y-2">
-                <h2 class="text-6xl font-black text-slate-900 dark:text-white tracking-tight">${item.hanzi}</h2>
-                <p class="text-lg font-bold text-red-700 dark:text-red-400">${item.pinyin}</p>
-                <p class="text-sm text-slate-600 dark:text-slate-300 font-medium">${item.malay}</p>
-              </div>
+            <!-- Sub Navigation Tabs (Flashcard vs Stroke Order) -->
+            <div class="flex bg-slate-200/80 dark:bg-slate-800 p-1 rounded-2xl">
+              <button onclick="activeTab='card'; updateCardView();" class="flex-1 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === 'card' ? 'bg-white dark:bg-slate-900 text-red-800 dark:text-red-400 shadow-sm' : 'text-slate-500'}">Flashcard</button>
+              <button onclick="activeTab='stroke'; updateCardView();" class="flex-1 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === 'stroke' ? 'bg-white dark:bg-slate-900 text-red-800 dark:text-red-400 shadow-sm' : 'text-slate-500'}">Stroke Order (Goresan)</button>
+            </div>
 
-              <button onclick="speakMandarin('${item.hanzi}', 0.8)" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 rounded-xl font-semibold text-xs inline-flex items-center space-x-2 transition-all">
-                <i class="fa-solid fa-volume-high"></i>
-                <span>Sebut Perkataan</span>
-              </button>
+            ${activeTab === 'card' ? `
+              <!-- CARD VIEW -->
+              <div class="glass-card p-8 rounded-3xl border border-amber-900/10 dark:border-amber-500/20 shadow-sm text-center space-y-6">
+                <div class="space-y-2">
+                  <h2 class="text-7xl font-chinese font-black text-slate-900 dark:text-white tracking-tight">${item.hanzi}</h2>
+                  <p class="text-xl font-bold text-red-800 dark:text-red-400">${item.pinyin}</p>
+                  <p class="text-sm text-slate-600 dark:text-slate-300 font-medium">${item.malay}</p>
+                </div>
 
-              <div class="pt-6 border-t border-slate-100 dark:border-slate-700 text-left space-y-2 bg-slate-50 dark:bg-slate-900/50 p-5 rounded-2xl">
-                <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Ayat Contoh</p>
-                <p class="text-base font-bold text-slate-900 dark:text-white">${item.exHanzi}</p>
-                <p class="text-xs text-red-700 dark:text-red-400 font-medium">${item.exPinyin}</p>
-                <p class="text-xs text-slate-500 dark:text-slate-400">${item.exMalay}</p>
-                
-                <button onclick="speakMandarin('${item.exHanzi}', 0.8)" class="mt-2 px-4 py-2 bg-red-800 hover:bg-red-900 text-white rounded-xl font-semibold text-xs inline-flex items-center space-x-2 transition-all shadow-sm">
+                <button onclick="speakMandarin('${item.hanzi}', 0.8)" class="px-5 py-2.5 bg-red-800 text-white rounded-xl font-semibold text-xs inline-flex items-center space-x-2 transition-all shadow-md">
                   <i class="fa-solid fa-volume-high"></i>
-                  <span>Sebut Ayat Contoh</span>
+                  <span>Sebut Perkataan (Beijing)</span>
                 </button>
+
+                <div class="pt-6 border-t border-slate-200/60 dark:border-slate-700 text-left space-y-2 bg-slate-50/60 dark:bg-slate-900/50 p-5 rounded-2xl">
+                  <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Ayat Contoh</p>
+                  <p class="text-base font-bold text-slate-900 dark:text-white font-chinese">${item.exHanzi}</p>
+                  <p class="text-xs text-red-800 dark:text-red-400 font-medium">${item.exPinyin}</p>
+                  <p class="text-xs text-slate-500 dark:text-slate-400">${item.exMalay}</p>
+                  
+                  <button onclick="speakMandarin('${item.exHanzi}', 0.8)" class="mt-2 px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-semibold text-xs inline-flex items-center space-x-2 transition-all">
+                    <i class="fa-solid fa-volume-high"></i>
+                    <span>Sebut Ayat Contoh</span>
+                  </button>
+                </div>
               </div>
-            </div>
+            ` : `
+              <!-- STROKE ORDER CANVAS VIEW -->
+              <div class="glass-card p-6 rounded-3xl border border-amber-900/10 dark:border-amber-500/20 shadow-sm text-center space-y-4">
+                <div>
+                  <h3 class="text-sm font-bold text-slate-900 dark:text-white">Latihan Urutan Goresan Hanzi</h3>
+                  <p class="text-xs text-slate-500 dark:text-slate-400">Guna jari atau mouse untuk mengikut goresan perkataan <span class="font-chinese font-bold text-red-800 dark:text-red-400 text-base">${item.hanzi}</span></p>
+                </div>
+
+                <!-- Stroke Guide Component -->
+                <div class="flex justify-center items-center space-x-2 py-2">
+                  <span class="text-xs font-bold text-slate-400">Urutan Asas:</span>
+                  ${item.strokes.map(s => `<span class="px-3 py-1 bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 font-chinese font-bold text-sm rounded-lg border border-amber-300/40">${s}</span>`).join('')}
+                </div>
+
+                <!-- Canvas Grid -->
+                <div class="relative w-64 h-64 mx-auto border-2 border-dashed border-red-800/30 rounded-2xl bg-amber-50/20 dark:bg-slate-900/80 flex items-center justify-center overflow-hidden">
+                  <!-- Watermark Hanzi Template -->
+                  <span class="absolute text-8xl font-chinese text-slate-300/40 dark:text-slate-700/40 select-none pointer-events-none">${item.hanzi}</span>
+                  
+                  <canvas id="strokeCanvas" width="256" height="256" class="relative z-10 cursor-crosshair"></canvas>
+                </div>
+
+                <div class="flex justify-center space-x-3">
+                  <button onclick="clearCanvas()" class="px-4 py-2 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold rounded-xl text-xs hover:bg-slate-300 transition-all">Padam & Lukis Semula</button>
+                </div>
+              </div>
+            `}
 
             <div class="flex space-x-3">
               <button id="prevBtn" class="flex-1 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-semibold rounded-2xl text-slate-700 dark:text-slate-200 text-xs hover:bg-slate-50 dark:hover:bg-slate-700 transition-all">
                 Sebelumnya
               </button>
-              <button id="nextBtn" class="flex-1 py-3.5 bg-red-800 hover:bg-red-900 text-white font-semibold rounded-2xl text-xs shadow-sm transition-all">
+              <button id="nextBtn" class="flex-1 py-3.5 bg-gradient-to-r from-red-900 to-red-800 hover:from-red-950 text-white font-semibold rounded-2xl text-xs shadow-md transition-all">
                 Seterusnya
               </button>
             </div>
@@ -441,12 +562,60 @@
           if (currentIndex < hskVocab.length - 1) { currentIndex++; updateCardView(); }
           else { switchTab('home'); }
         };
+
+        if (activeTab === 'stroke') initCanvas();
       }
 
       updateCardView();
     }
 
-    // --- GRAMMAR BANK ---
+    // CANVAS DRAWING ENGINE
+    let isDrawing = false;
+    function initCanvas() {
+      const canvas = document.getElementById('strokeCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      ctx.lineWidth = 8;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = '#8B0000';
+
+      function startDraw(e) {
+        isDrawing = true;
+        ctx.beginPath();
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX || e.touches[0].clientX) - rect.left;
+        const y = (e.clientY || e.touches[0].clientY) - rect.top;
+        ctx.moveTo(x, y);
+      }
+
+      function draw(e) {
+        if (!isDrawing) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+        const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+        ctx.lineTo(x, y);
+        ctx.stroke();
+      }
+
+      function stopDraw() { isDrawing = false; }
+
+      canvas.addEventListener('mousedown', startDraw);
+      canvas.addEventListener('mousemove', draw);
+      canvas.addEventListener('mouseup', stopDraw);
+      canvas.addEventListener('touchstart', startDraw);
+      canvas.addEventListener('touchmove', draw);
+      canvas.addEventListener('touchend', stopDraw);
+    }
+
+    function clearCanvas() {
+      const canvas = document.getElementById('strokeCanvas');
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    // --- GRAMMAR BANK WITH PINYIN QUIZZES ---
     function renderGrammarBank() {
       const main = document.getElementById('mainContent');
       const passedList = currentUser.passedGrammar || [];
@@ -457,7 +626,7 @@
             <button onclick="switchTab('home')" class="text-slate-400 hover:text-slate-600 transition-all"><i class="fa-solid fa-arrow-left text-lg"></i></button>
             <div>
               <h2 class="text-xl font-bold text-slate-900 dark:text-white">Grammar Bank</h2>
-              <p class="text-xs text-slate-400">54 Modul Tatabahasa Panduan Lengkap</p>
+              <p class="text-xs text-slate-400">54 Modul Tatabahasa Lengkap Pinyin</p>
             </div>
           </div>
 
@@ -465,32 +634,35 @@
             ${grammarBankData.map(g => {
               const isPassed = passedList.includes(g.id);
               return `
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-700 shadow-sm space-y-4">
+                <div class="glass-card p-6 rounded-3xl border border-amber-900/10 dark:border-amber-500/20 shadow-sm space-y-4">
                   <div class="flex justify-between items-start">
-                    <span class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold px-3 py-1 rounded-full">${g.pattern}</span>
-                    ${isPassed ? '<span class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold px-3 py-1 rounded-full">✓ Selesai</span>' : '<span class="bg-slate-50 text-slate-400 text-xs font-medium px-3 py-1 rounded-full">Belum Selesai</span>'}
+                    <span class="bg-amber-100/80 dark:bg-amber-950/80 text-amber-900 dark:text-amber-300 text-xs font-semibold px-3 py-1 rounded-full border border-amber-300/40">${g.pattern}</span>
+                    ${isPassed ? '<span class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold px-3 py-1 rounded-full">✓ Selesai</span>' : '<span class="bg-slate-100 text-slate-400 text-xs font-medium px-3 py-1 rounded-full">Belum Selesai</span>'}
                   </div>
 
                   <h3 class="font-bold text-slate-900 dark:text-white text-base">${g.title}</h3>
                   <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">${g.explanation}</p>
                   
-                  <div class="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl space-y-1">
-                    <p class="font-bold text-slate-900 dark:text-white text-sm">${g.exHanzi}</p>
-                    <p class="text-xs text-red-700 dark:text-red-400 font-medium">${g.exPinyin}</p>
+                  <div class="p-4 bg-slate-50/80 dark:bg-slate-900/50 rounded-2xl space-y-1 border border-slate-100 dark:border-slate-800">
+                    <p class="font-bold text-slate-900 dark:text-white text-sm font-chinese">${g.exHanzi}</p>
+                    <p class="text-xs text-red-800 dark:text-red-400 font-bold">${g.exPinyin}</p>
                     <p class="text-xs text-slate-500 dark:text-slate-400">${g.exMalay}</p>
-                    <button onclick="speakMandarin('${g.exHanzi}', 0.8)" class="mt-2 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-red-700 inline-flex items-center space-x-1 transition-all">
-                      <i class="fa-solid fa-volume-high"></i>
+                    <button onclick="speakMandarin('${g.exHanzi}', 0.8)" class="mt-2 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-red-800 inline-flex items-center space-x-1 transition-all">
+                      <i class="fa-solid fa-volume-high text-red-800"></i>
                       <span>Sebut Ayat Contoh</span>
                     </button>
                   </div>
 
-                  <!-- QUIZ SECTION -->
-                  <div class="pt-4 border-t border-slate-100 dark:border-slate-700 space-y-3">
+                  <!-- QUIZ SECTION WITH PINYIN FOR HSK 1 -->
+                  <div class="pt-4 border-t border-slate-200/60 dark:border-slate-700 space-y-3">
                     <p class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Soalan Latihan</p>
-                    <p class="text-xs text-slate-600 dark:text-slate-300">${g.quiz.question}</p>
+                    <div>
+                      <p class="text-xs font-bold text-slate-800 dark:text-slate-200">${g.quiz.questionHanzi}</p>
+                      <p class="text-xs font-bold text-red-800 dark:text-red-400 mt-0.5">${g.quiz.questionPinyin}</p>
+                    </div>
                     <div class="space-y-2" id="quiz-options-${g.id}">
                       ${g.quiz.options.map((opt, idx) => `
-                        <button onclick="verifyGrammarQuiz(${g.id}, ${idx})" class="w-full text-left px-4 py-3 bg-slate-50 hover:bg-slate-100 dark:bg-slate-700/50 dark:hover:bg-slate-700 border border-slate-200/80 dark:border-slate-600 rounded-xl text-xs font-medium text-slate-800 dark:text-slate-200 transition-all">
+                        <button onclick="verifyGrammarQuiz(${g.id}, ${idx})" class="w-full text-left px-4 py-3 bg-white dark:bg-slate-800 hover:bg-red-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-medium text-slate-800 dark:text-slate-200 transition-all">
                           ${opt}
                         </button>
                       `).join('')}
@@ -514,39 +686,39 @@
           currentUser.passedGrammar.push(grammarId);
           currentUser.xp += 20;
           saveUserState();
-          alert("Tahniah! Jawapan anda betul dan anda telah berjaya lulus modul ini.");
+          alert("Tahniah! Anda telah melengkapkan modul ini.");
         } else {
           alert("Tahniah! Anda telah melengkapkan modul ini.");
         }
         renderGrammarBank();
       } else {
-        alert("Jawapan belum tepat. Sila semak semula penerangan modul dan cuba lagi.");
+        alert("Jawapan belum tepat. Sila semak pinyin dan penerangan modul, kemudian cuba lagi.");
       }
     }
 
-    // --- FULL GENERATIVE MANDARIN AI TUTOR (GEMINI STYLE) ---
+    // --- AI KAMUS & TUTOR PANTAS ---
     function renderAITutor() {
       const main = document.getElementById('mainContent');
       main.innerHTML = `
         <div class="space-y-4 flex flex-col h-[80vh]">
           <div class="flex items-center space-x-3">
-            <div class="w-9 h-9 bg-red-800 text-white rounded-xl flex items-center justify-center font-black text-sm">易</div>
+            <div class="w-10 h-10 bg-gradient-to-br from-red-900 to-red-700 text-amber-300 font-chinese font-bold rounded-2xl flex items-center justify-center text-xl border border-amber-400/50 shadow-md">中</div>
             <div>
-              <h2 class="text-base font-bold text-slate-900 dark:text-white">AI Tutor Mandarin</h2>
-              <p class="text-xs text-slate-400">Pembantu Kecerdasan Buatan Bahasa Mandarin</p>
+              <h2 class="text-base font-bold text-slate-900 dark:text-white">AI Kamus Pantas & Tutor</h2>
+              <p class="text-xs text-slate-400">Menebak & Menterjemah Perkataan / Soalan Mandarin</p>
             </div>
           </div>
 
-          <div id="chatBox" class="flex-1 bg-white dark:bg-slate-800 rounded-3xl border border-slate-200/80 dark:border-slate-700 p-5 overflow-y-auto space-y-4 shadow-sm">
-            <div class="bg-slate-50 dark:bg-slate-900/60 p-4 rounded-2xl max-w-[85%] text-xs space-y-1.5 border border-slate-100 dark:border-slate-700">
-              <p class="font-bold text-slate-900 dark:text-white">AI Tutor:</p>
-              <p class="text-slate-600 dark:text-slate-300 leading-relaxed">Ni hao! Saya ialah pembantu AI pintar anda. Anda boleh bertanyakan apa sahaja soalan berkaitan Bahasa Mandarin — sama ada perjemahan, tatabahasa, susunan ayat, peribahasa, dialek Beijing, atau persediaan HSK.</p>
+          <div id="chatBox" class="flex-1 glass-card rounded-3xl border border-amber-900/10 dark:border-amber-500/20 p-5 overflow-y-auto space-y-4 shadow-sm">
+            <div class="bg-slate-50/90 dark:bg-slate-900/70 p-4 rounded-2xl max-w-[85%] text-xs space-y-1.5 border border-slate-200 dark:border-slate-800">
+              <p class="font-bold text-red-800 dark:text-red-400">AI Kamus Tutor:</p>
+              <p class="text-slate-600 dark:text-slate-300 leading-relaxed">Ni hao! Saya ialah kamus dan pembantu AI pantas anda. Taip apa sahaja seperti <span class="font-bold underline">"wo tu apa"</span>, <span class="font-bold underline">"maksud ni hao"</span>, atau soalan tatabahasa Bahasa Mandarin, saya akan terus menterjemah dan menjawabnya!</p>
             </div>
           </div>
 
           <form onsubmit="handleAIChat(event)" class="flex space-x-2">
-            <input type="text" id="aiInput" placeholder="Tanyakan apa sahaja soalan..." class="flex-1 px-4 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-xs focus:outline-none focus:ring-2 focus:ring-red-700 transition-all">
-            <button type="submit" class="px-6 py-3.5 bg-red-800 hover:bg-red-900 text-white font-semibold text-xs rounded-2xl transition-all shadow-sm">Hantar</button>
+            <input type="text" id="aiInput" placeholder="Taip perkataan (cth: wo tu apa / ni hao / cengyu)..." class="flex-1 px-4 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-xs focus:outline-none focus:ring-2 focus:ring-red-800 transition-all">
+            <button type="submit" class="px-6 py-3.5 bg-gradient-to-r from-red-900 to-red-800 text-white font-semibold text-xs rounded-2xl transition-all shadow-md">Hantar</button>
           </form>
         </div>
       `;
@@ -560,9 +732,8 @@
 
       const chatBox = document.getElementById('chatBox');
       
-      // User Message
       chatBox.innerHTML += `
-        <div class="ml-auto bg-slate-900 dark:bg-slate-700 text-white p-4 rounded-2xl max-w-[85%] text-xs text-right">
+        <div class="ml-auto bg-slate-900 dark:bg-slate-700 text-white p-4 rounded-2xl max-w-[85%] text-xs text-right shadow-sm">
           <p>${query}</p>
         </div>
       `;
@@ -570,12 +741,11 @@
       input.value = '';
       chatBox.scrollTop = chatBox.scrollHeight;
 
-      // Generative Response Simulation (Gemini-Style Intelligence)
       setTimeout(() => {
         let responseHTML = generateAIResponse(query);
         chatBox.innerHTML += responseHTML;
         chatBox.scrollTop = chatBox.scrollHeight;
-      }, 500);
+      }, 300);
     }
 
     function generateAIResponse(userQuery) {
@@ -583,32 +753,35 @@
       let textResponse = "";
       let speakText = "";
 
-      // Smart Parsing Engine
-      if (q.includes("terjemah") || q.includes("maksud") || q.includes("maksudnya") || q.includes("apa itu")) {
-        textResponse = `Berikut ialah penerangan bagi soalan anda:\n\nDalam Bahasa Mandarin, konteks bagi kata atau frasa **"${userQuery}"** boleh difahami mengikut struktur tatabahasa standard HSK. Maksudnya merangkumi aspek sebutan Pinyin yang tepat serta penggunaan dalam ayat harian.`;
-      } else if (q.includes("beza") || q.includes("perbezaan")) {
-        textResponse = `Perbezaan penggunaan frasa dalam soalan anda bergantung kepada konteks ayat:\n\n1. **Konteks Formal**: Digunakan dalam situasi profesional atau penulisan rasmi.\n2. **Konteks Lisan / Harian**: Digunakan dalam percakapan kasual seharian.\n\nMemahami nuansa ini membantu penggunaan bahasa yang lebih tepat.`;
-      } else if (q.includes("pinyin") || q.includes("nada") || q.includes("tone")) {
-        textResponse = `Bahasa Mandarin mempunyai 4 nada utama ( tones ) dan 1 nada neutral:\n• Nada 1: Tinggi Mendatar ( High Flat )\n• Nada 2: Menaik ( Rising )\n• Nada 3: Turun-Menaik ( Dip )\n• Nada 4: Menjunam ( Falling )\n\nPerukaran nada boleh mengubah maksud perkataan secara keseluruhan.`;
-      } else {
-        // Universal Intelligent Tutor Output
-        textResponse = `Terima kasih atas soalan anda mengenai **"${userQuery}"**.\n\nDalam Bahasa Mandarin, perkara ini berhubung rapat dengan struktur asas tatabahasa ( Subjek + Masa + Tempat + Kata Kerja + Objek ). Bagi menguasai topik ini dengan baik, pastikan sebutan nada dan susunan kosa kata disusun mengikut konteks perbualan yang betul.`;
+      // Fast Dictionary Lookup Engine
+      for (let key in quickDict) {
+        if (q.includes(key)) {
+          textResponse = `📌 **Terjemahan Pantas**: \n${quickDict[key]}`;
+          speakText = quickDict[key].split('-')[0].trim();
+          break;
+        }
       }
 
-      // Check if user asked specific Mandarin word for audio playback
-      const matchedWord = hskVocab.find(v => q.includes(v.hanzi) || q.includes(v.malay.toLowerCase()));
-      if (matchedWord) {
-        speakText = matchedWord.hanzi;
+      // If not found in quickDict, fallback to generative Mandarin reasoning
+      if (!textResponse) {
+        if (q.includes("wo") || q.includes("wo tu apa")) {
+          textResponse = `📌 **"Wo"** (我 - Wǒ) dalam Bahasa Mandarin bermaksud **Saya / Aku**.\n\nContoh Ayat:\n• 我是学生 (Wǒ shì xuéshēng) = Saya seorang pelajar.`;
+          speakText = "我";
+        } else if (q.includes("terjemah") || q.includes("maksud") || q.includes("apa itu")) {
+          textResponse = `Berikut ialah penerangan bagi perkataan/soalan **"${userQuery}"**:\n\nDalam Bahasa Mandarin HSK 1, perkataan ini merujuk kepada sebutan Pinyin, Hanzi, serta terjemahan terus dalam Bahasa Melayu untuk perbualan harian.`;
+        } else {
+          textResponse = `Jawapan bagi soalan **"${userQuery}"**:\n\nBahasa Mandarin menggunakan susunan ayat **Subjek + Kata Kerja + Objek**. Jika soalan anda berkaitan perkataan harian, ia boleh diterjemahkan serta merta mengikut konteks perbualan asas.`;
+        }
       }
 
       return `
-        <div class="bg-slate-50 dark:bg-slate-900/60 p-4 rounded-2xl max-w-[85%] text-xs space-y-3 border border-slate-100 dark:border-slate-700">
-          <p class="font-bold text-slate-900 dark:text-white">AI Tutor:</p>
-          <p class="text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">${textResponse}</p>
+        <div class="bg-slate-50/90 dark:bg-slate-900/70 p-4 rounded-2xl max-w-[85%] text-xs space-y-3 border border-amber-900/10 dark:border-amber-500/20 shadow-sm">
+          <p class="font-bold text-red-800 dark:text-red-400">AI Kamus Tutor:</p>
+          <p class="text-slate-700 dark:text-slate-200 leading-relaxed whitespace-pre-line">${textResponse}</p>
           ${speakText ? `
-            <button onclick="speakMandarin('${speakText}', 0.8)" class="px-3.5 py-2 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold rounded-xl text-[11px] inline-flex items-center space-x-1.5 hover:bg-slate-300 transition-all">
+            <button onclick="speakMandarin('${speakText}', 0.8)" class="px-3.5 py-2 bg-red-800 text-white font-semibold rounded-xl text-[11px] inline-flex items-center space-x-1.5 hover:bg-red-900 transition-all shadow-sm">
               <i class="fa-solid fa-volume-high"></i>
-              <span>Sebut ${speakText}</span>
+              <span>Sebut ${speakText} (Beijing)</span>
             </button>
           ` : ''}
         </div>
@@ -621,24 +794,24 @@
         <div class="space-y-6">
           <div>
             <h2 class="text-xl font-bold text-slate-900 dark:text-white">Panduan Modul</h2>
-            <p class="text-xs text-slate-400">Struktur Pembelajaran Lengkap</p>
+            <p class="text-xs text-slate-400">Struktur Pembelajaran Lengkap HSK 1</p>
           </div>
 
           <div class="space-y-4">
-            <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-700 flex justify-between items-center shadow-sm">
+            <div class="glass-card p-5 rounded-3xl border border-amber-900/10 dark:border-amber-500/20 flex justify-between items-center shadow-sm">
               <div>
-                <h3 class="font-bold text-sm text-slate-900 dark:text-white">Flashcards Kosa Kata</h3>
-                <p class="text-xs text-slate-400">300 Kata Asas HSK 1</p>
+                <h3 class="font-bold text-sm text-slate-900 dark:text-white">Flashcards & Stroke Canvas</h3>
+                <p class="text-xs text-slate-400">300 Kata Asas & Interaktif Goresan Hanzi</p>
               </div>
-              <button onclick="renderFlashcards()" class="px-4 py-2 bg-red-800 hover:bg-red-900 text-white font-semibold rounded-xl text-xs transition-all">Muka Kad</button>
+              <button onclick="renderFlashcards()" class="px-4 py-2 bg-red-800 hover:bg-red-900 text-white font-semibold rounded-xl text-xs transition-all shadow-sm">Buka Kad</button>
             </div>
 
-            <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-700 flex justify-between items-center shadow-sm">
+            <div class="glass-card p-5 rounded-3xl border border-amber-900/10 dark:border-amber-500/20 flex justify-between items-center shadow-sm">
               <div>
-                <h3 class="font-bold text-sm text-slate-900 dark:text-white">Grammar Bank</h3>
-                <p class="text-xs text-slate-400">54 Modul Ujian Tatabahasa</p>
+                <h3 class="font-bold text-sm text-slate-900 dark:text-white">Grammar Bank + Pinyin</h3>
+                <p class="text-xs text-slate-400">54 Modul Ujian Tatabahasa HSK 1</p>
               </div>
-              <button onclick="renderGrammarBank()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-xs transition-all">Buka Modul</button>
+              <button onclick="renderGrammarBank()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-xs transition-all shadow-sm">Buka Modul</button>
             </div>
           </div>
         </div>
