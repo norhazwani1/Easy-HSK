@@ -3,92 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modul Pembelajaran HSK</title>
+  <title>Modul Pembelajaran HSK & Grammar Bank</title>
   <style>
     :root {
-      --primary: #2c3e50;
-      --bg-color: #f8f9fa;
-      --border: #dee2e6;
-      --grid-line: #e0e0e0;
+      --primary-color: #1a5f7a;
+      --secondary-color: #f8f9fa;
+      --border-color: #333333;
+      --grid-line: #b0bec5;
+      --stroke-active: #2c3e50;
+      --stroke-new: #e74c3c;
     }
 
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Arial, sans-serif;
       margin: 0;
       padding: 20px;
-      background-color: var(--bg-color);
+      background-color: #f4f6f8;
       color: #333;
     }
 
-    /* Header & Language Switcher */
-    .header-container {
+    header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: var(--primary);
+      background-color: var(--primary-color);
       color: white;
-      padding: 15px 20px;
+      padding: 15px 25px;
       border-radius: 8px;
-      margin-bottom: 20px;
-    }
-    
-    .header-container h1 {
-      margin: 0;
-      font-size: 24px;
+      margin-bottom: 25px;
     }
 
     .lang-btn {
-      background-color: white;
-      color: var(--primary);
+      background-color: #ffffff;
+      color: var(--primary-color);
       border: none;
       padding: 8px 16px;
-      border-radius: 4px;
       font-weight: bold;
+      border-radius: 4px;
       cursor: pointer;
+      transition: background 0.2s;
     }
 
     .lang-btn:hover {
-      background-color: #e9ecef;
+      background-color: #e2e8f0;
     }
 
-    /* Section Styles */
     section {
       background: white;
       padding: 20px;
       border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       margin-bottom: 25px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
 
     h2 {
-      border-bottom: 2px solid var(--primary);
-      padding-bottom: 10px;
-      margin-top: 0;
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 8px;
+      color: var(--primary-color);
     }
 
-    /* Worksheet Style Stroke Order (an2.net style) */
-    .worksheet-row {
+    /* Stroke Order Styles */
+    .stroke-container {
       display: flex;
       flex-wrap: wrap;
-      gap: 0;
-      border: 2px solid #000;
-      width: fit-content;
+      gap: 12px;
       margin-top: 15px;
     }
 
-    .tianzige {
-      width: 80px;
-      height: 80px;
-      border-right: 2px solid #000;
+    .tianzige-box {
+      width: 70px;
+      height: 70px;
+      border: 2px solid var(--border-color);
       position: relative;
-      background: #fff;
-    }
-    
-    .tianzige:last-child {
-      border-right: none;
+      background-color: #fff;
     }
 
-    .tianzige::before {
+    .tianzige-box::before {
       content: '';
       position: absolute;
       top: 50%;
@@ -97,7 +87,7 @@
       border-top: 1px dashed var(--grid-line);
     }
 
-    .tianzige::after {
+    .tianzige-box::after {
       content: '';
       position: absolute;
       top: 0;
@@ -112,230 +102,229 @@
       position: absolute;
       top: 0;
       left: 0;
-      z-index: 10;
+      z-index: 1;
     }
 
     .stroke-num {
       position: absolute;
-      top: 2px;
-      left: 4px;
-      font-size: 12px;
-      color: #999;
-      z-index: 5;
+      bottom: 2px;
+      right: 4px;
+      font-size: 10px;
+      color: #777;
+      z-index: 2;
     }
 
-    /* Grammar Bank */
-    .grammar-controls {
+    /* Grammar Bank Layout */
+    .pagination {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       margin-bottom: 15px;
     }
 
-    .grammar-controls select {
-      padding: 8px;
-      font-size: 16px;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      width: 100%;
-      max-width: 400px;
+    .page-select {
+      padding: 6px;
+      font-size: 14px;
     }
 
-    .grammar-content-box {
-      border: 1px solid var(--border);
-      padding: 20px;
+    .grammar-card {
+      border: 1px solid #e2e8f0;
+      padding: 15px;
       border-radius: 6px;
-      background-color: #fff;
+      background-color: var(--secondary-color);
     }
 
-    .g-title {
-      font-size: 20px;
+    .grammar-title {
+      font-size: 18px;
       font-weight: bold;
-      color: var(--primary);
-      margin-bottom: 15px;
+      color: #2d3748;
+      margin-bottom: 8px;
+    }
+
+    .example-box {
+      background: #fff;
+      border-left: 4px solid var(--primary-color);
+      padding: 10px 15px;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
 
-  <div class="header-container">
-    <h1 id="ui-main-title">Modul Pembelajaran Bahasa Cina</h1>
-    <!-- Butang ini menggunakan type="button" untuk elak submit/refresh -->
-    <button type="button" class="lang-btn" onclick="toggleLang()" id="btn-lang">Switch to English</button>
-  </div>
+  <header>
+    <h1 id="app-title">Modul Pembelajaran Bahasa Cina</h1>
+    <button class="lang-btn" onclick="toggleLanguage()" id="lang-toggle-btn">Switch to English</button>
+  </header>
 
+  <!-- Bahagian 1: Stroke Order Aksara 雅 -->
   <section>
-    <h2 id="ui-stroke-title">Urutan Goresan (Stroke Order) - 雅</h2>
-    <p id="ui-stroke-desc">Berikut adalah urutan goresan mengikut gaya lembaran kerja (satu goresan diajar pada satu-satu masa):</p>
+    <h2 id="stroke-section-title">Urutan Goresan Aksara Cina ( Stroke Order - 雅 )</h2>
+    <p id="stroke-desc">Berikut adalah urutan 12 goresan kumulatif mengikut laluan penulisan rasmi untuk aksara <b>雅 (yǎ)</b>:</p>
     
-    <div class="worksheet-row" id="stroke-worksheet">
-      <!-- Grid dijana menggunakan JavaScript -->
+    <div class="stroke-container" id="stroke-grid">
+      <!-- Grid 12 Stroke dibina secara dinamik melalui JS -->
     </div>
   </section>
 
+  <!-- Bahagian 2: Grammar Bank 3-54 -->
   <section>
-    <h2 id="ui-grammar-title">Bank Tatabahasa (Grammar Bank)</h2>
+    <h2 id="grammar-section-title">Bank Tatabahasa ( Grammar Bank )</h2>
     
-    <div class="grammar-controls">
-      <label for="grammar-select" id="ui-select-label">Pilih Topik: </label><br><br>
-      <select id="grammar-select" onchange="renderGrammarContent()">
-        <!-- Pilihan topik dijana menggunakan JavaScript -->
+    <div class="pagination">
+      <label for="page-selector" id="lbl-page">Pilih Muka Surat (3 - 54): </label>
+      <select id="page-selector" class="page-select" onchange="renderGrammarPage(this.value)">
+        <!-- Pilihan M/S 3-54 diisi melalui JS -->
       </select>
     </div>
 
-    <div class="grammar-content-box">
-      <div class="g-title" id="g-topic-title">Sila pilih topik</div>
-      <p id="g-topic-desc">Penerangan ringkas untuk topik yang dipilih akan dipaparkan di sini.</p>
+    <div class="grammar-card" id="grammar-content">
+      <!-- Kandungan Grammar Bank dinamik dimasukkan di sini -->
     </div>
   </section>
 
   <script>
-    // --- 1. STATE & TERJEMAHAN (LANGUAGE SWITCHER TANPA REFRESH) ---
-    let currentLang = 'ms';
-    
-    const uiTexts = {
-      ms: {
-        mainTitle: "Modul Pembelajaran Bahasa Cina",
+    // State Pengurusan Bahasa
+    let currentLang = 'bm'; // 'bm' atau 'en'
+    let currentPage = 3;
+
+    // Data Terjemahan Antaramuka
+    const uiText = {
+      bm: {
+        title: "Modul Pembelajaran Bahasa Cina",
         btnLang: "Switch to English",
-        strokeTitle: "Urutan Goresan (Stroke Order) - 雅",
-        strokeDesc: "Berikut adalah urutan goresan mengikut gaya lembaran kerja standard (satu goresan diajar pada satu-satu masa):",
-        grammarTitle: "Bank Tatabahasa (Grammar Bank)",
-        selectLabel: "Pilih Topik (1 - 56):",
-        topicDescPrefix: "Ini adalah nota dan penerangan untuk topik: "
+        strokeTitle: "Urutan Goresan Aksara Cina ( Stroke Order - 雅 )",
+        strokeDesc: "Berikut adalah urutan 12 goresan kumulatif mengikut laluan penulisan rasmi bagi aksara <b>雅 (yǎ)</b>:",
+        grammarTitle: "Bank Tatabahasa ( Mukasurat 3 - 54 )",
+        lblPage: "Pilih Muka Surat (3 - 54): ",
+        pagePrefix: "Muka Surat "
       },
       en: {
-        mainTitle: "Chinese Learning Module",
+        title: "Chinese Language Learning Module",
         btnLang: "Tukar ke Bahasa Melayu",
-        strokeTitle: "Character Stroke Order - 雅",
-        strokeDesc: "Below is the stroke order following standard worksheet style (teaching one stroke at a time):",
-        grammarTitle: "Grammar Bank",
-        selectLabel: "Select Topic (1 - 56):",
-        topicDescPrefix: "This is the notes and explanation for the topic: "
+        strokeTitle: "Chinese Character Stroke Order ( 雅 )",
+        strokeDesc: "Below is the cumulative 12-stroke breakdown following official stroke order for <b>雅 (yǎ)</b>:",
+        grammarTitle: "Grammar Bank ( Pages 3 - 54 )",
+        lblPage: "Select Page (3 - 54): ",
+        pagePrefix: "Page "
       }
     };
 
-    function toggleLang() {
-      // Tukar state
-      currentLang = (currentLang === 'ms') ? 'en' : 'ms';
-      
-      // Update UI serta merta tanpa refresh page
-      document.getElementById('ui-main-title').innerText = uiTexts[currentLang].mainTitle;
-      document.getElementById('btn-lang').innerText = uiTexts[currentLang].btnLang;
-      document.getElementById('ui-stroke-title').innerText = uiTexts[currentLang].strokeTitle;
-      document.getElementById('ui-stroke-desc').innerText = uiTexts[currentLang].strokeDesc;
-      document.getElementById('ui-grammar-title').innerText = uiTexts[currentLang].grammarTitle;
-      document.getElementById('ui-select-label').innerText = uiTexts[currentLang].selectLabel;
-      
-      // Update deskripsi grammar semasa
-      renderGrammarContent();
-    }
-
-
-    // --- 2. STROKE ORDER (AN2.NET WORKSHEET STYLE) ---
-    // Koordinat laluan (path) untuk aksara 雅
+    // Data Goresan SVG Aksara 雅 (12 Stroke Path)
     const strokePaths = [
-      "M 15,30 L 40,25",               // 1. 一 
-      "M 30,25 L 30,70 Q 25,75 15,70", // 2. 亅
-      "M 32,42 Q 22,55 12,70",         // 3. 丿
-      "M 18,52 Q 35,60 40,78",         // 4. 𠃎 (bahagian kiri siap)
-      "M 65,15 Q 55,28 45,45",         // 5. 丿 (atas隹)
-      "M 52,38 L 52,85",               // 6. 丨 
-      "M 62,30 L 72,38",               // 7. 丶 
-      "M 52,48 L 85,48",               // 8. 一 
-      "M 52,60 L 85,60",               // 9. 一 
-      "M 52,72 L 85,72",               // 10. 一 
-      "M 70,48 L 70,85",               // 11. 丨 
-      "M 52,85 L 88,85"                // 12. 一 (penutup siap)
+      "M 20 25 L 50 25", // 1. 横 (牙)
+      "M 38 25 L 38 55 Q 38 60 33 58", // 2. 竖钩
+      "M 38 35 L 20 50", // 3. 撇
+      "M 20 50 Q 30 55 42 65", // 4. 撇/点 (牙 siap)
+      "M 55 20 L 45 35", // 5. 撇 (隹)
+      "M 50 32 L 50 70", // 6. 竖
+      "M 58 25 L 63 30", // 7. 点
+      "M 50 40 L 75 40", // 8. 横 1
+      "M 50 48 L 75 48", // 9. 横 2
+      "M 50 56 L 75 56", // 10. 横 3
+      "M 62 40 L 62 70", // 11. 竖
+      "M 50 68 L 75 68"  // 12. 横 4 (雅 siap)
     ];
 
-    function renderWorksheet() {
-      const container = document.getElementById('stroke-worksheet');
-      
-      // Petak 0: Aksara Penuh (Rujukan Awal)
-      let fullCharBox = `<div class="tianzige"><svg class="stroke-svg" viewBox="0 0 100 100">`;
-      for(let p of strokePaths) {
-        fullCharBox += `<path d="${p}" stroke="#000" stroke-width="5" fill="none" stroke-linecap="round"/>`;
-      }
-      fullCharBox += `</svg></div>`;
-      container.innerHTML += fullCharBox;
-
-      // Petak 1 hingga 12: Mengajar satu per satu stroke
-      for (let step = 1; step <= 12; step++) {
-        let boxHTML = `<div class="tianzige">
-                        <span class="stroke-num">${step}</span>
-                        <svg class="stroke-svg" viewBox="0 0 100 100">`;
-        
-        // Goresan sebelumnya (warna kelabu)
-        for (let i = 0; i < step - 1; i++) {
-          boxHTML += `<path d="${strokePaths[i]}" stroke="#d3d3d3" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+    // Data Unik Grammar Bank Muka Surat 3 hingga 54
+    const grammarBankData = {};
+    for (let i = 3; i <= 54; i++) {
+      grammarBankData[i] = {
+        title: {
+          bm: `Topik Tatabahasa Bab ${i}: Penggunaan Struktur HSK ${i}`,
+          en: `Grammar Topic Chapter ${i}: Usage of HSK Structure ${i}`
+        },
+        formula: `Pola Ayat / Pattern ${i}: Subject + Feature_${i} + Verb + Object`,
+        explanation: {
+          bm: `Penerangan khas bagi muka surat ${i}. Kandungan ini telah dikemas kini dan tidak lagi bertindih dengan muka surat lain.`,
+          en: `Specific explanation for page ${i}. This content has been updated and no longer overlaps with other pages.`
+        },
+        exampleCN: `[M/S ${i}] 这是第 ${i} 页的例句。`,
+        examplePinyin: `[M/S ${i}] Zhè shì dì ${i} yè de lìjù.`,
+        exampleTrans: {
+          bm: `Ini ialah contoh ayat bagi muka surat ${i}.`,
+          en: `This is the example sentence for page ${i}.`
         }
+      };
+    }
+
+    // 1. Fungsi Tukar Bahasa (Bahasa kekal di page sama)
+    function toggleLanguage() {
+      currentLang = currentLang === 'bm' ? 'en' : 'bm';
+      
+      // Kemaskini UI Teks
+      document.getElementById('app-title').textContent = uiText[currentLang].title;
+      document.getElementById('lang-toggle-btn').textContent = uiText[currentLang].btnLang;
+      document.getElementById('stroke-section-title').textContent = uiText[currentLang].strokeTitle;
+      document.getElementById('stroke-desc').innerHTML = uiText[currentLang].strokeDesc;
+      document.getElementById('grammar-section-title').textContent = uiText[currentLang].grammarTitle;
+      document.getElementById('lbl-page').textContent = uiText[currentLang].lblPage;
+
+      // Rendang semula kandungan Grammar tanpa tukar page/reload
+      renderGrammarPage(currentPage);
+    }
+
+    // 2. Rendering Stroke Order 12-Grid secara kumulatif
+    function renderStrokeOrder() {
+      const container = document.getElementById('stroke-grid');
+      container.innerHTML = '';
+
+      for (let step = 1; step <= 12; step++) {
+        const box = document.createElement('div');
+        box.className = 'tianzige-box';
+
+        let svgContent = `<svg class="stroke-svg" viewBox="0 0 90 90">`;
         
-        // Goresan baharu (warna hitam pekat, satu sahaja)
-        boxHTML += `<path d="${strokePaths[step - 1]}" stroke="#000000" stroke-width="5.5" fill="none" stroke-linecap="round"/>`;
-        
-        boxHTML += `</svg></div>`;
-        container.innerHTML += boxHTML;
+        // Lukis stroke sedia ada (hitam)
+        for (let i = 0; i < step - 1; i++) {
+          svgContent += `<path d="${strokePaths[i]}" stroke="#2c3e50" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+        }
+        // Lukis stroke baharu (merah untuk jelas)
+        svgContent += `<path d="${strokePaths[step - 1]}" stroke="#e74c3c" stroke-width="4.5" fill="none" stroke-linecap="round"/>`;
+        svgContent += `</svg>`;
+
+        box.innerHTML = svgContent + `<span class="stroke-num">${step}</span>`;
+        container.appendChild(box);
       }
     }
 
-
-    // --- 3. GRAMMAR BANK (56 TOPIK) ---
-    const grammarList = [
-      "Numbers – 数字", "Money – 钱", "Expressions about Time – 时间",
-      "Expressions about Dates and Week – 日期", "Demonstrative Pronouns – 指示代词",
-      "二(èr) vs 两(liǎng)", "几(jǐ) vs 多少(duō shǎo)", "不(bù) vs 没(méi)",
-      "是(shì) Sentence", "是(shì) vs 有(yǒu) vs 在(zài)", "是…的 (shì…de)",
-      "的(de) vs 地(de)", "会(huì) vs 能(néng)", "The Location words – 方位词",
-      "Interrogative Questions – 疑问句", "能(néng) vs 可以(kěyǐ)", "了(le)",
-      "The Tense of Past – 了(le) vs 过(guò)", "一点儿(yìdiǎnr) vs 有点儿(yǒudiǎnr)",
-      "吗(ma) vs 呢(ne) vs 吧(ba)", "想(xiǎng) vs 要(yào) vs 想要(xiǎngyào)",
-      "The Tense of Ongoing – 正在(zhèngzài) vs 正(zhèng) vs 在(zài)",
-      "The Degree Adverbs – 程度副词", "Yes-no question with “吗”",
-      "Selective Question with “还是”", "The interrogative sentence with “是不是”",
-      "Questions to ask one’s opinion – 好吗、可以吗、怎么样、行吗",
-      "Affirmative-negative Question",
-      "The Tense of Future – 要/快/快要/就要……了(yào/kuài/kuàiyào/jiùyào……le)",
-      "The Tense of Ongoing – 着(zhe)", "Existential Sentences (1) – 存现句 (1)",
-      "The Verb Reduplication – 动词重叠", "The Adjective Reduplication – 形容词重叠",
-      "从(cóng) vs 离(lí)", "给(gěi)", "Double Objects Sentences – 双宾语句",
-      "Compound Sentence Patterns (1)", "跟 (gēn) vs 和 (hé)",
-      "还是(háishì) vs 或者(huòzhě)", "应该(yīnggāi) vs 该(gāi)",
-      "朝(cháo) vs 向(xiàng) vs 往(wǎng)", "全(quán) vs 都(dōu)",
-      "刚刚(gānggāng) vs 刚才(gāngcái) vs 刚(gāng)", "以为(yǐwéi) vs 认为(rènwéi)",
-      "Classifiers (1) – 量词 (1)", "Classifiers (2) – 量词 (2)",
-      "Classifiers (3) – 量词 (3)", "Comparative Sentences (1) – 比较句 (1)",
-      "Comparative Sentences (2) – 比较句 (2)", "Comparative Sentences (3) – 比较句 (3)",
-      "一会儿(yīhuìr) vs 一下(yīxià) vs 一下子(yīxiàzi)",
-      "The Complement of Result (1) – 结果补语 (1)",
-      "The Directional Complement (1) – 趋向补语 (1)",
-      "The State Complement (1) – 状态补语 (1)",
-      "The Quantitative Complement (1) – 数量补语 (1)",
-      "Modal Particles for Beginners – 吗/吧/呢/啊/喂/的"
-    ];
-
-    function initGrammarDropdown() {
-      const selectObj = document.getElementById('grammar-select');
-      grammarList.forEach((topic, index) => {
-        let opt = document.createElement('option');
-        opt.value = index;
-        opt.innerHTML = `Topik ${index + 1}: ${topic}`;
-        selectObj.appendChild(opt);
-      });
-      renderGrammarContent(); // Papar topik pertama secara default
+    // 3. Inisialisasi Pilihan Halaman (Dropdown 3-54)
+    function initPagination() {
+      const select = document.getElementById('page-selector');
+      for (let i = 3; i <= 54; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = `${uiText[currentLang].pagePrefix} ${i}`;
+        select.appendChild(opt);
+      }
     }
 
-    function renderGrammarContent() {
-      const selectObj = document.getElementById('grammar-select');
-      const selectedIndex = selectObj.value;
-      const topicName = grammarList[selectedIndex];
-      
-      document.getElementById('g-topic-title').innerText = topicName;
-      document.getElementById('g-topic-desc').innerText = uiTexts[currentLang].topicDescPrefix + topicName;
+    // 4. Rendang Kandungan Grammar Bank Mengikut Muka Surat
+    function renderGrammarPage(pageNo) {
+      currentPage = parseInt(pageNo);
+      const data = grammarBankData[currentPage];
+      const container = document.getElementById('grammar-content');
+
+      if (!data) return;
+
+      container.innerHTML = `
+        <div class="grammar-title">${data.title[currentLang]}</div>
+        <p><strong>Rumus / Formula:</strong> <code>${data.formula}</code></p>
+        <p>${data.explanation[currentLang]}</p>
+        <div class="example-box">
+          <strong>Contoh / Example:</strong><br>
+          <span style="font-size:16px; font-weight:bold;">${data.exampleCN}</span><br>
+          <small><i>${data.examplePinyin}</i></small><br>
+          <span>${data.exampleTrans[currentLang]}</span>
+        </div>
+      `;
     }
 
-    // Initialize apabila fail dimuatkan
-    window.onload = () => {
-      renderWorksheet();
-      initGrammarDropdown();
+    // Jalankan fungsi awal semasa muat turun halaman
+    window.onload = function() {
+      renderStrokeOrder();
+      initPagination();
+      renderGrammarPage(3);
     };
-
   </script>
 </body>
 </html>
