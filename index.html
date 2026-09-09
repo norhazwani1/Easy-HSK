@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Easy HSK - Learn Mandarin, Pass HSK 1</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              red: '#E53E3E',
+              gold: '#D69E2E',
+              yellow: '#ECC94B',
+              blue: '#3182CE',
+              teal: '#319795',
+              dark: '#1A202C',
+              light: '#F7FAFC'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .perspective-1000 { perspective: 1000px; }
+    .transform-style-3d { transform-style: preserve-3d; }
+    .backface-hidden { backface-visibility: hidden; }
+    .rotate-y-180 { transform: rotateY(180deg); }
+  </style>
+
+  <!-- Firebase App & Database Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased selection:bg-red-100 selection:text-red-600 dark:bg-gray-900 dark:text-gray-100 min-h-screen pb-20 md:pb-0 md:pl-64">
+
+  <!-- APP CONTAINER -->
+  <div id="app" class="max-w-md mx-auto md:max-w-4xl min-h-screen flex flex-col justify-between">
+
+    <!-- TOP HEADER -->
+    <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 sticky top-0 z-30 flex justify-between items-center shadow-sm">
+      <div class="flex items-center space-x-2">
+        <span class="bg-red-600 text-white font-black text-xl px-2.5 py-1 rounded-xl shadow-sm">易</span>
+        <div>
+          <h1 class="font-extrabold text-lg leading-none text-gray-900 dark:text-white">Easy HSK</h1>
+          <p class="text-[10px] text-gray-500 dark:text-gray-400 font-medium">Start Zero • Pass HSK 1</p>
+        </div>
+      </div>
+      
+      <!-- Top Right Indicators -->
+      <div class="flex items-center space-x-3">
+        <div class="flex items-center space-x-1 bg-amber-50 dark:bg-amber-900/30 px-2.5 py-1 rounded-full border border-amber-200 dark:border-amber-700/50">
+          <span class="text-amber-500">🔥</span>
+          <span id="headerStreak" class="text-xs font-bold text-amber-700 dark:text-amber-300">0</span>
+        </div>
+        <div class="flex items-center space-x-1 bg-blue-50 dark:bg-blue-900/30 px-2.5 py-1 rounded-full border border-blue-200 dark:border-blue-700/50">
+          <span class="text-blue-500">⭐</span>
+          <span id="headerXP" class="text-xs font-bold text-blue-700 dark:text-blue-300">0</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN VIEW CONTAINER -->
+    <main id="mainContent" class="flex-grow p-4 md:p-6 overflow-y-auto">
+      <!-- Dynamic Screens Loaded Here via JavaScript -->
+    </main>
+
+    <!-- BOTTOM NAVIGATION (MOBILE) -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-2 px-4 flex justify-around items-center z-40 md:hidden shadow-lg">
+      <button onclick="switchTab('home')" id="tab-home" class="nav-btn flex flex-col items-center text-red-600 font-semibold">
+        <i class="fa-solid fa-house text-lg"></i>
+        <span class="text-[10px] mt-1">Utama</span>
+      </button>
+      <button onclick="switchTab('learn')" id="tab-learn" class="nav-btn flex flex-col items-center text-gray-400 hover:text-red-600">
+        <i class="fa-solid fa-book-open text-lg"></i>
+        <span class="text-[10px] mt-1">Belajar</span>
+      </button>
+      <button onclick="switchTab('practice')" id="tab-practice" class="nav-btn flex flex-col items-center text-gray-400 hover:text-red-600">
+        <i class="fa-solid fa-dumbbell text-lg"></i>
+        <span class="text-[10px] mt-1">Latihan</span>
+      </button>
+      <button onclick="switchTab('ai-tutor')" id="tab-ai-tutor" class="nav-btn flex flex-col items-center text-gray-400 hover:text-red-600">
+        <i class="fa-solid fa-robot text-lg"></i>
+        <span class="text-[10px] mt-1">AI Guru</span>
+      </button>
+      <button onclick="switchTab('profile')" id="tab-profile" class="nav-btn flex flex-col items-center text-gray-400 hover:text-red-600">
+        <i class="fa-solid fa-user text-lg"></i>
+        <span class="text-[10px] mt-1">Profil</span>
+      </button>
+    </nav>
+
+    <!-- DESKTOP SIDEBAR -->
+    <aside class="hidden md:flex flex-col fixed top-0 left-0 h-full w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 p-4 z-40">
+      <div class="flex items-center space-x-3 mb-8 px-2">
+        <span class="bg-red-600 text-white font-black text-2xl px-3 py-1.5 rounded-2xl shadow">易</span>
+        <div>
+          <h2 class="font-black text-xl text-gray-900 dark:text-white">Easy HSK</h2>
+          <p class="text-xs text-gray-500">Start Zero • Pass HSK 1</p>
+        </div>
+      </div>
+
+      <nav class="space-y-2 flex-grow">
+        <button onclick="switchTab('home')" id="dtab-home" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-bold bg-red-50 text-red-600 dark:bg-red-900/30">
+          <i class="fa-solid fa-house"></i>
+          <span>Utama</span>
+        </button>
+        <button onclick="switchTab('learn')" id="dtab-learn" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-bold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
+          <i class="fa-solid fa-book-open"></i>
+          <span>Belajar & Roadmap</span>
+        </button>
+        <button onclick="switchTab('practice')" id="dtab-practice" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-bold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
+          <i class="fa-solid fa-dumbbell"></i>
+          <span>Pusat Latihan</span>
+        </button>
+        <button onclick="switchTab('ai-tutor')" id="dtab-ai-tutor" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-bold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
+          <i class="fa-solid fa-robot"></i>
+          <span>AI Tutor Mandarin</span>
+        </button>
+        <button onclick="switchTab('profile')" id="dtab-profile" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-bold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
+          <i class="fa-solid fa-user"></i>
+          <span>Profil & Tetapan</span>
+        </button>
+      </nav>
+
+      <div class="p-3 bg-red-50 dark:bg-red-950/40 rounded-xl border border-red-100 dark:border-red-900/50">
+        <p class="text-xs text-red-700 dark:text-red-300 font-semibold mb-1">🎯 Sasaran HSK 1</p>
+        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-2">
+          <div id="desktopHskBar" class="bg-red-600 h-2 rounded-full" style="width: 20%;"></div>
+        </div>
+        <p class="text-[11px] text-gray-500 dark:text-gray-400">Persediaan: <span id="desktopHskPct">20%</span></p>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    // ----------------------------------------------------
+    // 1. FIREBASE CONFIGURATION & INITIALIZATION
+    // ----------------------------------------------------
+    const firebaseConfig = {
+      apiKey: "AIzaSyAY5hm7OkYp1YKlIxwZV21Je0dY_xDKavY",
+      authDomain: "hsk-level-1.firebaseapp.com",
+      databaseURL: "https://hsk-level-1-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "hsk-level-1",
+      storageBucket: "hsk-level-1.firebasestorage.app",
+      messagingSenderId: "1055953369501",
+      appId: "1:1055953369501:web:a5094492844552753b5774"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // ----------------------------------------------------
+    // 2. STATE MANAGEMENT & LOCAL STORAGE FALLBACK
+    // ----------------------------------------------------
+    let currentUser = JSON.parse(localStorage.getItem('easyhsk_user')) || {
+      uid: 'user_' + Math.random().toString(36).substr(2, 9),
+      name: '',
+      role: 'Pelajar',
+      priorKnowledge: 'Zero Basic',
+      goal: 'Lulus HSK 1',
+      dailyMinutes: '10',
+      xp: 0,
+      streak: 1,
+      hskReadiness: 15,
+      completedLessons: [],
+      masteredWords: [],
+      mistakes: [],
+      favourites: []
+    };
+
+    let audioSpeed = 1.0; // Audio Speed (Normal: 1.0, Slow: 0.6)
+
+    // Save user state locally and sync to Firebase Realtime DB
+    function saveUserState() {
+      localStorage.setItem('easyhsk_user', JSON.stringify(currentUser));
+      if (currentUser.uid) {
+        db.ref('users/' + currentUser.uid).set(currentUser);
+      }
+      updateHeaderStats();
+    }
+
+    function updateHeaderStats() {
+      document.getElementById('headerStreak').innerText = currentUser.streak || 0;
+      document.getElementById('headerXP').innerText = currentUser.xp || 0;
+      const dBar = document.getElementById('desktopHskBar');
+      const dPct = document.getElementById('desktopHskPct');
+      if (dBar && dPct) {
+        dBar.style.width = (currentUser.hskReadiness || 15) + '%';
+        dPct.innerText = (currentUser.hskReadiness || 15) + '%';
+      }
+    }
+
+    // ----------------------------------------------------
+    // 3. CORE MANDARIN DATA (HSK 1 Syllabus & Topics)
+    // ----------------------------------------------------
+    const hskVocab = [
+      { id: 1, hanzi: "你好", pinyin: "nǐ hǎo", malay: "hello / hai", topic: "Greetings", exHanzi: "你好！你好吗？", exPinyin: "Nǐ hǎo! Nǐ hǎo ma?", exMalay: "Hai! Apa khabar?" },
+      { id: 2, hanzi: "谢谢", pinyin: "xièxie", malay: "terima kasih", topic: "Greetings", exHanzi: "谢谢你！", exPinyin: "Xièxie nǐ!", exMalay: "Terima kasih!" },
+      { id: 3, hanzi: "再见", pinyin: "zàijiàn", malay: "selamat tinggal", topic: "Greetings", exHanzi: "明天再见！", exPinyin: "Míngtiān zàijiàn!", exMalay: "Jumpa lagi esok!" },
+      { id: 4, hanzi: "我", pinyin: "wǒ", malay: "saya", topic: "People", exHanzi: "我是学生。", exPinyin: "Wǒ shì xuéshēng.", exMalay: "Saya seorang pelajar." },
+      { id: 5, hanzi: "你", pinyin: "nǐ", malay: "awak / kamu", topic: "People", exHanzi: "你是老师吗？", exPinyin: "Nǐ shì lǎoshī ma?", exMalay: "Adakah awak seorang guru?" },
+      { id: 6, hanzi: "他", pinyin: "tā", malay: "dia (lelaki)", topic: "People", exHanzi: "他是我的朋友。", exPinyin: "Tā shì wǒ de péngyou.", exMalay: "Dia kawan saya." },
+      { id: 7, hanzi: "她", pinyin: "tā", malay: "dia (perempuan)", topic: "People", exHanzi: "她很漂亮。", exPinyin: "Tā hěn piàoliang.", exMalay: "Dia sangat cantik." },
+      { id: 8, hanzi: "水", pinyin: "shuǐ", malay: "air", topic: "Food & Drinks", exHanzi: "我想喝水。", exPinyin: "Wǒ xiǎng hē shuǐ.", exMalay: "Saya mahu minum air." },
+      { id: 9, hanzi: "茶", pinyin: "chá", malay: "teh", topic: "Food & Drinks", exHanzi: "我不喝茶。", exPinyin: "Wǒ bù hē chá.", exMalay: "Saya tidak minum teh." },
+      { id: 10, hanzi: "学校", pinyin: "xuéxiào", malay: "sekolah", topic: "School", exHanzi: "我在学校上课。", exPinyin: "Wǒ zài xuéxiào shàngkè.", exMalay: "Saya belajar di sekolah." }
+    ];
+
+    const grammarPoints = [
+      {
+        id: "g1",
+        title: "Ayat Penyata Adalah (是)",
+        pattern: "Subjek + 是 + Kata Nama",
+        explanation: "Gunakan '是' (shì) untuk menyatakan 'adalah' atau 'ialah'. Sama seperti 'is/am/are' dalam Bahasa Inggeris.",
+        exHanzi: "我是学生。",
+        exPinyin: "Wǒ shì xuéshēng.",
+        exMalay: "Saya ialah seorang pelajar.",
+        quizQ: "Saya ___ guru (老师).",
+        options: ["是 (shì)", "不 (bù)", "很 (hěn)"],
+        ans: 0
+      },
+      {
+        id: "g2",
+        title: "Ayat Negatif (不)",
+        pattern: "Subjek + 不 + Kata Kerja / Sifat",
+        explanation: "Perkataan '不' (bù) digunakan untuk menafikan perbuatan atau sifat (maksud: tidak / bukan).",
+        exHanzi: "我不喝茶。",
+        exPinyin: "Wǒ bù hē chá.",
+        exMalay: "Saya tidak minum teh.",
+        quizQ: "Pilih ayat 'Saya tidak pergi':",
+        options: ["我不去 (Wǒ bù qù)", "我是去 (Wǒ shì qù)", "我好去 (Wǒ hǎo qù)"],
+        ans: 0
+      }
+    ];
+
+    // ----------------------------------------------------
+    // 4. AUDIO TEXT-TO-SPEECH SYSTEM
+    // ----------------------------------------------------
+    function speakMandarin(text, speed = audioSpeed) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel(); // Stop ongoing speech
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'zh-CN';
+        utterance.rate = speed;
+        window.speechSynthesis.speak(utterance);
+      } else {
+        alert("Sistem audio tidak disokong pada pelayar ini.");
+      }
+    }
+
+    // ----------------------------------------------------
+    // 5. NAVIGATION & ROUTING
+    // ----------------------------------------------------
+    function switchTab(tabName) {
+      // Update UI buttons styling
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('text-red-600');
+        btn.classList.add('text-gray-400');
+      });
+      const activeBtn = document.getElementById(`tab-${tabName}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-gray-400');
+        activeBtn.classList.add('text-red-600');
+      }
+
+      const mainContent = document.getElementById('mainContent');
+
+      if (!currentUser.name && tabName !== 'onboarding') {
+        renderOnboarding();
+        return;
+      }
+
+      switch (tabName) {
+        case 'home':
+          renderHome();
+          break;
+        case 'learn':
+          renderRoadmap();
+          break;
+        case 'practice':
+          renderPracticeCenter();
+          break;
+        case 'ai-tutor':
+          renderAITutor();
+          break;
+        case 'profile':
+          renderProfile();
+          break;
+        default:
+          renderHome();
+      }
+      window.scrollTo(0, 0);
+    }
+
+    // ----------------------------------------------------
+    // 6. SCREEN RENDERING FUNCTIONS
+    // ----------------------------------------------------
+
+    // --- ONBOARDING SCREEN ---
+    function renderOnboarding() {
+      const main = document.getElementById('mainContent');
+      main.innerHTML = `
+        <div class="space-y-6 max-w-md mx-auto py-4">
+          <div class="text-center space-y-2">
+            <span class="inline-block p-4 bg-red-100 dark:bg-red-900/40 text-red-600 rounded-3xl text-4xl mb-2 animate-bounce">👋</span>
+            <h2 class="text-2xl font-black text-gray-900 dark:text-white">WELCOME TO EASY HSK</h2>
+            <p class="text-sm text-gray-600 dark:text-gray-300">Tak pernah belajar Mandarin?<br><strong class="text-red-600">Tak apa. Kita mula dari ZERO.</strong></p>
+          </div>
+
+          <form id="onboardingForm" onsubmit="handleOnboardingSubmit(event)" class="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-1">Nama Pelajar</label>
+              <input type="text" id="obName" required placeholder="Contoh: Aina / Amir" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-1">Tahap Pengalaman Mandarin</label>
+              <select id="obPrior" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
+                <option value="Zero Basic">Tidak pernah (Zero Basic)</option>
+                <option value="Sedikit">Sedikit sahaja</option>
+                <option value="Pernah">Pernah belajar sebelum ini</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-1">Matlamat Utama</label>
+              <select id="obGoal" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
+                <option value="Lulus HSK 1">Saya nak lulus HSK 1</option>
+                <option value="Asas Mandarin">Saya nak belajar asas Mandarin</option>
+                <option value="Perbualan Harian">Saya nak boleh berbuah harian</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-1">Masa Belajar Sehari</label>
+              <select id="obTime" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
+                <option value="5">5 Minit (Ringkas)</option>
+                <option value="10" selected>10 Minit (Disyorkan)</option>
+                <option value="15">15 Minit (Intensif)</option>
+                <option value="20">20+ Minit (Maksimum)</option>
+              </select>
+            </div>
+
+            <button type="submit" class="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-black text-lg rounded-2xl shadow-lg shadow-red-200 dark:shadow-none transition-all">
+              Mula Belajar Sekarang 🚀
+            </button>
+          </form>
+        </div>
+      `;
+    }
+
+    function handleOnboardingSubmit(e) {
+      e.preventDefault();
+      currentUser.name = document.getElementById('obName').value.trim();
+      currentUser.priorKnowledge = document.getElementById('obPrior').value;
+      currentUser.goal = document.getElementById('obGoal').value;
+      currentUser.dailyMinutes = document.getElementById('obTime').value;
+      saveUserState();
+      switchTab('home');
+    }
+
+    // --- HOME DASHBOARD ---
+    function renderHome() {
+      const main = document.getElementById('mainContent');
+      main.innerHTML = `
+        <div class="space-y-6">
+          <!-- WELCOME CARD -->
+          <div class="bg-gradient-to-r from-red-600 to-red-500 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
+            <div class="relative z-10 space-y-2">
+              <span class="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase">Tahap: ${currentUser.priorKnowledge}</span>
+              <h2 class="text-2xl font-black">Hi, ${currentUser.name}! 👋</h2>
+              <p class="text-red-100 text-sm">"Mandarin nampak susah. Tapi kalau belajar step-by-step, anda boleh!"</p>
+              
+              <div class="pt-2 flex items-center space-x-3">
+                <button onclick="startZeroBasicLesson()" class="bg-white text-red-600 px-5 py-2.5 rounded-xl font-bold text-sm shadow hover:bg-gray-50">
+                  <i class="fa-solid fa-play mr-1"></i> Sambung Belajar
+                </button>
+                <button onclick="switchTab('practice')" class="bg-red-700/50 hover:bg-red-700 text-white px-4 py-2.5 rounded-xl font-bold text-sm backdrop-blur-sm">
+                  ⚡ Latihan 10 Min
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- PROGRESS & STATS -->
+          <div class="grid grid-cols-2 gap-4">
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
+              <div class="flex items-center space-x-2 text-amber-500 mb-1">
+                <i class="fa-solid fa-fire text-lg"></i>
+                <span class="text-xs font-bold uppercase text-gray-500">Streak Hari</span>
+              </div>
+              <p class="text-2xl font-black text-gray-900 dark:text-white">${currentUser.streak} Hari</p>
+              <p class="text-[11px] text-gray-400">🔥 Kekalkan kebiasaan!</p>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
+              <div class="flex items-center space-x-2 text-red-500 mb-1">
+                <i class="fa-solid fa-bullseye text-lg"></i>
+                <span class="text-xs font-bold uppercase text-gray-500">Persediaan HSK 1</span>
+              </div>
+              <p class="text-2xl font-black text-gray-900 dark:text-white">${currentUser.hskReadiness}%</p>
+              <div class="w-full bg-gray-100 dark:bg-gray-700 h-1.5 rounded-full mt-2">
+                <div class="bg-red-600 h-1.5 rounded-full" style="width: ${currentUser.hskReadiness}%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- QUICK ACTIONS GRID -->
+          <div>
+            <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">Mod Pilihan</h3>
+            <div class="grid grid-cols-2 gap-3">
+              <button onclick="renderZeroBasicHub()" class="p-4 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/50 rounded-2xl text-left space-y-1 hover:border-emerald-300">
+                <span class="text-2xl">🌱</span>
+                <h4 class="font-bold text-gray-900 dark:text-white text-sm">Zero Basic Mode</h4>
+                <p class="text-[11px] text-emerald-700 dark:text-emerald-400">Pinyin & 4 Tones asas</p>
+              </button>
+
+              <button onclick="renderFlashcards()" class="p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/50 rounded-2xl text-left space-y-1 hover:border-blue-300">
+                <span class="text-2xl">🎴</span>
+                <h4 class="font-bold text-gray-900 dark:text-white text-sm">Kad Perkataan</h4>
+                <p class="text-[11px] text-blue-700 dark:text-blue-400">Flashcards HSK 1</p>
+              </button>
+
+              <button onclick="renderGrammarBank()" class="p-4 bg-purple-50 dark:bg-purple-950/30 border border-purple-100 dark:border-purple-900/50 rounded-2xl text-left space-y-1 hover:border-purple-300">
+                <span class="text-2xl">🧩</span>
+                <h4 class="font-bold text-gray-900 dark:text-white text-sm">Tatabahasa Mudahnya</h4>
+                <p class="text-[11px] text-purple-700 dark:text-purple-400">Struktur S+V+O</p>
+              </button>
+
+              <button onclick="renderMistakeNotebook()" class="p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900/50 rounded-2xl text-left space-y-1 hover:border-amber-300">
+                <span class="text-2xl">📝</span>
+                <h4 class="font-bold text-gray-900 dark:text-white text-sm">Buku Nota Kesalahan</h4>
+                <p class="text-[11px] text-amber-700 dark:text-amber-400">${currentUser.mistakes.length} soalan untuk diulang</p>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // --- ZERO BASIC HUB & PINYIN LESSON ---
+    function renderZeroBasicHub() {
+      const main = document.getElementById('mainContent');
+      main.innerHTML = `
+        <div class="space-y-6">
+          <div class="flex items-center space-x-3">
+            <button onclick="switchTab('home')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-arrow-left text-xl"></i></button>
+            <div>
+              <h2 class="text-xl font-black text-gray-900 dark:text-white">🌱 Zero Basic Mandarin</h2>
+              <p class="text-xs text-gray-500">Asas paling penting sebelum menghafal perkataan</p>
+            </div>
+          </div>
+
+          <!-- PINYIN & TONES EXPLANATION CARD -->
+          <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-4">
+            <h3 class="font-bold text-red-600 flex items-center"><i class="fa-solid fa-volume-high mr-2"></i> APA ITU PINYIN & TONES?</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+              Dalam Bahasa Mandarin, kita menggunakan sistem <strong class="text-gray-900 dark:text-white">PINYIN</strong> (sebutan abjad) dan <strong class="text-gray-900 dark:text-white">4 NADA (TONES)</strong>. Maksud perkataan boleh berubah mengikut nada!
+            </p>
+
+            <!-- TONES GUIDE GRID -->
+            <div class="grid grid-cols-2 gap-3 pt-2">
+              <div onclick="speakMandarin('ā')" class="p-3 bg-red-50 dark:bg-red-950/30 rounded-2xl border border-red-100 dark:border-red-900/50 cursor-pointer text-center">
+                <span class="text-2xl font-black text-red-600">ā</span>
+                <h4 class="text-xs font-bold text-gray-800 dark:text-gray-200 mt-1">Nada 1 (Tinggi Rata)</h4>
+                <p class="text-[10px] text-gray-500">Bunyi mendatar panjang</p>
+              </div>
+
+              <div onclick="speakMandarin('á')" class="p-3 bg-amber-50 dark:bg-amber-950/30 rounded-2xl border border-amber-100 dark:border-amber-900/50 cursor-pointer text-center">
+                <span class="text-2xl font-black text-amber-600">á</span>
+                <h4 class="text-xs font-bold text-gray-800 dark:text-gray-200 mt-1">Nada 2 (Menaik)</h4>
+                <p class="text-[10px] text-gray-500">Seperti bertanya "Hah?"</p>
+              </div>
+
+              <div onclick="speakMandarin('ǎ')" class="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-2xl border border-blue-100 dark:border-blue-900/50 cursor-pointer text-center">
+                <span class="text-2xl font-black text-blue-600">ǎ</span>
+                <h4 class="text-xs font-bold text-gray-800 dark:text-gray-200 mt-1">Nada 3 (Turun-Naik)</h4>
+                <p class="text-[10px] text-gray-500">Turun sedikit kemudian naik</p>
+              </div>
+
+              <div onclick="speakMandarin('à')" class="p-3 bg-purple-50 dark:bg-purple-950/30 rounded-2xl border border-purple-100 dark:border-purple-900/50 cursor-pointer text-center">
+                <span class="text-2xl font-black text-purple-600">à</span>
+                <h4 class="text-xs font-bold text-gray-800 dark:text-gray-200 mt-1">Nada 4 (Jatuh Tegas)</h4>
+                <p class="text-[10px] text-gray-500">Bunyi tegas & cepat</p>
+              </div>
+            </div>
+          </div>
+
+          <button onclick="startTonePracticeQuiz()" class="w-full py-4 bg-red-600 text-white font-bold rounded-2xl shadow-md">
+            Mula Ujian Pendengaran Nada 👂
+          </button>
+        </div>
+      `;
+    }
+
+    // --- TONE PRACTICE QUIZ ---
+    function startTonePracticeQuiz() {
+      const main = document.getElementById('mainContent');
+      main.innerHTML = `
+        <div class="space-y-6 max-w-md mx-auto">
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold text-gray-400">LATIHAN NADA MANDARIN</span>
+            <button onclick="renderZeroBasicHub()" class="text-sm font-bold text-red-600">Keluar</button>
+          </div>
+
+          <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm text-center space-y-4">
+            <p class="text-xs text-gray-500">Tekan ikon audio dan pilih nada yang anda dengar:</p>
+            <button onclick="speakMandarin('nǐ hǎo')" class="w-20 h-20 bg-red-100 dark:bg-red-900/40 text-red-600 rounded-full text-3xl mx-auto flex items-center justify-center hover:scale-105 transition-transform">
+              🔊
+            </button>
+            <h3 class="text-2xl font-black text-gray-900 dark:text-white">"nǐ hǎo"</h3>
+
+            <div class="space-y-2 pt-4">
+              <button onclick="checkToneAnswer(true)" class="w-full py-3 bg-gray-50 dark:bg-gray-700 hover:bg-red-50 text-gray-800 dark:text-gray-100 font-bold rounded-xl border border-gray-200 dark:border-gray-600 text-sm">
+                A. Nada 3 + Nada 3 (Turun-Naik)
+              </button>
+              <button onclick="checkToneAnswer(false)" class="w-full py-3 bg-gray-50 dark:bg-gray-700 hover:bg-red-50 text-gray-800 dark:text-gray-100 font-bold rounded-xl border border-gray-200 dark:border-gray-600 text-sm">
+                B. Nada 1 + Nada 4 (Rata + Jatuh)
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function checkToneAnswer(isCorrect) {
+      if (isCorrect) {
+        currentUser.xp += 15;
+        saveUserState();
+        alert("Bagus! 🎉 Sebutan 'nǐ hǎo' menggunakan Nada 3.");
+      } else {
+        alert("Belum tepat 😊 Cuba lagi dan dengar dengan teliti.");
+      }
+      renderZeroBasicHub();
+    }
+
+    // --- ROADMAP & LESSONS ---
+    function renderRoadmap() {
+      const main = document.getElementById('mainContent');
+      main.innerHTML = `
+        <div class="space-y-6">
+          <div>
+            <h2 class="text-xl font-black text-gray-900 dark:text-white">🗺️ Laluan Pembelajaran HSK 1</h2>
+            <p class="text-xs text-gray-500">Ikuti langkah berstruktur dari Zero ke HSK 1</p>
+          </div>
+
+          <div class="relative pl-6 space-y-6 before:absolute before:left-2.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-gray-200 dark:before:bg-gray-700">
+            <!-- STAGE 0 -->
+            <div class="relative">
+              <span class="absolute -left-6 top-0 w-6 h-6 bg-emerald-500 text-white rounded-full text-xs flex items-center justify-center font-bold">0</span>
+              <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-2">
+                <span class="text-[10px] bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full">STAGE 0</span>
+                <h3 class="font-bold text-gray-900 dark:text-white text-sm">🌱 Mandarin Zero Basic</h3>
+                <p class="text-xs text-gray-500">Pengenalan Pinyin, 4 Nada dan Struktur Asas.</p>
+                <button onclick="renderZeroBasicHub()" class="text-xs font-bold text-emerald-600 hover:underline">Mula Belajar →</button>
+              </div>
+            </div>
+
+            <!-- STAGE 1 -->
+            <div class="relative">
+              <span class="absolute -left-6 top-0 w-6 h-6 bg-red-600 text-white rounded-full text-xs flex items-center justify-center font-bold">1</span>
+              <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-2">
+                <span class="text-[10px] bg-red-100 text-red-700 font-bold px-2 py-0.5 rounded-full">STAGE 1</span>
+                <h3 class="font-bold text-gray-900 dark:text-white text-sm">🧩 Essential HSK Vocabulary</h3>
+                <p class="text-xs text-gray-500">Salam, Nombor, Ahli Keluarga & Diri Sendiri.</p>
+                <button onclick="renderFlashcards()" class="text-xs font-bold text-red-600 hover:underline">Buka Flashcards →</button>
+              </div>
+            </div>
+
+            <!-- STAGE 2 -->
+            <div class="relative">
+              <span class="absolute -left-6 top-0 w-6 h-6 bg-purple-600 text-white rounded-full text-xs flex items-center justify-center font-bold">2</span>
+              <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-2">
+                <span class="text-[10px] bg-purple-100 text-purple-700 font-bold px-2 py-0.5 rounded-full">STAGE 2</span>
+                <h3 class="font-bold text-gray-900 dark:text-white text-sm">🧱 HSK 1 Grammar Made Easy</h3>
+                <p class="text-xs text-gray-500">Membina ayat lengkap S + V + O.</p>
+                <button onclick="renderGrammarBank()" class="text-xs font-bold text-purple-600 hover:underline">Belajar Tatabahasa →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // --- FLASHCARDS SYSTEM ---
+    function renderFlashcards() {
+      let currentIndex = 0;
+      const main = document.getElementById('mainContent');
+
+      function updateCardView() {
+        const item = hskVocab[currentIndex];
+        main.innerHTML = `
+          <div class="space-y-6 max-w-md mx-auto">
+            <div class="flex justify-between items-center">
+              <button onclick="switchTab('home')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-arrow-left text-xl"></i></button>
+              <span class="text-xs font-bold text-gray-400">KAD PERKATAAN (${currentIndex + 1}/${hskVocab.length})</span>
+              <span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded-full">${item.topic}</span>
+            </div>
+
+            <!-- CARD ITEM -->
+            <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-lg text-center space-y-4 relative min-h-[280px] flex flex-col justify-center">
+              <h2 class="text-5xl font-black text-gray-900 dark:text-white">${item.hanzi}</h2>
+              <p class="text-xl font-bold text-red-600">${item.pinyin}</p>
+              <p class="text-base text-gray-600 dark:text-gray-300 font-medium">${item.malay}</p>
+
+              <div class="pt-4 border-t border-gray-100 dark:border-gray-700 text-xs text-gray-500">
+                <p class="font-bold text-gray-700 dark:text-gray-300">Contoh Ayat:</p>
+                <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mt-0.5">${item.exHanzi}</p>
+                <p class="text-red-500">${item.exPinyin}</p>
+                <p class="italic text-gray-400">${item.exMalay}</p>
+              </div>
+
+              <div class="flex justify-center space-x-2 pt-2">
+                <button onclick="speakMandarin('${item.hanzi}', 1.0)" class="px-4 py-2 bg-red-100 text-red-600 rounded-xl font-bold text-xs flex items-center">
+                  🔊 Normal
+                </button>
+                <button onclick="speakMandarin('${item.hanzi}', 0.6)" class="px-4 py-2 bg-amber-100 text-amber-700 rounded-xl font-bold text-xs flex items-center">
+                  🐢 Perlahan
+                </button>
+              </div>
+            </div>
+
+            <!-- CARD CONTROLS -->
+            <div class="flex space-x-3">
+              <button id="prevBtn" class="flex-1 py-3 bg-gray-100 dark:bg-gray-700 font-bold rounded-2xl text-gray-700 dark:text-gray-200">
+                ← Sebelumnya
+              </button>
+              <button id="nextBtn" class="flex-1 py-3 bg-red-600 text-white font-bold rounded-2xl shadow-md">
+                Seterusnya →
+              </button>
+            </div>
+          </div>
+        `;
+
+        document.getElementById('prevBtn').onclick = () => {
+          if (currentIndex > 0) { currentIndex--; updateCardView(); }
+        };
+        document.getElementById('nextBtn').onclick = () => {
+          if (currentIndex < hskVocab.length - 1) { currentIndex++; updateCardView(); }
+          else { alert("🎉 Anda telah melihat semua kad perkataan dalam set ini!"); switchTab('home'); }
+        };
+      }
+
+      updateCardView();
+    }
+
+    // --- GRAMMAR BANK ---
+    function renderGrammarBank() {
+      const main = document.getElementById('mainContent');
+      main.innerHTML = `
+        <div class="space-y-6">
+          <div class="flex items-center space-x-3">
+            <button onclick="switchTab('home')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-arrow-left text-xl"></i></button>
+            <div>
+              <h2 class="text-xl font-black text-gray-900 dark:text-white">🧩 Bank Tatabahasa HSK 1</h2>
+              <p class="text-xs text-gray-500">Struktur ayat paling asas dalam Mandarin</p>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            ${grammarPoints.map(g => `
+              <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-3">
+                <span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-2.5 py-1 rounded-full">${g.pattern}</span>
+                <h3 class="font-bold text-gray-900 dark:text-white">${g.title}</h3>
+                <p class="text-xs text-gray-600 dark:text-gray-300">${g.explanation}</p>
+                
+                <div class="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl space-y-1">
+                  <p class="font-bold text-gray-900 dark:text-white text-sm">${g.exHanzi}</p>
+                  <p class="text-xs text-red-500 font-medium">${g.exPinyin}</p>
+                  <p class="text-xs text-gray-500">${g.exMalay}</p>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // --- PRACTICE CENTER & QUIZ ---
+    function renderPracticeCenter() {
+      const main = document.getElementById('mainContent');
+      main.innerHTML = `
+        <div class="space-y-6">
+          <div>
+            <h2 class="text-xl font-black text-gray-900 dark:text-white">✍️ Pusat Latihan</h2>
+            <p class="text-xs text-gray-500">Uji kefahaman pendengaran, pinyin dan maksud</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button onclick="startVocabularyQuiz()" class="p-5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-3xl shadow-sm text-left flex items-center space-x-4 hover:border-red-500 transition-all">
+              <span class="p-4 bg-red-100 text-red-600 rounded-2xl text-2xl">📝</span>
+              <div>
+                <h3 class="font-bold text-gray-900 dark:text-white">Kuiz Kosakata HSK 1</h3>
+                <p class="text-xs text-gray-500">Soalan aneka pilihan kosa kata</p>
+              </div>
+            </button>
+
+            <button onclick="renderMistakeNotebook()" class="p-5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-3xl shadow-sm text-left flex items-center space-x-4 hover:border-amber-500 transition-all">
+              <span class="p-4 bg-amber-100 text-amber-600 rounded-2xl text-2xl">📓</span>
+              <div>
+                <h3 class="font-bold text-gray-900 dark:text-white">Buku Nota Kesalahan</h3>
+                <p class="text-xs text-gray-500">Ulang kaji ${currentUser.mistakes.length} soalan salah</p>
+              </div>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // --- VOCABULARY QUIZ LOGIC ---
+    function startVocabularyQuiz() {
+      const randomWord = hskVocab[Math.floor(Math.random() * hskVocab.length)];
+      const main = document.getElementById('mainContent');
+      
+      main.innerHTML = `
+        <div class="space-y-6 max-w-md mx-auto">
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold text-gray-400">KUIZ KOSA KATA</span>
+            <button onclick="switchTab('practice')" class="text-sm font-bold text-red-600">Batal</button>
+          </div>
+
+          <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm text-center space-y-4">
+            <p class="text-xs text-gray-500">Apakah maksud bagi perkataan Mandarin berikut?</p>
+            <h2 class="text-4xl font-black text-gray-900 dark:text-white">${randomWord.hanzi}</h2>
+            <p class="text-lg font-bold text-red-500">${randomWord.pinyin}</p>
+
+            <div class="space-y-2 pt-4">
+              ${hskVocab.slice(0, 3).concat(randomWord).sort(() => Math.random() - 0.5).map(opt => `
+                <button onclick="handleQuizAnswer('${opt.malay}', '${randomWord.malay}', '${randomWord.hanzi}')" class="w-full py-3 px-4 bg-gray-50 dark:bg-gray-700 hover:bg-red-50 text-gray-800 dark:text-gray-100 font-bold rounded-xl border border-gray-200 dark:border-gray-600 text-sm text-left">
+                  ${opt.malay}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function handleQuizAnswer(selected, correct, wordHanzi) {
+      if (selected === correct) {
+        currentUser.xp += 10;
+        currentUser.hskReadiness = Math.min(100, currentUser.hskReadiness + 2);
+        saveUserState();
+        alert("Bagus! 🎉 Jawapan anda tepat.");
+      } else {
+        currentUser.mistakes.push({ word: wordHanzi, correctMalay: correct });
+        saveUserState();
+        alert(`Belum tepat 😊 Jawapan betul ialah: ${correct}`);
+      }
+      startVocabularyQuiz();
+    }
+
+    // --- MISTAKE NOTEBOOK ---
+    function renderMistakeNotebook() {
+      const main = document.getElementById('mainContent');
+      main.innerHTML = `
+        <div class="space-y-6">
+          <div class="flex items-center space-x-3">
+            <button onclick="switchTab('home')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-arrow-left text-xl"></i></button>
+            <div>
+              <h2 class="text-xl font-black text-gray-900 dark:text-white">📝 Buku Nota Kesalahan</h2>
+              <p class="text-xs text-gray-500">Senarai soalan yang perlu anda ulang kaji</p>
+            </div>
+          </div>
+
+          ${currentUser.mistakes.length === 0 ? `
+            <div class="p-8 text-center bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700">
+              <span class="text-4xl">🎉</span>
+              <p class="font-bold text-gray-800 dark:text-gray-200 mt-2">Tiada Kesalahan Disimpan!</p>
+              <p class="text-xs text-gray-500">Anda telah menjawab semua soalan dengan baik.</p>
+            </div>
+          ` : `
+            <div class="space-y-3">
+              ${currentUser.mistakes.map((m, idx) => `
+                <div class="p-4 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 flex justify-between items-center shadow-sm">
+                  <div>
+                    <h4 class="font-black text-lg text-gray-900 dark:text-white">${m.word}</h4>
+                    <p class="text-xs text-red-600 font-semibold">Maksud Betul: ${m.correctMalay}</p>
+                  </div>
+                  <button onclick="clearMistake(${idx})" class="text-xs bg-emerald-50 text-emerald-600 font-bold px-3 py-1.5 rounded-xl border border-emerald-200">
+                    Selesai / Mastered ✅
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    function clearMistake(index) {
+      currentUser.mistakes.splice(index, 1);
+      saveUserState();
+      renderMistakeNotebook();
+    }
+
+    // --- SIMULATED AI TUTOR ---
+    function renderAITutor() {
+      const main = document.getElementById('mainContent');
+      main.innerHTML = `
+        <div class="space-y-4 flex flex-col h-[80vh]">
+          <div class="flex items-center space-x-3">
+            <span class="text-2xl">🤖</span>
+            <div>
+              <h2 class="text-xl font-black text-gray-900 dark:text-white">AI Guru Mandarin</h2>
+              <p class="text-xs text-gray-500">Tanya soalan berkaitan HSK 1 & Mandarin</p>
+            </div>
+          </div>
+
+          <!-- CHAT BOX -->
+          <div id="chatBox" class="flex-1 bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 p-4 overflow-y-auto space-y-3 shadow-inner">
+            <div class="bg-red-50 dark:bg-red-950/40 p-3 rounded-2xl max-w-[85%] text-xs space-y-1">
+              <p class="font-bold text-red-700 dark:text-red-300">🤖 AI Guru:</p>
+              <p class="text-gray-800 dark:text-gray-200">Ni hao! Saya guru AI anda. Ada sebarang soalan tentang perkataan Mandarin atau HSK 1?</p>
+            </div>
+          </div>
+
+          <!-- INPUT -->
+          <form onsubmit="handleAIChat(event)" class="flex space-x-2">
+            <input type="text" id="aiInput" placeholder="Taip soalan anda di sini..." class="flex-1 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
+            <button type="submit" class="px-5 py-3 bg-red-600 text-white font-bold rounded-2xl">Hantar</button>
+          </form>
+        </div>
+      `;
+    }
+
+    function handleAIChat(e) {
+      e.preventDefault();
+      const input = document.getElementById('aiInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const chatBox = document.getElementById('chatBox');
+      
+      // User Message
+      chatBox.innerHTML += `
+        <div class="ml-auto bg-gray-100 dark:bg-gray-700 p-3 rounded-2xl max-w-[85%] text-xs text-right">
+          <p class="text-gray-900 dark:text-white">${text}</p>
+        </div>
+      `;
+
+      input.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // Simulated AI response
+      setTimeout(() => {
+        let reply = "Perkataan ini sangat kerap digunakan dalam HSK 1! Belajar membaca Pinyin dan mengamalkan sebutan audio setiap hari.";
+        if (text.toLowerCase().includes("suka") || text.toLowerCase().includes("喜欢")) {
+          reply = "Perkataan 'suka' dalam Mandarin ialah 喜欢 (xǐhuan). Contoh: 我喜欢喝茶 (Wǒ xǐhuan hē chá - Saya suka minum teh).";
+        } else if (text.toLowerCase().includes("terima kasih")) {
+          reply = "'Terima kasih' ialah 谢谢 (xièxie). Anda boleh membalas dengan 不客气 (bú kèqi - sama-sama).";
+        }
+
+        chatBox.innerHTML += `
+          <div class="bg-red-50 dark:bg-red-950/40 p-3 rounded-2xl max-w-[85%] text-xs space-y-1">
+            <p class="font-bold text-red-700 dark:text-red-300">🤖 AI Guru:</p>
+            <p class="text-gray-800 dark:text-gray-200">${reply}</p>
+          </div>
+        `;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 600);
+    }
+
+    // --- PROFILE & SETTINGS ---
+    function renderProfile() {
+      const main = document.getElementById('mainContent');
+      main.innerHTML = `
+        <div class="space-y-6">
+          <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-100 dark:border-gray-700 text-center space-y-3 shadow-sm">
+            <div class="w-20 h-20 bg-red-100 dark:bg-red-900/40 text-red-600 rounded-full text-3xl font-black flex items-center justify-center mx-auto">
+              ${currentUser.name ? currentUser.name[0].toUpperCase() : 'P'}
+            </div>
+            <div>
+              <h2 class="text-xl font-black text-gray-900 dark:text-white">${currentUser.name}</h2>
+              <p class="text-xs text-gray-500">${currentUser.role} • Matlamat: ${currentUser.goal}</p>
+            </div>
+          </div>
+
+          <!-- SETTINGS -->
+          <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-100 dark:border-gray-700 space-y-4 shadow-sm">
+            <h3 class="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Tetapan Aplikasi</h3>
+
+            <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+              <span class="text-sm text-gray-700 dark:text-gray-300 font-medium">Kelajuan Audio Suara</span>
+              <select onchange="audioSpeed = parseFloat(this.value)" class="text-xs px-3 py-1.5 bg-gray-100 dark:bg-gray-700 rounded-xl font-bold">
+                <option value="1.0" selected>Normal (1.0x)</option>
+                <option value="0.7">Perlahan (0.7x)</option>
+              </select>
+            </div>
+
+            <button onclick="resetAppProgress()" class="w-full py-3 bg-red-50 text-red-600 font-bold rounded-2xl text-xs hover:bg-red-100">
+              Sifarkan Progress & Reset Semula 🔄
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function resetAppProgress() {
+      if (confirm("Adakah anda pasti mahu menetapkan semula semua rekod pembelajaran?")) {
+        localStorage.removeItem('easyhsk_user');
+        location.reload();
+      }
+    }
+
+    // ----------------------------------------------------
+    // 7. INITIAL STARTUP
+    // ----------------------------------------------------
+    window.addEventListener('DOMContentLoaded', () => {
+      updateHeaderStats();
+      if (!currentUser.name) {
+        renderOnboarding();
+      } else {
+        switchTab('home');
+      }
+    });
+  </script>
+</body>
+</html>
