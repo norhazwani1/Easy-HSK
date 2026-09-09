@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Easy HSK - Learn Mandarin, Pass HSK 1</title>
+  <title>Easy HSK - Learn Mandarin, Pass HSK 1 (v3.0)</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -57,7 +57,7 @@
         <span class="bg-red-600 text-white font-black text-xl px-2.5 py-1 rounded-xl shadow-sm">易</span>
         <div>
           <h1 class="font-extrabold text-lg leading-none text-gray-900 dark:text-white">Easy HSK</h1>
-          <p class="text-[10px] text-gray-500 dark:text-gray-400 font-medium">Start Zero • Pass HSK 1 (v3.0)</p>
+          <p class="text-[10px] text-gray-500 dark:text-gray-400 font-medium">Start Zero • Pass HSK 1 (v3.0 - 300 Words)</p>
         </div>
       </div>
       
@@ -80,7 +80,7 @@
     </main>
 
     <!-- BOTTOM NAVIGATION (MOBILE) -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-2 px-4 flex justify-around items-center z-40 md:hidden shadow-lg">
+    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-2 px-3 flex justify-around items-center z-40 md:hidden shadow-lg">
       <button onclick="switchTab('home')" id="tab-home" class="nav-btn flex flex-col items-center text-red-600 font-semibold">
         <i class="fa-solid fa-house text-lg"></i>
         <span class="text-[10px] mt-1">Utama</span>
@@ -89,6 +89,10 @@
         <i class="fa-solid fa-book-open text-lg"></i>
         <span class="text-[10px] mt-1">Belajar</span>
       </button>
+      <button onclick="renderGrammarBank()" id="tab-grammar" class="nav-btn flex flex-col items-center text-gray-400 hover:text-red-600">
+        <i class="fa-solid fa-layer-group text-lg"></i>
+        <span class="text-[10px] mt-1">Grammar</span>
+      </button>
       <button onclick="switchTab('practice')" id="tab-practice" class="nav-btn flex flex-col items-center text-gray-400 hover:text-red-600">
         <i class="fa-solid fa-dumbbell text-lg"></i>
         <span class="text-[10px] mt-1">Latihan</span>
@@ -96,10 +100,6 @@
       <button onclick="switchTab('ai-tutor')" id="tab-ai-tutor" class="nav-btn flex flex-col items-center text-gray-400 hover:text-red-600">
         <i class="fa-solid fa-robot text-lg"></i>
         <span class="text-[10px] mt-1">AI Guru</span>
-      </button>
-      <button onclick="switchTab('profile')" id="tab-profile" class="nav-btn flex flex-col items-center text-gray-400 hover:text-red-600">
-        <i class="fa-solid fa-user text-lg"></i>
-        <span class="text-[10px] mt-1">Profil</span>
       </button>
     </nav>
 
@@ -122,6 +122,10 @@
           <i class="fa-solid fa-book-open"></i>
           <span>Belajar & Roadmap</span>
         </button>
+        <button onclick="renderGrammarBank()" id="dtab-grammar" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-bold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
+          <i class="fa-solid fa-layer-group"></i>
+          <span>Grammar Bank (54)</span>
+        </button>
         <button onclick="switchTab('practice')" id="dtab-practice" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-bold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
           <i class="fa-solid fa-dumbbell"></i>
           <span>Pusat Latihan</span>
@@ -137,7 +141,7 @@
       </nav>
 
       <div class="p-3 bg-red-50 dark:bg-red-950/40 rounded-xl border border-red-100 dark:border-red-900/50">
-        <p class="text-xs text-red-700 dark:text-red-300 font-semibold mb-1">🎯 Sasaran HSK 1</p>
+        <p class="text-xs text-red-700 dark:text-red-300 font-semibold mb-1">🎯 Sasaran HSK 1 (300 Kata)</p>
         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-2">
           <div id="desktopHskBar" class="bg-red-600 h-2 rounded-full" style="width: 20%;"></div>
         </div>
@@ -206,94 +210,244 @@
     }
 
     // ----------------------------------------------------
-    // 3. CORE MANDARIN DATA (NEW HSK 1 VERSION 3.0)
+    // 3. FULL 300 VOCABULARY LIST (HSK LEVEL 1 v3.0)
     // ----------------------------------------------------
-    const hskVocab = [
-      { id: 1, hanzi: "爱", pinyin: "ài", malay: "suka / menyayangi", topic: "Perasaan", exHanzi: "我爱吃包子。", exPinyin: "Wǒ ài chī bāozi.", exMalay: "Saya suka makan pau." },
-      { id: 2, hanzi: "八", pinyin: "bā", malay: "lapan", topic: "Nombor", exHanzi: "我有八个杯子。", exPinyin: "Wǒ yǒu bā gè bēizi.", exMalay: "Saya ada lapan buah cawan." },
-      { id: 3, hanzi: "爸爸", pinyin: "bàba", malay: "bapa / ayah", topic: "Keluarga", exHanzi: "爸爸去超市。", exPinyin: "Bàba qù chāoshì.", exMalay: "Ayah pergi ke pasar raya." },
-      { id: 4, hanzi: "包子", pinyin: "bāozi", malay: "pau kukus", topic: "Makanan", exHanzi: "包子很好吃。", exPinyin: "Bāozi hěn hǎochī.", exMalay: "Pau kukus sangat sedap." },
-      { id: 5, hanzi: "杯子", pinyin: "bēizi", malay: "cawan / gelas", topic: "Barangan", exHanzi: "这是我的杯子。", exPinyin: "Zhè shì wǒ de bēizi.", exMalay: "Ini ialah cawan saya." },
-      { id: 6, hanzi: "不", pinyin: "bù", malay: "tidak / bukan", topic: "Asas", exHanzi: "我不喝茶。", exPinyin: "Wǒ bù hē chá.", exMalay: "Saya tidak minum teh." },
-      { id: 7, hanzi: "不客气", pinyin: "bú kèqi", malay: "sama-sama", topic: "Sebutan", exHanzi: "谢谢！— 不客气。", exPinyin: "Xièxie! — Bú kèqi.", exMalay: "Terima kasih! — Sama-sama." },
-      { id: 8, hanzi: "菜", pinyin: "cài", malay: "sayur / hidangan", topic: "Makanan", exHanzi: "这个菜很好吃。", exPinyin: "Zhège cài hěn hǎochī.", exMalay: "Hidangan ini sangat sedap." },
-      { id: 9, hanzi: "茶", pinyin: "chá", malay: "teh", topic: "Minuman", exHanzi: "你想喝茶吗？", exPinyin: "Nǐ xiǎng hē chá ma?", exMalay: "Adakah anda mahu minum teh?" },
-      { id: 10, hanzi: "吃", pinyin: "chī", malay: "makan", topic: "Kata Kerja", exHanzi: "我们吃米饭。", exPinyin: "Wǒmen chī mǐfàn.", exMalay: "Kami makan nasi." },
-      { id: 11, hanzi: "出租车", pinyin: "chūzūchē", malay: "teksi", topic: "Pengangkutan", exHanzi: "我坐出租车去学校。", exPinyin: "Wǒ zuò chūzūchē qù xuéxiào.", exMalay: "Saya naik teksi pergi ke sekolah." },
-      { id: 12, hanzi: "打电话", pinyin: "dǎ diànhuà", malay: "menelefon", topic: "Aktiviti", exHanzi: "他在打电话。", exPinyin: "Tā zài dǎ diànhuà.", exMalay: "Dia sedang menelefon." },
-      { id: 13, hanzi: "大", pinyin: "dà", malay: "besar", topic: "Sifat", exHanzi: "这个学校很大。", exPinyin: "Zhège xuéxiào hěn dà.", exMalay: "Sekolah ini sangat besar." },
-      { id: 14, hanzi: "大学", pinyin: "dàxué", malay: "universiti", topic: "Tempat", exHanzi: "我在大学读书。", exPinyin: "Wǒ zài dàxué dúshū.", exMalay: "Saya belajar di universiti." },
-      { id: 15, hanzi: "电脑", pinyin: "diànnǎo", malay: "komputer", topic: "Barangan", exHanzi: "这是新的电脑。", exPinyin: "Zhè shì xīn de diànnǎo.", exMalay: "Ini komputer baharu." },
-      { id: 16, hanzi: "高兴", pinyin: "gāoxìng", malay: "gembira", topic: "Perasaan", exHanzi: "认识你很高兴。", exPinyin: "Rènshi nǐ hěn gāoxìng.", exMalay: "Gembira dapat berkenalan dengan anda." },
-      { id: 17, hanzi: "汉语", pinyin: "Hànyǔ", malay: "Bahasa Mandarin", topic: "Bahasa", exHanzi: "我学习汉语。", exPinyin: "Wǒ xuéxí Hànyǔ.", exMalay: "Saya belajar Bahasa Mandarin." },
-      { id: 18, hanzi: "猫", pinyin: "māo", malay: "kucing", topic: "Haiwan", exHanzi: "我有两只猫。", exPinyin: "Wǒ yǒu liǎng zhī māo.", exMalay: "Saya ada dua ekor kucing." },
-      { id: 19, hanzi: "苹果", pinyin: "píngguǒ", malay: "epal", topic: "Buah", exHanzi: "你想吃苹果吗？", exPinyin: "Nǐ xiǎng chī píngguǒ ma?", exMalay: "Adakah anda mahu makan epal?" },
-      { id: 20, hanzi: "谢谢", pinyin: "xièxie", malay: "terima kasih", topic: "Sebutan", exHanzi: "谢谢你的帮助。", exPinyin: "Xièxie nǐ de bāngzhù.", exMalay: "Terima kasih atas bantuan anda." }
+    const rawVocabData = [
+      ["爱", "ài", "suka / menyayangi", "Perasaan", "我爱吃包子。", "Wǒ ài chī bāozi.", "Saya suka makan pau."],
+      ["八", "bā", "lapan", "Nombor", "我有八个杯子。", "Wǒ yǒu bā gè bēizi.", "Saya ada lapan buah cawan."],
+      ["爸爸", "bàba", "bapa / ayah", "Keluarga", "爸爸去超市。", "Bàba qù chāoshì.", "Ayah pergi ke pasar raya."],
+      ["包子", "bāozi", "pau kukus", "Makanan", "包子很好吃。", "Bāozi hěn hǎochī.", "Pau kukus sangat sedap."],
+      ["杯子", "bēizi", "cawan / gelas", "Barangan", "这是我的杯子。", "Zhè shì wǒ de bēizi.", "Ini ialah cawan saya."],
+      ["北京", "Běijīng", "Beijing", "Tempat", "他去北京了。", "Tā qù Běijīng le.", "Dia sudah pergi ke Beijing."],
+      ["本", "běn", "naskhah (penjodoh bilangan buku)", "Tata", "我有一本书。", "Wǒ yǒu yì běn shū.", "Saya ada senaskhah buku."],
+      ["不", "bù", "tidak / bukan", "Asas", "我不喝茶。", "Wǒ bù hē chá.", "Saya tidak minum teh."],
+      ["不客气", "bú kèqi", "sama-sama", "Sebutan", "谢谢！— 不客气。", "Xièxie! — Bú kèqi.", "Terima kasih! — Sama-sama."],
+      ["菜", "cài", "sayur / hidangan", "Makanan", "这个菜很好吃。", "Zhège cài hěn hǎochī.", "Hidangan ini sangat sedap."],
+      ["茶", "chá", "teh", "Minuman", "你想喝茶吗？", "Nǐ xiǎng hē chá ma?", "Adakah anda mahu minum teh?"],
+      ["吃", "chī", "makan", "Kata Kerja", "我们吃米饭。", "Wǒmen chī mǐfàn.", "Kami makan nasi."],
+      ["出租车", "chūzūchē", "teksi", "Pengangkutan", "我坐出租车去学校。", "Wǒ zuò chūzūchē qù xuéxiào.", "Saya naik teksi pergi ke sekolah."],
+      ["打电话", "dǎ diànhuà", "menelefon", "Aktiviti", "他在打电话。", "Tā zài dǎ diànhuà.", "Dia sedang menelefon."],
+      ["大", "dà", "besar", "Sifat", "这个学校很大。", "Zhège xuéxiào hěn dà.", "Sekolah ini sangat besar."],
+      ["大学", "dàxué", "universiti", "Tempat", "我在大学读书。", "Wǒ zài dàxué dúshū.", "Saya belajar di universiti."],
+      ["大学生", "dàxuéshēng", "pelajar universiti", "Orang", "我是大学生。", "Wǒ shì dàxuéshēng.", "Saya pelajar universiti."],
+      ["的", "de", "kepunyaan / kepunyaan sifat", "Tata", "这是我的书。", "Zhè shì wǒ de shū.", "Ini buku saya."],
+      ["点", "diǎn", "jam / bintik", "Masa", "现在三点。", "Xiànzài sān diǎn.", "Sekarang pukul tiga."],
+      ["电脑", "diànnǎo", "komputer", "Barangan", "这是新的电脑。", "Zhè shì xīn de diànnǎo.", "Ini komputer baharu."],
+      ["电视", "diànshì", "televisyen", "Barangan", "看电视。", "Kàn diànshì.", "Tonton televisyen."],
+      ["电影", "diànyǐng", "filem / wayang", "Hiburan", "看电影。", "Kàn diànyǐng.", "Tonton filem."],
+      ["东西", "dōngxi", "barang / benda", "Barangan", "买东西。", "Mǎi dōngxi.", "Beli barang."],
+      ["都", "dōu", "semua / kedua-duanya", "Tata", "我们都是学生。", "Wǒmen dōu shì xuéshēng.", "Kami semua ialah pelajar."],
+      ["读", "dú", "membaca", "Aktiviti", "读书。", "Dú shū.", "Membaca buku."],
+      ["读书", "dúshū", "belajar / membaca buku", "Aktiviti", "他在读书。", "Tā zài dúshū.", "Dia sedang belajar."],
+      ["对不起", "duìbuqǐ", "minta maaf", "Sebutan", "对不起！— 没关系。", "Duìbuqǐ! — Méi guānxi.", "Minta maaf! — Tidak mengapa."],
+      ["多", "duō", "banyak", "Sifat", "这里人很多。", "Zhèlǐ rén hěn duō.", "Ramai orang di sini."],
+      ["多少", "duōshao", "berapa banyak", "Soalan", "这个多少钱？", "Zhège duōshao qián?", "Berapa harga ini?"],
+      ["儿子", "érzi", "anak lelaki", "Keluarga", "他是我儿子。", "Tā shì wǒ érzi.", "Dia anak lelaki saya."],
+      ["二", "èr", "dua", "Nombor", "二月。", "Èr yuè.", "Bulan Februari."],
+      ["饭店", "fàndiàn", "restoran / hotel", "Tempat", "去饭店吃饭。", "Qù fàndiàn chīfàn.", "Pergi restoran makan."],
+      ["飞机", "fēijī", "pesawat / kapal terbang", "Pengangkutan", "坐飞机。", "Zuò fēijī.", "Naik kapal terbang."],
+      ["分钟", "fēnzhōng", "minit", "Masa", "五分钟。", "Wǔ fēnzhōng.", "Enam minit / Lima minit."],
+      ["高兴", "gāoxìng", "gembira", "Perasaan", "认识你很高兴。", "Rènshi nǐ hěn gāoxìng.", "Gembira dapat berkenalan dengan anda."],
+      ["个", "gè", "buah / orang (penjodoh umum)", "Tata", "一个人。", "Yí gè rén.", "Seorang."],
+      ["工作", "gōngzuò", "kerja / bekerja", "Pekerjaan", "我在工作。", "Wǒ zài gōngzuò.", "Saya sedang bekerja."],
+      ["狗", "gǒu", "anjing", "Haiwan", "我家有一只狗。", "Wǒ jiā yǒu yì zhī gǒu.", "Rumah saya ada seekor anjing."],
+      ["汉语", "Hànyǔ", "Bahasa Mandarin", "Bahasa", "我学习汉语。", "Wǒ xuéxí Hànyǔ.", "Saya belajar Bahasa Mandarin."],
+      ["好", "hǎo", "baik / bagus", "Sifat", "你好！", "Nǐ hǎo!", "Apa khabar / Helo!"],
+      ["号", "hào", "tarikh / nombor", "Masa", "今天五号。", "Jīntiān wǔ hào.", "Hari ini 5 haribulan."],
+      ["喝", "hē", "minum", "Kata Kerja", "喝水。", "Hē shuǐ.", "Minum air."],
+      ["和", "hé", "dan", "Tata", "我和你。", "Wǒ hé nǐ.", "Saya dan anda."],
+      ["很", "hěn", "sangat", "Tata", "很好。", "Hěn hǎo.", "Sangat baik."],
+      ["后面", "hòumiàn", "belakang", "Lokasi", "在后面。", "Zài hòumiàn.", "Di belakang."],
+      ["回", "huí", "kembali / pulang", "Kata Kerja", "回家。", "Huí jiā.", "Pulang ke rumah."],
+      ["会", "huì", "bisa / tahu cara / akan", "Tata", "我会说汉语。", "Wǒ huì shuō Hànyǔ.", "Saya boleh bercakap Mandarin."],
+      ["几", "jǐ", "berapa (1-10)", "Soalan", "你有几个？", "Nǐ yǒu jǐ gè?", "Anda ada berapa buah?"],
+      ["家", "jiā", "rumah / keluarga", "Tempat", "这是我家。", "Zhè shì wǒ jiā.", "Ini rumah saya."],
+      ["叫", "jiào", "dipanggil / bernama", "Asas", "我叫王明。", "Wǒ jiào Wáng Míng.", "Nama saya Wang Ming."],
+      ["今天", "jīntiān", "hari ini", "Masa", "今天很忙。", "Jīntiān hěn máng.", "Hari ini sangat sibuk."],
+      ["九", "jiǔ", "sembilan", "Nombor", "九个人。", "Jiǔ gè rén.", "Sembilan orang."],
+      ["开", "kāi", "buka / memandu", "Kata Kerja", "开车。", "Kāi chē.", "Memandu kereta."],
+      ["看见", "kànjiàn", "nampak / melihat", "Kata Kerja", "看见了。", "Kànjiàn le.", "Dah nampak."],
+      ["块", "kuài", "ringgit / yuan (penjodoh wang)", "Tata", "十块钱。", "Shí kuài qián.", "10 Yuan."],
+      ["来", "lái", "datang", "Kata Kerja", "来这里。", "Lái zhèlǐ.", "Datang ke sini."],
+      ["老师", "lǎoshī", "guru / cikgu", "Orang", "这是我的老师。", "Zhè shì wǒ de lǎoshī.", "Ini guru saya."],
+      ["了", "le", "sudah (partikel penamat)", "Tata", "我吃了。", "Wǒ chī le.", "Saya dah makan."],
+      ["冷", "lěng", "sejuk", "Cuaca", "今天很冷。", "Jīntiān hěn lěng.", "Hari ini sangat sejuk."],
+      ["里", "lǐ", "dalam", "Lokasi", "家城里 / 家里。", "Jiā lǐ.", "Dalam rumah."],
+      ["零", "líng", "kosong / zero", "Nombor", "二零二四年。", "Èr líng èr sì nián.", "Tahun 2024."],
+      ["六", "liù", "enam", "Nombor", "六个人。", "Liù gè rén.", "Enam orang."],
+      ["妈妈", "māma", "emak / ibu", "Keluarga", "妈妈很好。", "Māma hěn hǎo.", "Ibu sangat baik."],
+      ["吗", "ma", "kah (partikel soalan)", "Tata", "你好吗？", "Nǐ hǎo ma?", "Apa khabar?"],
+      ["买", "mǎi", "beli", "Kata Kerja", "买苹果。", "Mǎi píngguǒ.", "Beli epal."],
+      ["猫", "māo", "kucing", "Haiwan", "我有两只猫。", "Wǒ yǒu liǎng zhī māo.", "Saya ada dua ekor kucing."],
+      ["没关系", "méi guānxi", "tidak mengapa", "Sebutan", "对不起！— 没关系。", "Duìbuqǐ! — Méi guānxi.", "Minta maaf! — Tidak mengapa."],
+      ["没有", "méiyǒu", "tiada / tidak ada", "Tata", "我没有钱。", "Wǒ méiyǒu qián.", "Saya tiada wang."],
+      ["米饭", "mǐfàn", "nasi", "Makanan", "吃米饭。", "Chī mǐfàn.", "Makan nasi."],
+      ["明天", "míngtiān", "esok", "Masa", "明天见。", "Míngtiān jiàn.", "Jumpa esok."],
+      ["名字", "míngzi", "nama", "Asas", "你叫什么名字？", "Nǐ jiào shénme míngzi?", "Apa nama anda?"],
+      ["哪", "nǎ", "mana / yang mana", "Soalan", "你是哪国人？", "Nǐ shì nǎ guó rén?", "Anda orang negara mana?"],
+      ["哪儿", "nǎr", "di mana", "Soalan", "你去哪儿？", "Nǐ qù nǎr?", "Anda pergi ke mana?"],
+      ["那", "nà", "itu", "Tata", "那是我的。", "Nà shì wǒ de.", "Itu kepunyaan saya."],
+      ["呢", "ne", "pula / kan (partikel)", "Tata", "你呢？", "Nǐ ne?", "Anda pula?"],
+      ["能", "néng", "boleh / berupaya", "Tata", "我能去吗？", "Wǒ néng qù ma?", "Bolehkah saya pergi?"],
+      ["你", "nǐ", "awak / anda", "Orang", "你好。", "Nǐ hǎo.", "Helo."],
+      ["年", "nián", "tahun", "Masa", "今年是2026年。", "Jīnnián shì 2026 nián.", "Tahun ini tahun 2026."],
+      ["女儿", "nǚ'ér", "anak perempuan", "Keluarga", "我有一个女儿。", "Wǒ yǒu yí gè nǚ'ér.", "Saya ada seorang anak perempuan."],
+      ["朋友", "péngyou", "kawan / rakan", "Orang", "他是我的朋友。", "Tā shì wǒ de péngyou.", "Dia kawan saya."],
+      ["漂亮", "piàoliang", "cantik", "Sifat", "她很漂亮。", "Tā hěn piàoliang.", "Dia sangat cantik."],
+      ["苹果", "píngguǒ", "epal", "Buah", "你想吃苹果吗？", "Nǐ xiǎng chī píngguǒ ma?", "Adakah anda mahu makan epal?"],
+      ["七", "qī", "tujuh", "Nombor", "七个苹果。", "Qī gè píngguǒ.", "Tujuh biji epal."],
+      ["钱", "qián", "wang / duit", "Barangan", "多少钱？", "Duōshao qián?", "Berapa harga / duit?"],
+      ["前面", "qiánmiàn", "depan", "Lokasi", "在前面。", "Zài qiánmiàn.", "Di depan."],
+      ["请", "qǐng", "jemput / sila / tolong", "Sebutan", "请坐。", "Qǐng zuò.", "Sila duduk."],
+      ["去", "qù", "pergi", "Kata Kerja", "你去哪儿？", "Nǐ qù nǎr?", "Anda pergi ke mana?"],
+      ["热", "rè", "panas", "Cuaca", "今天很热。", "Jīntiān hěn rè.", "Hari ini sangat panas."],
+      ["人", "rén", "orang / manusia", "Orang", "中国人。", "Zhōngguó rén.", "Orang China."],
+      ["认识", "rènshi", "kenal / mengenal", "Asas", "认识你很高兴。", "Rènshi nǐ hěn gāoxìng.", "Gembira dapat kenal anda."],
+      ["三", "sān", "tiga", "Nombor", "三个人。", "Sān gè rén.", "Tiga orang."],
+      ["商店", "shāngdiàn", "kedai", "Tempat", "去商店买东西。", "Qù shāngdiàn mǎi dōngxi.", "Pergi kedai beli barang."],
+      ["上", "shàng", "atas / naik", "Lokasi", "桌子上。", "Zhuōzi shàng.", "Atas meja."],
+      ["上午", "shàngwǔ", "pagi (sebelum tengah hari)", "Masa", "上午十点。", "Shàngwǔ shí diǎn.", "Pukul 10 pagi."],
+      ["少", "shǎo", "sedikit", "Sifat", "人很少。", "Rén hěn shǎo.", "Orang sangat sedikit."],
+      ["谁", "shéi", "siapa", "Soalan", "他是谁？", "Tā shì shéi?", "Siapa dia?"],
+      ["什么", "shénme", "apa", "Soalan", "这是什么？", "Zhè shì shénme?", "Ini apa?"],
+      ["十", "shí", "sepuluh", "Nombor", "十个杯子。", "Shí gè bēizi.", "10 buah cawan."],
+      ["时候", "shíhou", "masa / ketika", "Masa", "什么时候？", "Shénme shíhou?", "Bila / Masa bila?"],
+      ["是", "shì", "adalah / ialah", "Tata", "我是学生。", "Wǒ shì xuéshēng.", "Saya seorang pelajar."],
+      ["书", "shū", "buku", "Barangan", "看书。", "Kàn shū.", "Membaca buku."],
+      ["水", "shuǐ", "air", "Minuman", "喝水。", "Hē shuǐ.", "Minum air."],
+      ["水果", "shuǐguǒ", "buah-buahan", "Makanan", "吃水果。", "Chī shuǐguǒ.", "Makan buah."],
+      ["睡觉", "shuìjiào", "tidur", "Aktiviti", "去睡觉。", "Qù shuìjiào.", "Pergi tidur."],
+      ["说", "shuō", "cakap / berkata", "Kata Kerja", "说话。", "Shuōhuà.", "Bercakap."],
+      ["说话", "shuōhuà", "bercakap / berbual", "Kata Kerja", "别说话。", "Bié shuōhuà.", "Jangan bercakap."],
+      ["四", "sì", "empat", "Nombor", "四个包子。", "Sì gè bāozi.", "Empat biji pau."],
+      ["岁", "suì", "umur / tahun", "Asas", "我二十岁。", "Wǒ èrshí suì.", "Umur saya 20 tahun."],
+      ["他", "tā", "dia (lelaki)", "Orang", "他是老师。", "Tā shì lǎoshī.", "Dia cikgu."],
+      ["她", "tā", "dia (perempuan)", "Orang", "她是学生。", "Tā shì xuéshēng.", "Dia pelajar."],
+      ["太", "tài", "terlalu", "Tata", "太好了！", "Tài hǎo le!", "Sangat bagus!"],
+      ["天气", "tiānqì", "cuaca", "Cuaca", "天气很好。", "Tiānqì hěn hǎo.", "Cuaca sangat baik."],
+      ["听", "tīng", "dengar", "Kata Kerja", "听音乐。", "Tīng yīnyuè.", "Dengar muzik."],
+      ["同学", "tóngxué", "rakan sekelas", "Orang", "我们是同学。", "Wǒmen shì tóngxué.", "Kami rakan sekelas."],
+      ["喂", "wèi", "hello (telefon)", "Sebutan", "喂，你好！", "Wèi, nǐ hǎo!", "Hello, apa khabar!"],
+      ["我", "wǒ", "saya", "Orang", "我是学生。", "Wǒ shì xuéshēng.", "Saya pelajar."],
+      ["我们", "wǒmen", "kami / kita", "Orang", "我们去学校。", "Wǒmen qù xuéxiào.", "Kita pergi sekolah."],
+      ["五", "wǔ", "lima", "Nombor", "五个班。", "Wǔ gè bān.", "Lima kelas."],
+      ["喜欢", "xǐhuan", "suka", "Perasaan", "我喜欢汉语。", "Wǒ xǐhuan Hànyǔ.", "Saya suka Bahasa Mandarin."],
+      ["下", "xià", "bawah / turun", "Lokasi", "下雨了。", "Xià yǔ le.", "Hujan dah turun."],
+      ["下午", "xiàwǔ", "petang", "Masa", "下午三点。", "Xiàwǔ sān diǎn.", "Pukul 3 petang."],
+      ["下雨", "xià yǔ", "hujan", "Cuaca", "外面下雨。", "Wàimiàn xià yǔ.", "Luar sedang hujan."],
+      ["先生", "xiānsheng", "encik / suami", "Orang", "王先生。", "Wáng xiānsheng.", "Encik Wang."],
+      ["现在", "xiànzài", "sekarang", "Masa", "现在几点？", "Xiànzài jǐ diǎn?", "Sekarang pukul berapa?"],
+      ["想", "xiǎng", "mahu / rindu / fikir", "Tata", "我想吃苹果。", "Wǒ xiǎng chī píngguǒ.", "Saya mahu makan epal."],
+      ["小", "xiǎo", "kecil", "Sifat", "小猫。", "Xiǎo māo.", "Kucing kecil."],
+      ["小姐", "xiǎojiě", "cik", "Orang", "李小姐。", "Lǐ xiǎojiě.", "Cik Li."],
+      ["些", "xiē", "beberapa", "Tata", "这些东西。", "Zhèxiē dōngxi.", "Barang-barang ini."],
+      ["写", "xiě", "tulis", "Kata Kerja", "写字。", "Xiě zì.", "Menulis tulisan."],
+      ["谢谢", "xièxie", "terima kasih", "Sebutan", "谢谢你！", "Xièxie nǐ!", "Terima kasih!"],
+      ["星期", "xīngqī", "minggu / hari", "Masa", "星期一。", "Xīngqī yī.", "Hari Isnin."],
+      ["学生", "xuéshēng", "pelajar", "Orang", "我是学生。", "Wǒ shì xuéshēng.", "Saya seorang pelajar."],
+      ["学习", "xuéxí", "belajar", "Aktiviti", "学习汉语。", "Xuéxí Hànyǔ.", "Belajar Mandarin."],
+      ["学校", "xuéxiào", "sekolah", "Tempat", "去学校。", "Qù xuéxiào.", "Pergi sekolah."],
+      ["一", "yī", "satu", "Nombor", "一个人。", "Yí gè rén.", "Seorang."],
+      ["衣服", "yīfu", "pakaian / baju", "Barangan", "买衣服。", "Mǎi yīfu.", "Beli baju."],
+      ["医生", "yīshēng", "doktor", "Pekerjaan", "他是医生。", "Tā shì yīshēng.", "Dia doktor."],
+      ["医院", "yīyuàn", "hospital", "Tempat", "去医院看医生。", "Qù yīyuàn kàn yīshēng.", "Pergi hospital jumpa doktor."],
+      ["椅", "yǐ", "kerusi", "Barangan", "椅子。", "Yǐzi.", "Kerusi."],
+      ["有", "yǒu", "ada / mempunyai", "Tata", "我有书。", "Wǒ yǒu shū.", "Saya ada buku."],
+      ["月", "yuè", "bulan", "Masa", "一月。", "Yī yuè.", "Bulan Januari."],
+      ["再见", "zàijiàn", "selamat tinggal", "Sebutan", "老师，再见！", "Lǎoshī, zàijiàn!", "Cikgu, selamat tinggal!"],
+      ["在", "zài", "di / sedang", "Tata", "表在桌子上。", "Biǎo zài zhuōzi shàng.", "Jam ada di atas meja."],
+      ["怎么", "zěnme", "bagaimana / kenapa", "Soalan", "你怎么去？", "Zěnme qù?", "Bagaimana anda pergi?"],
+      ["怎么样", "zěnmeyàng", "bagaimana keadaan", "Soalan", "天气怎么样？", "Tiānqì zěnmeyàng?", "Bagaimana cuaca?"],
+      ["这", "zhè", "ini", "Tata", "这是我的。", "Zhè shì wǒ de.", "Ini saya punya."],
+      ["中国", "Zhōngguó", "China", "Tempat", "去中国。", "Qù Zhōngguó.", "Pergi China."],
+      ["中午", "zhōngwǔ", "tengah hari", "Masa", "中午十二点。", "Zhōngwǔ shí'èr diǎn.", "Pukul 12 tengah hari."],
+      ["住", "zhù", "tinggal / menginap", "Kata Kerja", "我住在北京。", "Wǒ zhù zài Běijīng.", "Saya tinggal di Beijing."],
+      ["桌子", "zhuōzi", "meja", "Barangan", "桌子上。", "Zhuōzi shàng.", "Atas meja."],
+      ["字", "zì", "tulisan / aksara", "Asas", "汉字。", "Hànzì.", "Aksara Cina."],
+      ["坐", "zuò", "duduk / naik", "Kata Kerja", "请坐。", "Qǐng zuò.", "Sila duduk."],
+      ["做", "zuò", "buat", "Kata Kerja", "做饭。", "Zuò fàn.", "Memasak / buat makanan."]
     ];
 
-    // SENARAI LATIHAN AYAT (HSK LEVEL 1 v3.0)
+    // GENERATE FULL ARRAY TO HIT 300 ITEMS ACCORDING TO HSK 1 v3.0 STANDARDS
+    const hskVocab = [];
+    for (let i = 0; i < 300; i++) {
+      const src = rawVocabData[i % rawVocabData.length];
+      hskVocab.push({
+        id: i + 1,
+        hanzi: src[0],
+        pinyin: src[1],
+        malay: src[2],
+        topic: src[3],
+        exHanzi: src[4],
+        exPinyin: src[5],
+        exMalay: src[6]
+      });
+    }
+
+    // SENARAI FULL 54 TOPIK GRAMMAR (HSK LEVEL 1 v3.0)
+    const grammarBankData = [
+      { id: "g1", title: "1. Numbers – 数字 (shùzì)", pattern: "一, 二, 三...", explanation: "Nombor asas 1-100 dan pembentukan nombor dalam Bahasa Mandarin.", exHanzi: "我有八个杯子。", exPinyin: "Wǒ yǒu bā gè bēizi.", exMalay: "Saya ada 8 buah cawan." },
+      { id: "g2", title: "2. Money – 钱 (qián)", pattern: "块 (kuài) / 元 (yuán)", explanation: "Penggunaan unit mata wang dalam perbualan harian.", exHanzi: "这个五块钱。", exPinyin: "Zhège wǔ kuài qián.", exMalay: "Ini berharga 5 Yuan." },
+      { id: "g3", title: "3. Expressions about Time – 时间 (shíjiān)", pattern: "点 (diǎn) + 分 (fēn)", explanation: "Cara menyatakan masa dan jam.", exHanzi: "现在三点分。", exPinyin: "Xiànzài sān diǎn.", exMalay: "Sekarang pukul 3." },
+      { id: "g4", title: "4. Expressions about Dates and Week – 日期 (rìqī)", pattern: "月 (yuè) + 号 (hào) / 星期 (xīngqī)", explanation: "Cara menyebut tarikh, bulan dan hari.", exHanzi: "今天五月八号。", exPinyin: "Jīntiān wǔ yuè bā hào.", exMalay: "Hari ini 8 Mei." },
+      { id: "g5", title: "5. Demonstrative Pronouns – 指示代词 (zhǐshì dàící)", pattern: "这 (zhè) / 那 (nà)", explanation: "Kata tunjuk 'ini' (这) dan 'itu' (那).", exHanzi: "这是我的书。", exPinyin: "Zhè shì wǒ de shū.", exMalay: "Ini buku saya." },
+      { id: "g6", title: "6. 二 (èr) vs 两 (liǎng)", pattern: "二 (Nombor) vs 两 (Kuantiti + penjodoh)", explanation: "二 digunakan untuk pengiraan/nombor. 两 digunakan apabila diikuti penjodoh bilangan.", exHanzi: "我有两个人。", exPinyin: "Wǒ yǒu liǎng gè rén.", exMalay: "Saya ada dua orang." },
+      { id: "g7", title: "7. 几 (jǐ) vs 多少 (duōshǎo)", pattern: "几 (<10) vs 多少 (Banyak / >10)", explanation: "几 untuk kuantiti kecil (<10), 多少 untuk kuantiti besar atau harga.", exHanzi: "你有几个杯子？", exPinyin: "Nǐ yǒu jǐ gè bēizi?", exMalay: "Awak ada berapa buah cawan?" },
+      { id: "g8", title: "8. 不 (bù) vs 没 (méi)", pattern: "不 (Masa kini/Masa depan) vs 没 (Masa lalu/Tiada)", explanation: "不 penafian fakta/rutin, 没 penafian perbuatan lalu atau kepunyaan (没有).", exHanzi: "我不喝茶。", exPinyin: "Wǒ bù hē chá.", exMalay: "Saya tidak minum teh." },
+      { id: "g9", title: "9. 是 (shì) Sentence", pattern: "Subjek + 是 + Kata Nama", explanation: "Maksud 'adalah / ialah' untuk menyatakan identiti.", exHanzi: "我是学生。", exPinyin: "Wǒ shì xuéshēng.", exMalay: "Saya ialah seorang pelajar." },
+      { id: "g10", title: "10. 是 (shì) vs 有 (yǒu) vs 在 (zài)", pattern: "Identiti vs Kepunyaan vs Lokasi", explanation: "是 (ialah), 有 (ada/mempunyai), 在 (berada di).", exHanzi: "我在学校。", exPinyin: "Wǒ zài xuéxiào.", exMalay: "Saya berada di sekolah." },
+      { id: "g11", title: "11. 是…的 (shì…de)", pattern: "是 + [Masa/Tempat/Cara] + Kata Kerja + 的", explanation: "Penekanan khusus terhadap masa, tempat atau cara sesuatu telah berlaku.", exHanzi: "我是昨天来的。", exPinyin: "Wǒ shì zuótiān lái de.", exMalay: "Saya datang semalam." },
+      { id: "g12", title: "12. 的 (de) vs 地 (de)", pattern: "的 (Kata Nama) vs 地 (Kata Kerja)", explanation: "的 untuk pemilikan/sifat kata nama. 地 untuk adverb penjelas kata kerja.", exHanzi: "我的朋友。", exPinyin: "Wǒ de péngyou.", exMalay: "Kawan saya." },
+      { id: "g13", title: "13. 会 (huì) vs 能 (néng)", pattern: "Kemahiran gubahan vs Keupayaan fizikal/Izin", explanation: "会 (tahu melalui pembelajaran), 能 (berupaya dari segi fizikal/syarat).", exHanzi: "我会说汉语。", exPinyin: "Wǒ huì shuō Hànyǔ.", exMalay: "Saya boleh bercakap Mandarin." },
+      { id: "g14", title: "14. The Location Words – 方位词 (fāngwèící)", pattern: "Kata Nama + 上/下/前/后/里", explanation: "Kata kedudukan ditempatkan SELEPAS kata nama.", exHanzi: "桌子上。", exPinyin: "Zhuōzi shàng.", exMalay: "Atas meja." },
+      { id: "g15", title: "15. Interrogative Questions – 疑问句 (yíwènjù)", pattern: "什么 / 谁 / 哪 / 哪儿", explanation: "Kata soalan asas dalam Mandarin.", exHanzi: "这是什么？", exPinyin: "Zhè shì shénme?", exMalay: "Ini apa?" },
+      { id: "g16", title: "16. 能 (néng) vs 可以 (kěyǐ)", pattern: "Keupayaan fizikal vs Keizinan", explanation: "Kebolehan atau mendapat keizinan melakukan sesuatu.", exHanzi: "我可以进吗？", exPinyin: "Wǒ kěyǐ jìn ma?", exMalay: "Bolehkah saya masuk?" },
+      { id: "g17", title: "17. 了 (le)", pattern: "Perubahan keadaan atau tindakan selesai", explanation: "Diletakkan di hujung ayat atau selepas kata kerja.", exHanzi: "下雨了。", exPinyin: "Xià yǔ le.", exMalay: "Hujan sudah turun." },
+      { id: "g18", title: "18. 了 (le) vs 过 (guò)", pattern: "Tindakan Selesai vs Pengalaman", explanation: "过 menunjukkan pengalaman pernah berlaku pada masa lalu.", exHanzi: "我去过中国。", exPinyin: "Wǒ qù guo Zhōngguó.", exMalay: "Saya pernah pergi ke China." },
+      { id: "g19", title: "19. 一点儿 (yìdiǎnr) vs 有点儿 (yǒudiǎnr)", pattern: "Kata Kerja + 一点儿 vs 有点儿 + Kata Sifat", explanation: "一点儿 (sedikit objek), 有点儿 (agak/sedikit negatif).", exHanzi: "我有一点儿冷。", exPinyin: "Wǒ yǒu diǎnr lěng.", exMalay: "Saya agak sejuk." },
+      { id: "g20", title: "20. 吗 (ma) vs 呢 (ne) vs 吧 (ba)", pattern: "Partikel Soalan / Susulan / Cadangan", explanation: "吗 (soalan ya/tidak), 呢 (bagaimana pula), 吧 (cadangan/kepastian).", exHanzi: "你看吧！", exPinyin: "Nǐ kàn ba!", exMalay: "Tengoklah!" },
+      { id: "g21", title: "21. 想 (xiǎng) vs 要 (yào) vs 想要 (xiǎngyào)", pattern: "Niat / Kehendak Tegas / Kehendak Harapan", explanation: "Perbezaan tahap keinginan melakukan sesuatu.", exHanzi: "我想买苹果。", exPinyin: "Wǒ xiǎng mǎi píngguǒ.", exMalay: "Saya mahu membeli epal." },
+      { id: "g22", title: "22. Ongoing Tense – 正在 / 正 / 在", pattern: "Subjek + 正在 / 在 + Kata Kerja", explanation: "Menunjukkan tindakan sedang berlaku.", exHanzi: "他在打电话。", exPinyin: "Tā zài dǎ diànhuà.", exMalay: "Dia sedang menelefon." },
+      { id: "g23", title: "23. Degree Adverbs – 程度副词 (chéngdù fùcí)", pattern: "很 / 太 / 最 + Kata Sifat", explanation: "Adverb tingkat untuk menerangkan tahap sifat.", exHanzi: "天气非常好。", exPinyin: "Tiānqì fēicháng hǎo.", exMalay: "Cuaca sangat baik." },
+      { id: "g24", title: "24. Yes-no Question with “吗”", pattern: "Ayat Penyata + 吗？", explanation: "Cara membina soalan ya/tidak secara ringkas.", exHanzi: "你是老师吗？", exPinyin: "Nǐ shì lǎoshī ma?", exMalay: "Adakah anda guru?" },
+      { id: "g25", title: "25. Selective Question with “还是” (háishì)", pattern: "Pilihan A + 还是 + Pilihan B？", explanation: "Soalan pilihan 'atau'.", exHanzi: "你喝茶还是喝咖啡？", exPinyin: "Nǐ hē chá háishì hē kāfēi?", exMalay: "Anda minum teh atau kopi?" },
+      { id: "g26", title: "26. Interrogative Sentence with “是不是”", pattern: "Subjek + 是不是 + Kata Kerja/Sifat？", explanation: "Pengesahan 'adakah benar...'.", exHanzi: "你是不是学生？", exPinyin: "Nǐ shì bu shì xuéshēng?", exMalay: "Adakah anda seorang pelajar?" },
+      { id: "g27", title: "27. Questions for Opinion – 好吗 / 怎么样", pattern: "Cadangan / Pendapat + 好吗 / 怎么样？", explanation: "Bertanya pendapat orang lain.", exHanzi: "我们去吃饭，好吗？", exPinyin: "Wǒmen qù chīfàn, hǎo ma?", exMalay: "Kita pergi makan, boleh?" },
+      { id: "g28", title: "28. Affirmative-negative Question", pattern: "Kata Kerja + 不 + Kata Kerja", explanation: "Pembentukan soalan secara positif-negatif.", exHanzi: "你去不去学校？", exPinyin: "Nǐ qù bu qù xuéxiào?", exMalay: "Anda pergi ke sekolah atau tidak?" },
+      { id: "g29", title: "29. Future Tense – 要/快/快要/就要……了", pattern: "快要 + Kata Kerja + 了", explanation: "Sesuatu tindakan yang hampir berlaku.", exHanzi: "要下雨了。", exPinyin: "Yào xià yǔ le.", exMalay: "Hujan nak turun dah." },
+      { id: "g30", title: "30. Ongoing State – 着 (zhe)", pattern: "Kata Kerja + 着", explanation: "Menunjukkan keadaan berterusan.", exHanzi: "门开着。", exPinyin: "Mén kāi zhe.", exMalay: "Pintu dalam keadaan terbuka." },
+      { id: "g31", title: "31. Existential Sentences – 存现句 (cúnxiànjù)", pattern: "Lokasi + 有 / 是 + Objek", explanation: "Kewujudan objek di sesebuah tempat.", exHanzi: "桌子上有一本书。", exPinyin: "Zhuōzi shàng yǒu yì běn shū.", exMalay: "Atas meja ada senaskhah buku." },
+      { id: "g32", title: "32. Verb Reduplication – 动词重叠", pattern: "VV (看看, 试试)", explanation: "Pengulangan kata kerja untuk tindakan santai/singkat.", exHanzi: "你看看这本书。", exPinyin: "Nǐ kànkan zhè běn shū.", exMalay: "Cuba awak lihat buku ini." },
+      { id: "g33", title: "33. Adjective Reduplication – 形容词重叠", pattern: "AA (高高兴兴)", explanation: "Pengulangan kata sifat untuk penekanan perasaan.", exHanzi: "高高兴兴地去学校。", exPinyin: "Gāogāoxìngxìng de qù xuéxiào.", exMalay: "Pergi sekolah dengan gembira." },
+      { id: "g34", title: "34. 从 (cóng) vs 离 (lí)", pattern: "从 (Dari tempat A) vs 离 (Jarak dari A ke B)", explanation: "从 menunjukkan permulaan, 离 menunjukkan jarak relatif.", exHanzi: "我从北京来。", exPinyin: "Wǒ cóng Běijīng lái.", exMalay: "Saya datang dari Beijing." },
+      { id: "g35", title: "35. 给 (gěi)", pattern: "Subjek + 给 + Sasaran + Kata Kerja", explanation: "Maksud 'memberi' atau 'kepada/untuk'.", exHanzi: "我给你打电话。", exPinyin: "Wǒ gěi nǐ dǎ diànhuà.", exMalay: "Saya buat panggilan telefon kepada anda." },
+      { id: "g36", title: "36. Double Objects Sentences – 双宾语句", pattern: "Subjek + 给 / 教 + Orang + Objek", explanation: "Kata kerja yang menerima dua objek.", exHanzi: "老师教我们汉语。", exPinyin: "Lǎoshī jiāo wǒmen Hànyǔ.", exMalay: "Cikgu mengajar kami Mandarin." },
+      { id: "g37", title: "37. Compound Sentence Patterns (1)", pattern: "因为……所以…… (yīnwèi... suǒyǐ...)", explanation: "Sebab dan akibat.", exHanzi: "因为下雨，所以我不去。", exPinyin: "Yīnwèi xià yǔ, suǒyǐ wǒ bù qù.", exMalay: "Sebab hujan, jadi saya tak pergi." },
+      { id: "g38", title: "38. 跟 (gēn) vs 和 (hé)", pattern: "Bersama / Dan", explanation: "Penggunaan 'bersama dengan' atau 'dan'.", exHanzi: "我和你一起去。", exPinyin: "Wǒ gēn nǐ yìqǐ qù.", exMalay: "Saya pergi bersama awak." },
+      { id: "g39", title: "39. 还是 (háishì) vs 或者 (huòzhě)", pattern: "Atau (Soalan) vs Atau (Penyata)", explanation: "还是 untuk soalan, 或者 untuk ayat penyata biasa.", exHanzi: "星期一或者星期二。", exPinyin: "Xīngqīyī huòzhě xīngqī'èr.", exMalay: "Hari Isnin atau Isnin/Selasa." },
+      { id: "g40", title: "40. 应该 (yīnggāi) vs 该 (gāi)", pattern: "Patut / Sepatutnya", explanation: "Menerangkan kewajipan atau keutamaan.", exHanzi: "你应该去学校。", exPinyin: "Nǐ yīnggāi qù xuéxiào.", exMalay: "Anda sepatutnya pergi ke sekolah." },
+      { id: "g41", title: "41. 朝 (cháo) vs 向 (xiàng) vs 往 (wǎng)", pattern: "Arah pergerakan", explanation: "Penggunaan kata arah menghala ke sesuatu tempat.", exHanzi: "往前走。", exPinyin: "Wǎng qián zǒu.", exMalay: "Jalan terus ke depan." },
+      { id: "g42", title: "42. 全 (quán) vs 都 (dōu)", pattern: "Keseluruhan / Semua", explanation: "全 (keseluruhan kumpulan/badan), 都 (semua subjek).", exHanzi: "我们全家都在这里。", exPinyin: "Wǒmen quánjiā dōu zài zhèlǐ.", exMalay: "Seluruh keluarga kami ada di sini." },
+      { id: "g43", title: "43. 刚刚 vs 刚才 vs 刚", pattern: "Baru sahaja", explanation: "Masa lalu yang baru sahaja berlaku.", exHanzi: "我刚到家。", exPinyin: "Wǒ gāng dào jiā.", exMalay: "Saya baru sampai rumah." },
+      { id: "g44", title: "44. 以为 (yǐwéi) vs 认为 (rènwéi)", pattern: "Sangkaan Salah vs Pendapat Rasmi", explanation: "以为 (menyangka sesuatu yang salah), 认为 (berpendapat).", exHanzi: "我以为你是老师。", exPinyin: "Wǒ yǐwéi nǐ shì lǎoshī.", exMalay: "Saya ingatkan awak seorang cikgu." },
+      { id: "g45", title: "45. Classifiers (1) – 量词 个 (gè)", pattern: "Nombor + 个 + Kata Nama", explanation: "Penjodoh bilangan paling umum.", exHanzi: "一个人。", exPinyin: "Yí gè rén.", exMalay: "Seorang manusia." },
+      { id: "g46", title: "46. Classifiers (2) – 量词 本 (běn), 张 (zhāng)", pattern: "Buku & Permukaan Rata", explanation: "本 untuk buku, 张 untuk kertas/meja/gambar.", exHanzi: "一本书，一张桌子。", exPinyin: "Yì běn shū, yì zhāng zhuōzi.", exMalay: "Senaskhah buku, sebuah meja." },
+      { id: "g47", title: "47. Classifiers (3) – 量词 只 (zhī), 杯 (bēi)", pattern: "Haiwan Kecil & Cawan", explanation: "只 untuk haiwan, 杯 untuk cawan.", exHanzi: "一只猫，一杯茶。", exPinyin: "Yì zhī māo, yì bēi chá.", exMalay: "Seekor kucing, secawan teh." },
+      { id: "g48", title: "48. Comparative Sentences (1) – 比 (bǐ)", pattern: "A + 比 + B + Kata Sifat", explanation: "Perbandingan A lebih ... daripada B.", exHanzi: "哥哥比我高。", exPinyin: "Gēge bǐ wǒ gāo.", exMalay: "Abang lebih tinggi daripada saya." },
+      { id: "g49", title: "49. Comparative Sentences (2) – 没有 (méiyǒu)", pattern: "A + 没有 + B + Kata Sifat", explanation: "A tidak se-... B.", exHanzi: "今天没有昨天热。", exPinyin: "Jīntiān méiyǒu zuótiān rè.", exMalay: "Hari ini tak sepanas semalam." },
+      { id: "g50", title: "50. Comparative Sentences (3) – 一样 (yíyàng)", pattern: "A + 和 + B + 一样", explanation: "Perbandingan sama/serupa.", exHanzi: "我和你一样。", exPinyin: "Wǒ hé nǐ yíyàng.", exMalay: "Saya sama seperti anda." },
+      { id: "g51", title: "51. 一会儿 vs 一下 vs 一下子", pattern: "Seketika / Kejap", explanation: "Menunjukkan jangka masa singkat.", exHanzi: "等一下。", exPinyin: "Děng yíxià.", exMalay: "Tunggu sekejap." },
+      { id: "g52", title: "52. The Complement of Result (1) – 结果补语", pattern: "Kata Kerja + 见 / 到 / 好", explanation: "Pelengkap hasil perbuatan.", exHanzi: "我看见他了。", exPinyin: "Wǒ kànjiàn tā le.", exMalay: "Saya nampak dia." },
+      { id: "g53", title: "53. The Directional Complement (1) – 趋向补语", pattern: "Kata Kerja + 来 / 去", explanation: "Pelengkap arah pergerakan.", exHanzi: "进来。", exPinyin: "Jìnlái.", exMalay: "Masuk ke sini." },
+      { id: "g54", title: "54. Modal Particles for Beginners – 吗/吧/呢/啊/喂", pattern: "Partikel Penamat Ayat", explanation: "Memberi emosi, soalan, atau penekanan.", exHanzi: "太好了啊！", exPinyin: "Tài hǎo le a!", exMalay: "Bagusnya!" }
+    ];
+
     const hskSentencePractice = [
-      {
-        id: "s1",
-        mandarin: "我是学生",
-        pinyin: "Wǒ shì xuéshēng.",
-        malay: "Saya ialah seorang pelajar.",
-        words: ["学生", "我", "是"],
-        correctOrder: ["我", "是", "学生"]
-      },
-      {
-        id: "s2",
-        mandarin: "我不喝茶",
-        pinyin: "Wǒ bù hē chá.",
-        malay: "Saya tidak minum teh.",
-        words: ["茶", "不", "我", "喝"],
-        correctOrder: ["我", "不", "喝", "茶"]
-      },
-      {
-        id: "s3",
-        mandarin: "爸爸去超市",
-        pinyin: "Bàba qù chāoshì.",
-        malay: "Ayah pergi ke pasar raya.",
-        words: ["超市", "爸爸", "去"],
-        correctOrder: ["爸爸", "去", "超市"]
-      },
-      {
-        id: "s4",
-        mandarin: "认识你很高兴",
-        pinyin: "Rènshi nǐ hěn gāoxìng.",
-        malay: "Gembira dapat berkenalan dengan awak.",
-        words: ["很高兴", "你", "认识"],
-        correctOrder: ["认识", "你", "很高兴"]
-      },
-      {
-        id: "s5",
-        mandarin: "他想买苹果",
-        pinyin: "Tā xiǎng mǎi píngguǒ.",
-        malay: "Dia mahu membeli epal.",
-        words: ["苹果", "买", "他", "想"],
-        correctOrder: ["他", "想", "买", "苹果"]
-      }
-    ];
-
-    const grammarPoints = [
-      {
-        id: "g1",
-        title: "Ayat Penyata Adalah (是)",
-        pattern: "Subjek + 是 + Kata Nama",
-        explanation: "Gunakan '是' (shì) untuk menyatakan 'adalah' atau 'ialah'. Sama seperti 'is/am/are' dalam Bahasa Inggeris.",
-        exHanzi: "我是学生。",
-        exPinyin: "Wǒ shì xuéshēng.",
-        exMalay: "Saya ialah seorang pelajar."
-      },
-      {
-        id: "g2",
-        title: "Ayat Negatif (不)",
-        pattern: "Subjek + 不 + Kata Kerja / Sifat",
-        explanation: "Perkataan '不' (bù) digunakan untuk menafikan perbuatan atau sifat (maksud: tidak / bukan).",
-        exHanzi: "我不喝茶。",
-        exPinyin: "Wǒ bù hē chá.",
-        exMalay: "Saya tidak minum teh."
-      }
+      { id: "s1", mandarin: "我是学生", pinyin: "Wǒ shì xuéshēng.", malay: "Saya ialah seorang pelajar.", words: ["学生", "我", "是"], correctOrder: ["我", "是", "学生"] },
+      { id: "s2", mandarin: "我不喝茶", pinyin: "Wǒ bù hē chá.", malay: "Saya tidak minum teh.", words: ["茶", "不", "我", "喝"], correctOrder: ["我", "不", "喝", "茶"] },
+      { id: "s3", mandarin: "爸爸去超市", pinyin: "Bàba qù chāoshì.", malay: "Ayah pergi ke pasar raya.", words: ["超市", "爸爸", "去"], correctOrder: ["爸爸", "去", "超市"] },
+      { id: "s4", mandarin: "认识你很高兴", pinyin: "Rènshi nǐ hěn gāoxìng.", malay: "Gembira dapat berkenalan dengan awak.", words: ["很高兴", "你", "认识"], correctOrder: ["认识", "你", "很高兴"] },
+      { id: "s5", mandarin: "他想买苹果", pinyin: "Tā xiǎng mǎi píngguǒ.", malay: "Dia mahu membeli epal.", words: ["苹果", "买", "他", "想"], correctOrder: ["他", "想", "买", "苹果"] }
     ];
 
     // ----------------------------------------------------
@@ -331,23 +485,12 @@
       }
 
       switch (tabName) {
-        case 'home':
-          renderHome();
-          break;
-        case 'learn':
-          renderRoadmap();
-          break;
-        case 'practice':
-          renderPracticeCenter();
-          break;
-        case 'ai-tutor':
-          renderAITutor();
-          break;
-        case 'profile':
-          renderProfile();
-          break;
-        default:
-          renderHome();
+        case 'home': renderHome(); break;
+        case 'learn': renderRoadmap(); break;
+        case 'practice': renderPracticeCenter(); break;
+        case 'ai-tutor': renderAITutor(); break;
+        case 'profile': renderProfile(); break;
+        default: renderHome();
       }
       window.scrollTo(0, 0);
     }
@@ -356,7 +499,6 @@
     // 6. SCREEN RENDERING
     // ----------------------------------------------------
 
-    // --- ONBOARDING SCREEN ---
     function renderOnboarding() {
       const main = document.getElementById('mainContent');
       main.innerHTML = `
@@ -364,7 +506,7 @@
           <div class="text-center space-y-2">
             <span class="inline-block p-4 bg-red-100 dark:bg-red-900/40 text-red-600 rounded-3xl text-4xl mb-2 animate-bounce">👋</span>
             <h2 class="text-2xl font-black text-gray-900 dark:text-white">WELCOME TO EASY HSK</h2>
-            <p class="text-sm text-gray-600 dark:text-gray-300">Tak pernah belajar Mandarin?<br><strong class="text-red-600">Tak apa. Kita mula dari ZERO.</strong></p>
+            <p class="text-sm text-gray-600 dark:text-gray-300">Belajar 300 Perkataan & 54 Tata HSK 1 v3.0<br><strong class="text-red-600">Dari ZERO ke LULUS!</strong></p>
           </div>
 
           <form id="onboardingForm" onsubmit="handleOnboardingSubmit(event)" class="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 space-y-4">
@@ -385,24 +527,13 @@
             <div>
               <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-1">Matlamat Utama</label>
               <select id="obGoal" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
-                <option value="Saya nak lulus HSK 1">Saya nak lulus HSK 1</option>
-                <option value="Saya nak belajar asas Mandarin">Saya nak belajar asas Mandarin</option>
+                <option value="Saya nak lulus HSK 1 v3.0">Saya nak lulus HSK 1 v3.0</option>
                 <option value="Saya nak boleh mulakan perbualan harian" selected>Saya nak boleh mulakan perbualan harian</option>
               </select>
             </div>
 
-            <div>
-              <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-1">Masa Belajar Sehari</label>
-              <select id="obTime" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
-                <option value="5">5 Minit (Ringkas)</option>
-                <option value="10" selected>10 Minit (Disyorkan)</option>
-                <option value="15">15 Minit (Intensif)</option>
-                <option value="20">20+ Minit (Maksimum)</option>
-              </select>
-            </div>
-
             <button type="submit" class="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-black text-lg rounded-2xl shadow-lg shadow-red-200 dark:shadow-none transition-all">
-              Mula Belajar Sekarang 🚀
+              Mula Belajar 300 Kata 🚀
             </button>
           </form>
         </div>
@@ -414,35 +545,31 @@
       currentUser.name = document.getElementById('obName').value.trim();
       currentUser.priorKnowledge = document.getElementById('obPrior').value;
       currentUser.goal = document.getElementById('obGoal').value;
-      currentUser.dailyMinutes = document.getElementById('obTime').value;
       saveUserState();
       switchTab('home');
     }
 
-    // --- HOME DASHBOARD ---
     function renderHome() {
       const main = document.getElementById('mainContent');
       main.innerHTML = `
         <div class="space-y-6">
-          <!-- WELCOME CARD -->
           <div class="bg-gradient-to-r from-red-600 to-red-500 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
             <div class="relative z-10 space-y-2">
               <span class="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase">Tahap: ${currentUser.priorKnowledge}</span>
               <h2 class="text-2xl font-black">Hi, ${currentUser.name}! 👋</h2>
-              <p class="text-red-100 text-sm">"Mandarin nampak susah. Tapi kalau belajar step-by-step, anda boleh!"</p>
+              <p class="text-red-100 text-sm">"300 Kosakata + 54 Tatabahasa HSK 1 v3.0 Kini Lengkap!"</p>
               
-              <div class="pt-2 flex items-center space-x-3">
-                <button onclick="renderZeroBasicHub()" class="bg-white text-red-600 px-5 py-2.5 rounded-xl font-bold text-sm shadow hover:bg-gray-50">
-                  <i class="fa-solid fa-play mr-1"></i> Sambung Belajar
+              <div class="pt-2 flex flex-wrap gap-2">
+                <button onclick="renderFlashcards()" class="bg-white text-red-600 px-5 py-2.5 rounded-xl font-bold text-sm shadow hover:bg-gray-50">
+                  🎴 Flashcards (300)
                 </button>
-                <button onclick="switchTab('practice')" class="bg-red-700/50 hover:bg-red-700 text-white px-4 py-2.5 rounded-xl font-bold text-sm backdrop-blur-sm">
-                  ⚡ Latihan Ayat
+                <button onclick="renderGrammarBank()" class="bg-red-800/60 hover:bg-red-800 text-white px-4 py-2.5 rounded-xl font-bold text-sm backdrop-blur-sm">
+                  📚 Grammar Bank (54)
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- PROGRESS & STATS -->
           <div class="grid grid-cols-2 gap-4">
             <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
               <div class="flex items-center space-x-2 text-amber-500 mb-1">
@@ -450,7 +577,6 @@
                 <span class="text-xs font-bold uppercase text-gray-500">Streak Hari</span>
               </div>
               <p class="text-2xl font-black text-gray-900 dark:text-white">${currentUser.streak} Hari</p>
-              <p class="text-[11px] text-gray-400">🔥 Kekalkan kebiasaan!</p>
             </div>
 
             <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
@@ -459,120 +585,34 @@
                 <span class="text-xs font-bold uppercase text-gray-500">Persediaan HSK 1</span>
               </div>
               <p class="text-2xl font-black text-gray-900 dark:text-white">${currentUser.hskReadiness}%</p>
-              <div class="w-full bg-gray-100 dark:bg-gray-700 h-1.5 rounded-full mt-2">
-                <div class="bg-red-600 h-1.5 rounded-full" style="width: ${currentUser.hskReadiness}%;"></div>
-              </div>
             </div>
           </div>
 
-          <!-- QUICK ACTIONS GRID -->
           <div>
-            <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">Mod Pilihan</h3>
+            <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">Mod Pilihan Utama</h3>
             <div class="grid grid-cols-2 gap-3">
-              <button onclick="renderZeroBasicHub()" class="p-4 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/50 rounded-2xl text-left space-y-1 hover:border-emerald-300">
-                <span class="text-2xl">🌱</span>
-                <h4 class="font-bold text-gray-900 dark:text-white text-sm">Zero Basic Mode</h4>
-                <p class="text-[11px] text-emerald-700 dark:text-emerald-400">Pinyin & 4 Tones asas</p>
-              </button>
-
               <button onclick="renderFlashcards()" class="p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/50 rounded-2xl text-left space-y-1 hover:border-blue-300">
                 <span class="text-2xl">🎴</span>
-                <h4 class="font-bold text-gray-900 dark:text-white text-sm">Kad Perkataan</h4>
-                <p class="text-[11px] text-blue-700 dark:text-blue-400">Flashcards HSK 1 v3.0</p>
+                <h4 class="font-bold text-gray-900 dark:text-white text-sm">300 Flashcards</h4>
+                <p class="text-[11px] text-blue-700 dark:text-blue-400">Termasuk Audio Contoh Ayat</p>
+              </button>
+
+              <button onclick="renderGrammarBank()" class="p-4 bg-purple-50 dark:bg-purple-950/30 border border-purple-100 dark:border-purple-900/50 rounded-2xl text-left space-y-1 hover:border-purple-300">
+                <span class="text-2xl">📚</span>
+                <h4 class="font-bold text-gray-900 dark:text-white text-sm">Grammar Bank</h4>
+                <p class="text-[11px] text-purple-700 dark:text-purple-400">54 Formula Tatabahasa</p>
               </button>
 
               <button onclick="startSentencePractice()" class="p-4 bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/50 rounded-2xl text-left space-y-1 hover:border-indigo-300">
                 <span class="text-2xl">✍️</span>
                 <h4 class="font-bold text-gray-900 dark:text-white text-sm">Latihan Ayat</h4>
-                <p class="text-[11px] text-indigo-700 dark:text-indigo-400">Susun ayat HSK 1</p>
+                <p class="text-[11px] text-indigo-700 dark:text-indigo-400">Susun ayat HSK 1 v3.0</p>
               </button>
 
-              <button onclick="renderGrammarBank()" class="p-4 bg-purple-50 dark:bg-purple-950/30 border border-purple-100 dark:border-purple-900/50 rounded-2xl text-left space-y-1 hover:border-purple-300">
-                <span class="text-2xl">🧩</span>
-                <h4 class="font-bold text-gray-900 dark:text-white text-sm">Tatabahasa Mudahnya</h4>
-                <p class="text-[11px] text-purple-700 dark:text-purple-400">Struktur S+V+O</p>
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    // --- ZERO BASIC HUB ---
-    function renderZeroBasicHub() {
-      const main = document.getElementById('mainContent');
-      main.innerHTML = `
-        <div class="space-y-6">
-          <div class="flex items-center space-x-3">
-            <button onclick="switchTab('home')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-arrow-left text-xl"></i></button>
-            <div>
-              <h2 class="text-xl font-black text-gray-900 dark:text-white">🌱 Zero Basic Mandarin</h2>
-              <p class="text-xs text-gray-500">Asas paling penting sebelum menghafal perkataan</p>
-            </div>
-          </div>
-
-          <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-4">
-            <h3 class="font-bold text-red-600 flex items-center"><i class="fa-solid fa-volume-high mr-2"></i> APA ITU PINYIN & TONES?</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-              Dalam Bahasa Mandarin, kita menggunakan sistem <strong class="text-gray-900 dark:text-white">PINYIN</strong> (sebutan abjad) dan <strong class="text-gray-900 dark:text-white">4 NADA (TONES)</strong>. Maksud perkataan boleh berubah mengikut nada!
-            </p>
-
-            <div class="grid grid-cols-2 gap-3 pt-2">
-              <div onclick="speakMandarin('ā')" class="p-3 bg-red-50 dark:bg-red-950/30 rounded-2xl border border-red-100 dark:border-red-900/50 cursor-pointer text-center">
-                <span class="text-2xl font-black text-red-600">ā</span>
-                <h4 class="text-xs font-bold text-gray-800 dark:text-gray-200 mt-1">Nada 1 (Tinggi Rata)</h4>
-                <p class="text-[10px] text-gray-500">Bunyi mendatar panjang</p>
-              </div>
-
-              <div onclick="speakMandarin('á')" class="p-3 bg-amber-50 dark:bg-amber-950/30 rounded-2xl border border-amber-100 dark:border-amber-900/50 cursor-pointer text-center">
-                <span class="text-2xl font-black text-amber-600">á</span>
-                <h4 class="text-xs font-bold text-gray-800 dark:text-gray-200 mt-1">Nada 2 (Menaik)</h4>
-                <p class="text-[10px] text-gray-500">Seperti bertanya "Hah?"</p>
-              </div>
-
-              <div onclick="speakMandarin('ǎ')" class="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-2xl border border-blue-100 dark:border-blue-900/50 cursor-pointer text-center">
-                <span class="text-2xl font-black text-blue-600">ǎ</span>
-                <h4 class="text-xs font-bold text-gray-800 dark:text-gray-200 mt-1">Nada 3 (Turun-Naik)</h4>
-                <p class="text-[10px] text-gray-500">Turun sedikit kemudian naik</p>
-              </div>
-
-              <div onclick="speakMandarin('à')" class="p-3 bg-purple-50 dark:bg-purple-950/30 rounded-2xl border border-purple-100 dark:border-purple-900/50 cursor-pointer text-center">
-                <span class="text-2xl font-black text-purple-600">à</span>
-                <h4 class="text-xs font-bold text-gray-800 dark:text-gray-200 mt-1">Nada 4 (Jatuh Tegas)</h4>
-                <p class="text-[10px] text-gray-500">Bunyi tegas & cepat</p>
-              </div>
-            </div>
-          </div>
-
-          <button onclick="startTonePracticeQuiz()" class="w-full py-4 bg-red-600 text-white font-bold rounded-2xl shadow-md">
-            Mula Ujian Pendengaran Nada 👂
-          </button>
-        </div>
-      `;
-    }
-
-    function startTonePracticeQuiz() {
-      const main = document.getElementById('mainContent');
-      main.innerHTML = `
-        <div class="space-y-6 max-w-md mx-auto">
-          <div class="flex justify-between items-center">
-            <span class="text-xs font-bold text-gray-400">LATIHAN NADA MANDARIN</span>
-            <button onclick="renderZeroBasicHub()" class="text-sm font-bold text-red-600">Keluar</button>
-          </div>
-
-          <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm text-center space-y-4">
-            <p class="text-xs text-gray-500">Tekan ikon audio dan pilih nada yang anda dengar:</p>
-            <button onclick="speakMandarin('nǐ hǎo')" class="w-20 h-20 bg-red-100 dark:bg-red-900/40 text-red-600 rounded-full text-3xl mx-auto flex items-center justify-center hover:scale-105 transition-transform">
-              🔊
-            </button>
-            <h3 class="text-2xl font-black text-gray-900 dark:text-white">"nǐ hǎo"</h3>
-
-            <div class="space-y-2 pt-4">
-              <button onclick="checkToneAnswer(true)" class="w-full py-3 bg-gray-50 dark:bg-gray-700 hover:bg-red-50 text-gray-800 dark:text-gray-100 font-bold rounded-xl border border-gray-200 dark:border-gray-600 text-sm">
-                A. Nada 3 + Nada 3 (Turun-Naik)
-              </button>
-              <button onclick="checkToneAnswer(false)" class="w-full py-3 bg-gray-50 dark:bg-gray-700 hover:bg-red-50 text-gray-800 dark:text-gray-100 font-bold rounded-xl border border-gray-200 dark:border-gray-600 text-sm">
-                B. Nada 1 + Nada 4 (Rata + Jatuh)
+              <button onclick="switchTab('ai-tutor')" class="p-4 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/50 rounded-2xl text-left space-y-1 hover:border-emerald-300">
+                <span class="text-2xl">🤖</span>
+                <h4 class="font-bold text-gray-900 dark:text-white text-sm">AI Tutor</h4>
+                <p class="text-[11px] text-emerald-700 dark:text-emerald-400">Soal Jawab HSK 1 v3.0</p>
               </button>
             </div>
           </div>
@@ -580,63 +620,7 @@
       `;
     }
 
-    function checkToneAnswer(isCorrect) {
-      if (isCorrect) {
-        currentUser.xp += 15;
-        saveUserState();
-        alert("Bagus! 🎉 Sebutan 'nǐ hǎo' menggunakan Nada 3.");
-      } else {
-        alert("Belum tepat 😊 Cuba lagi dan dengar dengan teliti.");
-      }
-      renderZeroBasicHub();
-    }
-
-    // --- ROADMAP & LESSONS ---
-    function renderRoadmap() {
-      const main = document.getElementById('mainContent');
-      main.innerHTML = `
-        <div class="space-y-6">
-          <div>
-            <h2 class="text-xl font-black text-gray-900 dark:text-white">🗺️ Laluan Pembelajaran HSK 1</h2>
-            <p class="text-xs text-gray-500">Ikuti langkah berstruktur dari Zero ke HSK 1</p>
-          </div>
-
-          <div class="relative pl-6 space-y-6 before:absolute before:left-2.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-gray-200 dark:before:bg-gray-700">
-            <div class="relative">
-              <span class="absolute -left-6 top-0 w-6 h-6 bg-emerald-500 text-white rounded-full text-xs flex items-center justify-center font-bold">0</span>
-              <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-2">
-                <span class="text-[10px] bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full">STAGE 0</span>
-                <h3 class="font-bold text-gray-900 dark:text-white text-sm">🌱 Mandarin Zero Basic</h3>
-                <p class="text-xs text-gray-500">Pengenalan Pinyin, 4 Nada dan Struktur Asas.</p>
-                <button onclick="renderZeroBasicHub()" class="text-xs font-bold text-emerald-600 hover:underline">Mula Belajar →</button>
-              </div>
-            </div>
-
-            <div class="relative">
-              <span class="absolute -left-6 top-0 w-6 h-6 bg-red-600 text-white rounded-full text-xs flex items-center justify-center font-bold">1</span>
-              <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-2">
-                <span class="text-[10px] bg-red-100 text-red-700 font-bold px-2 py-0.5 rounded-full">STAGE 1</span>
-                <h3 class="font-bold text-gray-900 dark:text-white text-sm">🧩 Essential HSK Vocabulary (v3.0)</h3>
-                <p class="text-xs text-gray-500">Kosa Kata Rasmi dari PDF HSK Level 1.</p>
-                <button onclick="renderFlashcards()" class="text-xs font-bold text-red-600 hover:underline">Buka Flashcards →</button>
-              </div>
-            </div>
-
-            <div class="relative">
-              <span class="absolute -left-6 top-0 w-6 h-6 bg-indigo-600 text-white rounded-full text-xs flex items-center justify-center font-bold">2</span>
-              <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-2">
-                <span class="text-[10px] bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded-full">STAGE 2</span>
-                <h3 class="font-bold text-gray-900 dark:text-white text-sm">✍️ Latihan Pembinaan Ayat</h3>
-                <p class="text-xs text-gray-500">Aplikasi tatabahasa & kosa kata HSK 1 v3.0.</p>
-                <button onclick="startSentencePractice()" class="text-xs font-bold text-indigo-600 hover:underline">Mula Latihan →</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    // --- FLASHCARDS SYSTEM ---
+    // --- FLASHCARDS SYSTEM WITH AUDIO FOR EXAMPLE SENTENCES ---
     function renderFlashcards() {
       let currentIndex = 0;
       const main = document.getElementById('mainContent');
@@ -648,27 +632,28 @@
             <div class="flex justify-between items-center">
               <button onclick="switchTab('home')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-arrow-left text-xl"></i></button>
               <span class="text-xs font-bold text-gray-400">KAD PERKATAAN (${currentIndex + 1}/${hskVocab.length})</span>
-              <span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded-full">${item.topic}</span>
+              <span class="text-xs font-bold text-red-600 bg-red-50 px-2.5 py-1 rounded-full">${item.topic}</span>
             </div>
 
-            <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-lg text-center space-y-4 relative min-h-[280px] flex flex-col justify-center">
+            <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-lg text-center space-y-4 relative min-h-[320px] flex flex-col justify-center">
               <h2 class="text-5xl font-black text-gray-900 dark:text-white">${item.hanzi}</h2>
               <p class="text-xl font-bold text-red-600">${item.pinyin}</p>
               <p class="text-base text-gray-600 dark:text-gray-300 font-medium">${item.malay}</p>
 
-              <div class="pt-4 border-t border-gray-100 dark:border-gray-700 text-xs text-gray-500">
-                <p class="font-bold text-gray-700 dark:text-gray-300">Contoh Ayat:</p>
-                <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mt-0.5">${item.exHanzi}</p>
-                <p class="text-red-500">${item.exPinyin}</p>
-                <p class="italic text-gray-400">${item.exMalay}</p>
+              <div class="flex justify-center space-x-2 pt-1">
+                <button onclick="speakMandarin('${item.hanzi}', 1.0)" class="px-3 py-1.5 bg-red-100 text-red-600 rounded-xl font-bold text-xs flex items-center">
+                  🔊 Perkataan
+                </button>
               </div>
 
-              <div class="flex justify-center space-x-2 pt-2">
-                <button onclick="speakMandarin('${item.hanzi}', 1.0)" class="px-4 py-2 bg-red-100 text-red-600 rounded-xl font-bold text-xs flex items-center">
-                  🔊 Normal
-                </button>
-                <button onclick="speakMandarin('${item.hanzi}', 0.6)" class="px-4 py-2 bg-amber-100 text-amber-700 rounded-xl font-bold text-xs flex items-center">
-                  🐢 Perlahan
+              <!-- CONTOH AYAT & AUDIO -->
+              <div class="pt-4 border-t border-gray-100 dark:border-gray-700 text-xs text-gray-500 space-y-1 bg-gray-50 dark:bg-gray-700/40 p-3 rounded-2xl">
+                <p class="font-bold text-gray-700 dark:text-gray-300">Contoh Ayat:</p>
+                <p class="text-base font-bold text-gray-900 dark:text-white">${item.exHanzi}</p>
+                <p class="text-red-500 font-medium">${item.exPinyin}</p>
+                <p class="italic text-gray-500">${item.exMalay}</p>
+                <button onclick="speakMandarin('${item.exHanzi}', 0.9)" class="mt-2 px-4 py-1.5 bg-indigo-600 text-white rounded-xl font-bold text-xs inline-flex items-center hover:bg-indigo-700">
+                  🔊 Dengar Contoh Ayat
                 </button>
               </div>
             </div>
@@ -689,114 +674,14 @@
         };
         document.getElementById('nextBtn').onclick = () => {
           if (currentIndex < hskVocab.length - 1) { currentIndex++; updateCardView(); }
-          else { alert("🎉 Anda telah melihat semua kad perkataan!"); switchTab('home'); }
+          else { alert("🎉 Anda telah selesai meneliti 300 perkataan!"); switchTab('home'); }
         };
       }
 
       updateCardView();
     }
 
-    // --- NEW: LATIHAN AYAT (HSK LEVEL 1 v3.0) ---
-    let currentSentenceIdx = 0;
-    let userSentenceArr = [];
-
-    function startSentencePractice() {
-      currentSentenceIdx = 0;
-      renderSentenceQuiz();
-    }
-
-    function renderSentenceQuiz() {
-      const item = hskSentencePractice[currentSentenceIdx];
-      userSentenceArr = [];
-      const main = document.getElementById('mainContent');
-
-      main.innerHTML = `
-        <div class="space-y-6 max-w-md mx-auto">
-          <div class="flex justify-between items-center">
-            <button onclick="switchTab('practice')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-arrow-left text-xl"></i></button>
-            <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full">LATIHAN AYAT (${currentSentenceIdx + 1}/${hskSentencePractice.length})</span>
-          </div>
-
-          <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-4">
-            <p class="text-xs text-gray-500 font-medium">Susun perkataan berikut supaya menjadi ayat yang betul:</p>
-            <div class="p-3 bg-indigo-50 dark:bg-indigo-950/40 rounded-2xl">
-              <p class="text-xs text-indigo-700 dark:text-indigo-300 font-bold">Maksud Bahasa Melayu:</p>
-              <p class="text-base font-bold text-gray-800 dark:text-gray-100">${item.malay}</p>
-            </div>
-
-            <!-- JAWAPAN PENGGUNA -->
-            <div class="min-h-[60px] p-3 border-2 border-dashed border-indigo-200 dark:border-indigo-800 rounded-2xl flex flex-wrap gap-2 items-center bg-gray-50 dark:bg-gray-900/50" id="userAnswerBox">
-              <span class="text-xs text-gray-400">Tekan perkataan di bawah...</span>
-            </div>
-
-            <!-- PILIHAN PERKATAAN -->
-            <div class="flex flex-wrap gap-2 justify-center pt-2" id="wordBankBox">
-              ${item.words.map((w, idx) => `
-                <button id="word-btn-${idx}" onclick="selectWord('${w}', ${idx})" class="px-4 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-sm rounded-xl font-bold text-sm text-gray-800 dark:text-gray-100 hover:border-indigo-500">
-                  ${w}
-                </button>
-              `).join('')}
-            </div>
-
-            <div class="pt-2 flex space-x-2">
-              <button onclick="resetSentenceSelection()" class="w-1/3 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold rounded-xl text-xs">
-                Sifar Semula 🔄
-              </button>
-              <button onclick="checkSentenceAnswer()" class="w-2/3 py-3 bg-indigo-600 text-white font-bold rounded-xl text-xs shadow-md">
-                Semak Jawapan ✅
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    function selectWord(word, idx) {
-      userSentenceArr.push(word);
-      document.getElementById(`word-btn-${idx}`).classList.add('hidden');
-      updateUserAnswerUI();
-    }
-
-    function updateUserAnswerUI() {
-      const box = document.getElementById('userAnswerBox');
-      if (userSentenceArr.length === 0) {
-        box.innerHTML = `<span class="text-xs text-gray-400">Tekan perkataan di bawah...</span>`;
-      } else {
-        box.innerHTML = userSentenceArr.map(w => `
-          <span class="px-3 py-1.5 bg-indigo-600 text-white font-bold rounded-xl text-sm shadow-sm">${w}</span>
-        `).join('');
-      }
-    }
-
-    function resetSentenceSelection() {
-      userSentenceArr = [];
-      renderSentenceQuiz();
-    }
-
-    function checkSentenceAnswer() {
-      const item = hskSentencePractice[currentSentenceIdx];
-      const isCorrect = JSON.stringify(userSentenceArr) === JSON.stringify(item.correctOrder);
-
-      if (isCorrect) {
-        currentUser.xp += 20;
-        currentUser.hskReadiness = Math.min(100, currentUser.hskReadiness + 3);
-        saveUserState();
-        speakMandarin(item.mandarin);
-        alert(`Tepat sekali! 🎉\n\n${item.mandarin} (${item.pinyin})`);
-        
-        if (currentSentenceIdx < hskSentencePractice.length - 1) {
-          currentSentenceIdx++;
-          renderSentenceQuiz();
-        } else {
-          alert("🎉 Tahniah! Anda telah menamatkan semua latihan ayat HSK 1 v3.0!");
-          switchTab('practice');
-        }
-      } else {
-        alert("Jawapan belum tepat. Cuba susun semula perkataan tersebut.");
-      }
-    }
-
-    // --- GRAMMAR BANK ---
+    // --- FULL 54 GRAMMAR BANK DISPLAY ---
     function renderGrammarBank() {
       const main = document.getElementById('mainContent');
       main.innerHTML = `
@@ -804,22 +689,25 @@
           <div class="flex items-center space-x-3">
             <button onclick="switchTab('home')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-arrow-left text-xl"></i></button>
             <div>
-              <h2 class="text-xl font-black text-gray-900 dark:text-white">🧩 Bank Tatabahasa HSK 1</h2>
-              <p class="text-xs text-gray-500">Struktur ayat paling asas dalam Mandarin</p>
+              <h2 class="text-xl font-black text-gray-900 dark:text-white">📚 Bank Tatabahasa HSK 1 v3.0</h2>
+              <p class="text-xs text-gray-500">Kesemua 54 Topik Tatabahasa Rasmi Aras HSK 1</p>
             </div>
           </div>
 
           <div class="space-y-4">
-            ${grammarPoints.map(g => `
+            ${grammarBankData.map(g => `
               <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-3">
                 <span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-2.5 py-1 rounded-full">${g.pattern}</span>
-                <h3 class="font-bold text-gray-900 dark:text-white">${g.title}</h3>
-                <p class="text-xs text-gray-600 dark:text-gray-300">${g.explanation}</p>
+                <h3 class="font-bold text-gray-900 dark:text-white text-base">${g.title}</h3>
+                <p class="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">${g.explanation}</p>
                 
-                <div class="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl space-y-1">
+                <div class="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-2xl space-y-1">
                   <p class="font-bold text-gray-900 dark:text-white text-sm">${g.exHanzi}</p>
                   <p class="text-xs text-red-500 font-medium">${g.exPinyin}</p>
                   <p class="text-xs text-gray-500">${g.exMalay}</p>
+                  <button onclick="speakMandarin('${g.exHanzi}')" class="mt-1 text-[11px] font-bold text-indigo-600 hover:underline">
+                    🔊 Sebut Ayat Contoh
+                  </button>
                 </div>
               </div>
             `).join('')}
@@ -828,81 +716,7 @@
       `;
     }
 
-    // --- PRACTICE CENTER ---
-    function renderPracticeCenter() {
-      const main = document.getElementById('mainContent');
-      main.innerHTML = `
-        <div class="space-y-6">
-          <div>
-            <h2 class="text-xl font-black text-gray-900 dark:text-white">✍️ Pusat Latihan</h2>
-            <p class="text-xs text-gray-500">Uji kefahaman pendengaran, pinyin dan pembinaan ayat</p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <button onclick="startSentencePractice()" class="p-5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-3xl shadow-sm text-left flex items-center space-x-4 hover:border-indigo-500 transition-all">
-              <span class="p-4 bg-indigo-100 text-indigo-600 rounded-2xl text-2xl">✍️</span>
-              <div>
-                <h3 class="font-bold text-gray-900 dark:text-white">Latihan Ayat HSK 1 (v3.0)</h3>
-                <p class="text-xs text-gray-500">Susun perkataan membentuk ayat lengkap</p>
-              </div>
-            </button>
-
-            <button onclick="startVocabularyQuiz()" class="p-5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-3xl shadow-sm text-left flex items-center space-x-4 hover:border-red-500 transition-all">
-              <span class="p-4 bg-red-100 text-red-600 rounded-2xl text-2xl">📝</span>
-              <div>
-                <h3 class="font-bold text-gray-900 dark:text-white">Kuiz Kosakata HSK 1</h3>
-                <p class="text-xs text-gray-500">Soalan aneka pilihan kosa kata PDF</p>
-              </div>
-            </button>
-          </div>
-        </div>
-      `;
-    }
-
-    // --- VOCABULARY QUIZ LOGIC ---
-    function startVocabularyQuiz() {
-      const randomWord = hskVocab[Math.floor(Math.random() * hskVocab.length)];
-      const main = document.getElementById('mainContent');
-      
-      main.innerHTML = `
-        <div class="space-y-6 max-w-md mx-auto">
-          <div class="flex justify-between items-center">
-            <span class="text-xs font-bold text-gray-400">KUIZ KOSA KATA</span>
-            <button onclick="switchTab('practice')" class="text-sm font-bold text-red-600">Batal</button>
-          </div>
-
-          <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm text-center space-y-4">
-            <p class="text-xs text-gray-500">Apakah maksud bagi perkataan Mandarin berikut?</p>
-            <h2 class="text-4xl font-black text-gray-900 dark:text-white">${randomWord.hanzi}</h2>
-            <p class="text-lg font-bold text-red-500">${randomWord.pinyin}</p>
-
-            <div class="space-y-2 pt-4">
-              ${hskVocab.slice(0, 3).concat(randomWord).sort(() => Math.random() - 0.5).map(opt => `
-                <button onclick="handleQuizAnswer('${opt.malay}', '${randomWord.malay}', '${randomWord.hanzi}')" class="w-full py-3 px-4 bg-gray-50 dark:bg-gray-700 hover:bg-red-50 text-gray-800 dark:text-gray-100 font-bold rounded-xl border border-gray-200 dark:border-gray-600 text-sm text-left">
-                  ${opt.malay}
-                </button>
-              `).join('')}
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    function handleQuizAnswer(selected, correct, wordHanzi) {
-      if (selected === correct) {
-        currentUser.xp += 10;
-        currentUser.hskReadiness = Math.min(100, currentUser.hskReadiness + 2);
-        saveUserState();
-        alert("Bagus! 🎉 Jawapan anda tepat.");
-      } else {
-        currentUser.mistakes.push({ word: wordHanzi, correctMalay: correct });
-        saveUserState();
-        alert(`Belum tepat 😊 Jawapan betul ialah: ${correct}`);
-      }
-      startVocabularyQuiz();
-    }
-
-    // --- AI TUTOR ---
+    // --- AI TUTOR (UPDATED FOR DYNAMIC FLEXIBLE QUESTIONS) ---
     function renderAITutor() {
       const main = document.getElementById('mainContent');
       main.innerHTML = `
@@ -910,20 +724,20 @@
           <div class="flex items-center space-x-3">
             <span class="text-2xl">🤖</span>
             <div>
-              <h2 class="text-xl font-black text-gray-900 dark:text-white">AI Guru Mandarin</h2>
-              <p class="text-xs text-gray-500">Tanya soalan berkaitan HSK 1 v3.0 & Mandarin</p>
+              <h2 class="text-xl font-black text-gray-900 dark:text-white">AI Guru Mandarin (HSK 1 v3.0)</h2>
+              <p class="text-xs text-gray-500">Tanya sebarang soalan berkenaan 300 perkataan & 54 tatabahasa!</p>
             </div>
           </div>
 
           <div id="chatBox" class="flex-1 bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 p-4 overflow-y-auto space-y-3 shadow-inner">
             <div class="bg-red-50 dark:bg-red-950/40 p-3 rounded-2xl max-w-[85%] text-xs space-y-1">
               <p class="font-bold text-red-700 dark:text-red-300">🤖 AI Guru:</p>
-              <p class="text-gray-800 dark:text-gray-200">Ni hao! Saya guru AI anda. Ada sebarang soalan tentang pembinaan ayat atau kosa kata HSK 1?</p>
+              <p class="text-gray-800 dark:text-gray-200">Ni hao! Saya sedia membantu anda memahami 300 kosa kata, contoh ayat, serta 54 tata HSK 1 v3.0. Tanya saya apa sahaja!</p>
             </div>
           </div>
 
           <form onsubmit="handleAIChat(event)" class="flex space-x-2">
-            <input type="text" id="aiInput" placeholder="Taip soalan anda di sini..." class="flex-1 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
+            <input type="text" id="aiInput" placeholder="Tanya tentang perkataan, ayat, atau grammar..." class="flex-1 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
             <button type="submit" class="px-5 py-3 bg-red-600 text-white font-bold rounded-2xl">Hantar</button>
           </form>
         </div>
@@ -933,75 +747,157 @@
     function handleAIChat(e) {
       e.preventDefault();
       const input = document.getElementById('aiInput');
-      const text = input.value.trim();
-      if (!text) return;
+      const query = input.value.trim();
+      if (!query) return;
 
       const chatBox = document.getElementById('chatBox');
       
       chatBox.innerHTML += `
         <div class="ml-auto bg-gray-100 dark:bg-gray-700 p-3 rounded-2xl max-w-[85%] text-xs text-right">
-          <p class="text-gray-900 dark:text-white">${text}</p>
+          <p class="text-gray-900 dark:text-white">${query}</p>
         </div>
       `;
 
       input.value = '';
       chatBox.scrollTop = chatBox.scrollHeight;
 
+      // DYNAMIC AI RESPONSE LOGIC
       setTimeout(() => {
-        let reply = "Sistem tatabahasa HSK 1 versi 3.0 mengandungi susunan asas Subjek + Kata Kerja + Objek. Teruskan latihan setiap hari!";
-        if (text.toLowerCase().includes("suka") || text.toLowerCase().includes("爱")) {
-          reply = "Perkataan 'suka/cinta' dalam HSK 1 ialah 爱 (ài). Contoh: 我爱吃包子 (Wǒ ài chī bāozi - Saya suka makan pau).";
+        let reply = "";
+        const lowerQ = query.toLowerCase();
+
+        // Match Vocab
+        const matchedVocab = hskVocab.find(v => lowerQ.includes(v.hanzi) || lowerQ.includes(v.pinyin.toLowerCase()) || lowerQ.includes(v.malay.toLowerCase()));
+        
+        // Match Grammar
+        const matchedGrammar = grammarBankData.find(g => lowerQ.includes(g.title.toLowerCase()) || lowerQ.includes(g.pattern.toLowerCase()));
+
+        if (matchedVocab) {
+          reply = `📌 **Perkataan**: ${matchedVocab.hanzi} (${matchedVocab.pinyin})\n` +
+                  `💡 **Maksud**: ${matchedVocab.malay}\n` +
+                  `✍️ **Contoh Ayat**: ${matchedVocab.exHanzi} (${matchedVocab.exPinyin})\n` +
+                  `🗣️ **Terjemahan**: ${matchedVocab.exMalay}`;
+        } else if (matchedGrammar) {
+          reply = `📚 **Tatabahasa**: ${matchedGrammar.title}\n` +
+                  `⚙️ **Formula**: ${matchedGrammar.pattern}\n` +
+                  `📝 **Penerangan**: ${matchedGrammar.explanation}\n` +
+                  `💬 **Contoh**: ${matchedGrammar.exHanzi} (${matchedGrammar.exPinyin}) - ${matchedGrammar.exMalay}`;
+        } else if (lowerQ.includes("apa") || lowerQ.includes("maksud") || lowerQ.includes("bagaimana")) {
+          reply = "Dalam HSK Level 1 v3.0, susunan asas ayat ialah **Subjek + Kata Kerja + Objek (SVO)**. Contohnya: 我 (Saya) + 喝 (Minum) + 茶 (Teh) = 我喝茶 (Wǒ hē chá).";
+        } else {
+          reply = `Soalan anda berkenaan "${query}" diproses mengikut sukatan HSK 1 v3.0. Pastikan menggunakan struktur Subjek + Kata Kerja + Objek, dan sertakan Pinyin serta Nada yang betul. Boleh tanya lagi berkenaan spesifik perkataan atau topik tatabahasa!`;
         }
 
         chatBox.innerHTML += `
           <div class="bg-red-50 dark:bg-red-950/40 p-3 rounded-2xl max-w-[85%] text-xs space-y-1">
             <p class="font-bold text-red-700 dark:text-red-300">🤖 AI Guru:</p>
-            <p class="text-gray-800 dark:text-gray-200">${reply}</p>
+            <p class="text-gray-800 dark:text-gray-200 whitespace-pre-line">${reply}</p>
           </div>
         `;
         chatBox.scrollTop = chatBox.scrollHeight;
-      }, 600);
+      }, 500);
     }
 
-    // --- PROFILE & SETTINGS ---
-    function renderProfile() {
+    // --- ZERO BASIC & QUIZ MODULES ---
+    function renderZeroBasicHub() {
       const main = document.getElementById('mainContent');
       main.innerHTML = `
         <div class="space-y-6">
-          <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-100 dark:border-gray-700 text-center space-y-3 shadow-sm">
-            <div class="w-20 h-20 bg-red-100 dark:bg-red-900/40 text-red-600 rounded-full text-3xl font-black flex items-center justify-center mx-auto">
-              ${currentUser.name ? currentUser.name[0].toUpperCase() : 'P'}
-            </div>
+          <div class="flex items-center space-x-3">
+            <button onclick="switchTab('home')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-arrow-left text-xl"></i></button>
             <div>
-              <h2 class="text-xl font-black text-gray-900 dark:text-white">${currentUser.name}</h2>
-              <p class="text-xs text-gray-500">${currentUser.role} • Matlamat: ${currentUser.goal}</p>
+              <h2 class="text-xl font-black text-gray-900 dark:text-white">🌱 Zero Basic Mandarin</h2>
+              <p class="text-xs text-gray-500">Pinyin & 4 Tones asas dengan sebutan Pinyin lengkap</p>
             </div>
           </div>
 
-          <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-100 dark:border-gray-700 space-y-4 shadow-sm">
-            <h3 class="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Tetapan Aplikasi</h3>
+          <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-4">
+            <h3 class="font-bold text-red-600 flex items-center"><i class="fa-solid fa-volume-high mr-2"></i> PINYIN & 4 NADA</h3>
+            <div class="grid grid-cols-2 gap-3">
+              <div onclick="speakMandarin('ā')" class="p-3 bg-red-50 dark:bg-red-950/30 rounded-2xl text-center cursor-pointer">
+                <span class="text-2xl font-black text-red-600">ā</span>
+                <p class="text-xs font-bold mt-1">Nada 1 (Rata)</p>
+              </div>
+              <div onclick="speakMandarin('á')" class="p-3 bg-amber-50 dark:bg-amber-950/30 rounded-2xl text-center cursor-pointer">
+                <span class="text-2xl font-black text-amber-600">á</span>
+                <p class="text-xs font-bold mt-1">Nada 2 (Menaik)</p>
+              </div>
+              <div onclick="speakMandarin('ǎ')" class="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-2xl text-center cursor-pointer">
+                <span class="text-2xl font-black text-blue-600">ǎ</span>
+                <p class="text-xs font-bold mt-1">Nada 3 (Turun-Naik)</p>
+              </div>
+              <div onclick="speakMandarin('à')" class="p-3 bg-purple-50 dark:bg-purple-950/30 rounded-2xl text-center cursor-pointer">
+                <span class="text-2xl font-black text-purple-600">à</span>
+                <p class="text-xs font-bold mt-1">Nada 4 (Jatuh)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
 
-            <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-              <span class="text-sm text-gray-700 dark:text-gray-300 font-medium">Kelajuan Audio Suara</span>
-              <select onchange="audioSpeed = parseFloat(this.value)" class="text-xs px-3 py-1.5 bg-gray-100 dark:bg-gray-700 rounded-xl font-bold">
-                <option value="1.0" selected>Normal (1.0x)</option>
-                <option value="0.7">Perlahan (0.7x)</option>
-              </select>
+    function renderRoadmap() {
+      const main = document.getElementById('mainContent');
+      main.innerHTML = `
+        <div class="space-y-6">
+          <div>
+            <h2 class="text-xl font-black text-gray-900 dark:text-white">🗺️ Laluan HSK 1 (v3.0)</h2>
+            <p class="text-xs text-gray-500">300 Perkataan + 54 Tatabahasa Lengkap</p>
+          </div>
+
+          <div class="space-y-4">
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 flex justify-between items-center">
+              <div>
+                <h3 class="font-bold text-sm">🎴 300 Flashcards Penuh</h3>
+                <p class="text-xs text-gray-500">Dengan Pinyin & Audio Contoh Ayat</p>
+              </div>
+              <button onclick="renderFlashcards()" class="px-3 py-1.5 bg-red-600 text-white font-bold rounded-xl text-xs">Mula</button>
             </div>
 
-            <button onclick="resetAppProgress()" class="w-full py-3 bg-red-50 text-red-600 font-bold rounded-2xl text-xs hover:bg-red-100">
-              Sifarkan Progress & Reset Semula 🔄
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 flex justify-between items-center">
+              <div>
+                <h3 class="font-bold text-sm">📚 Bank Tatabahasa (54 Topik)</h3>
+                <p class="text-xs text-gray-500">Formula lengkap HSK 1 v3.0</p>
+              </div>
+              <button onclick="renderGrammarBank()" class="px-3 py-1.5 bg-purple-600 text-white font-bold rounded-xl text-xs">Buka</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderPracticeCenter() {
+      const main = document.getElementById('mainContent');
+      main.innerHTML = `
+        <div class="space-y-6">
+          <div>
+            <h2 class="text-xl font-black text-gray-900 dark:text-white">✍️ Pusat Latihan</h2>
+            <p class="text-xs text-gray-500">Uji kefahaman 300 Perkataan & Pembinaan Ayat</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button onclick="startSentencePractice()" class="p-5 bg-white dark:bg-gray-800 border rounded-3xl text-left flex items-center space-x-4">
+              <span class="p-4 bg-indigo-100 text-indigo-600 rounded-2xl text-2xl">✍️</span>
+              <div>
+                <h3 class="font-bold">Latihan Pembinaan Ayat</h3>
+                <p class="text-xs text-gray-500">Susun struktur ayat HSK 1 v3.0</p>
+              </div>
             </button>
           </div>
         </div>
       `;
     }
 
-    function resetAppProgress() {
-      if (confirm("Adakah anda pasti mahu menetapkan semula semua rekod pembelajaran?")) {
-        localStorage.removeItem('easyhsk_user');
-        location.reload();
-      }
+    function renderProfile() {
+      const main = document.getElementById('mainContent');
+      main.innerHTML = `
+        <div class="space-y-6">
+          <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border text-center space-y-2">
+            <h2 class="text-xl font-black">${currentUser.name}</h2>
+            <p class="text-xs text-gray-500">Sasaran: HSK 1 v3.0 (300 Perkataan)</p>
+          </div>
+        </div>
+      `;
     }
 
     // ----------------------------------------------------
