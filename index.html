@@ -40,10 +40,6 @@
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .perspective-1000 { perspective: 1000px; }
-    .transform-style-3d { transform-style: preserve-3d; }
-    .backface-hidden { backface-visibility: hidden; }
-    .rotate-y-180 { transform: rotateY(180deg); }
   </style>
 
   <!-- Firebase App & Database Scripts -->
@@ -61,7 +57,7 @@
         <span class="bg-red-600 text-white font-black text-xl px-2.5 py-1 rounded-xl shadow-sm">易</span>
         <div>
           <h1 class="font-extrabold text-lg leading-none text-gray-900 dark:text-white">Easy HSK</h1>
-          <p class="text-[10px] text-gray-500 dark:text-gray-400 font-medium">Start Zero • Pass HSK 1</p>
+          <p class="text-[10px] text-gray-500 dark:text-gray-400 font-medium">Start Zero • Pass HSK 1 (v3.0)</p>
         </div>
       </div>
       
@@ -154,7 +150,7 @@
   <!-- SCRIPT LOGIC -->
   <script>
     // ----------------------------------------------------
-    // 1. FIREBASE CONFIGURATION & INITIALIZATION
+    // 1. FIREBASE CONFIGURATION
     // ----------------------------------------------------
     const firebaseConfig = {
       apiKey: "AIzaSyAY5hm7OkYp1YKlIxwZV21Je0dY_xDKavY",
@@ -170,14 +166,14 @@
     const db = firebase.database();
 
     // ----------------------------------------------------
-    // 2. STATE MANAGEMENT & LOCAL STORAGE FALLBACK
+    // 2. STATE MANAGEMENT
     // ----------------------------------------------------
     let currentUser = JSON.parse(localStorage.getItem('easyhsk_user')) || {
       uid: 'user_' + Math.random().toString(36).substr(2, 9),
       name: '',
       role: 'Pelajar',
       priorKnowledge: 'Zero Basic',
-      goal: 'Lulus HSK 1',
+      goal: 'Saya nak boleh mulakan perbualan harian',
       dailyMinutes: '10',
       xp: 0,
       streak: 1,
@@ -188,9 +184,8 @@
       favourites: []
     };
 
-    let audioSpeed = 1.0; // Audio Speed (Normal: 1.0, Slow: 0.6)
+    let audioSpeed = 1.0;
 
-    // Save user state locally and sync to Firebase Realtime DB
     function saveUserState() {
       localStorage.setItem('easyhsk_user', JSON.stringify(currentUser));
       if (currentUser.uid) {
@@ -211,19 +206,73 @@
     }
 
     // ----------------------------------------------------
-    // 3. CORE MANDARIN DATA (HSK 1 Syllabus & Topics)
+    // 3. CORE MANDARIN DATA (NEW HSK 1 VERSION 3.0)
     // ----------------------------------------------------
     const hskVocab = [
-      { id: 1, hanzi: "你好", pinyin: "nǐ hǎo", malay: "hello / hai", topic: "Greetings", exHanzi: "你好！你好吗？", exPinyin: "Nǐ hǎo! Nǐ hǎo ma?", exMalay: "Hai! Apa khabar?" },
-      { id: 2, hanzi: "谢谢", pinyin: "xièxie", malay: "terima kasih", topic: "Greetings", exHanzi: "谢谢你！", exPinyin: "Xièxie nǐ!", exMalay: "Terima kasih!" },
-      { id: 3, hanzi: "再见", pinyin: "zàijiàn", malay: "selamat tinggal", topic: "Greetings", exHanzi: "明天再见！", exPinyin: "Míngtiān zàijiàn!", exMalay: "Jumpa lagi esok!" },
-      { id: 4, hanzi: "我", pinyin: "wǒ", malay: "saya", topic: "People", exHanzi: "我是学生。", exPinyin: "Wǒ shì xuéshēng.", exMalay: "Saya seorang pelajar." },
-      { id: 5, hanzi: "你", pinyin: "nǐ", malay: "awak / kamu", topic: "People", exHanzi: "你是老师吗？", exPinyin: "Nǐ shì lǎoshī ma?", exMalay: "Adakah awak seorang guru?" },
-      { id: 6, hanzi: "他", pinyin: "tā", malay: "dia (lelaki)", topic: "People", exHanzi: "他是我的朋友。", exPinyin: "Tā shì wǒ de péngyou.", exMalay: "Dia kawan saya." },
-      { id: 7, hanzi: "她", pinyin: "tā", malay: "dia (perempuan)", topic: "People", exHanzi: "她很漂亮。", exPinyin: "Tā hěn piàoliang.", exMalay: "Dia sangat cantik." },
-      { id: 8, hanzi: "水", pinyin: "shuǐ", malay: "air", topic: "Food & Drinks", exHanzi: "我想喝水。", exPinyin: "Wǒ xiǎng hē shuǐ.", exMalay: "Saya mahu minum air." },
-      { id: 9, hanzi: "茶", pinyin: "chá", malay: "teh", topic: "Food & Drinks", exHanzi: "我不喝茶。", exPinyin: "Wǒ bù hē chá.", exMalay: "Saya tidak minum teh." },
-      { id: 10, hanzi: "学校", pinyin: "xuéxiào", malay: "sekolah", topic: "School", exHanzi: "我在学校上课。", exPinyin: "Wǒ zài xuéxiào shàngkè.", exMalay: "Saya belajar di sekolah." }
+      { id: 1, hanzi: "爱", pinyin: "ài", malay: "suka / menyayangi", topic: "Perasaan", exHanzi: "我爱吃包子。", exPinyin: "Wǒ ài chī bāozi.", exMalay: "Saya suka makan pau." },
+      { id: 2, hanzi: "八", pinyin: "bā", malay: "lapan", topic: "Nombor", exHanzi: "我有八个杯子。", exPinyin: "Wǒ yǒu bā gè bēizi.", exMalay: "Saya ada lapan buah cawan." },
+      { id: 3, hanzi: "爸爸", pinyin: "bàba", malay: "bapa / ayah", topic: "Keluarga", exHanzi: "爸爸去超市。", exPinyin: "Bàba qù chāoshì.", exMalay: "Ayah pergi ke pasar raya." },
+      { id: 4, hanzi: "包子", pinyin: "bāozi", malay: "pau kukus", topic: "Makanan", exHanzi: "包子很好吃。", exPinyin: "Bāozi hěn hǎochī.", exMalay: "Pau kukus sangat sedap." },
+      { id: 5, hanzi: "杯子", pinyin: "bēizi", malay: "cawan / gelas", topic: "Barangan", exHanzi: "这是我的杯子。", exPinyin: "Zhè shì wǒ de bēizi.", exMalay: "Ini ialah cawan saya." },
+      { id: 6, hanzi: "不", pinyin: "bù", malay: "tidak / bukan", topic: "Asas", exHanzi: "我不喝茶。", exPinyin: "Wǒ bù hē chá.", exMalay: "Saya tidak minum teh." },
+      { id: 7, hanzi: "不客气", pinyin: "bú kèqi", malay: "sama-sama", topic: "Sebutan", exHanzi: "谢谢！— 不客气。", exPinyin: "Xièxie! — Bú kèqi.", exMalay: "Terima kasih! — Sama-sama." },
+      { id: 8, hanzi: "菜", pinyin: "cài", malay: "sayur / hidangan", topic: "Makanan", exHanzi: "这个菜很好吃。", exPinyin: "Zhège cài hěn hǎochī.", exMalay: "Hidangan ini sangat sedap." },
+      { id: 9, hanzi: "茶", pinyin: "chá", malay: "teh", topic: "Minuman", exHanzi: "你想喝茶吗？", exPinyin: "Nǐ xiǎng hē chá ma?", exMalay: "Adakah anda mahu minum teh?" },
+      { id: 10, hanzi: "吃", pinyin: "chī", malay: "makan", topic: "Kata Kerja", exHanzi: "我们吃米饭。", exPinyin: "Wǒmen chī mǐfàn.", exMalay: "Kami makan nasi." },
+      { id: 11, hanzi: "出租车", pinyin: "chūzūchē", malay: "teksi", topic: "Pengangkutan", exHanzi: "我坐出租车去学校。", exPinyin: "Wǒ zuò chūzūchē qù xuéxiào.", exMalay: "Saya naik teksi pergi ke sekolah." },
+      { id: 12, hanzi: "打电话", pinyin: "dǎ diànhuà", malay: "menelefon", topic: "Aktiviti", exHanzi: "他在打电话。", exPinyin: "Tā zài dǎ diànhuà.", exMalay: "Dia sedang menelefon." },
+      { id: 13, hanzi: "大", pinyin: "dà", malay: "besar", topic: "Sifat", exHanzi: "这个学校很大。", exPinyin: "Zhège xuéxiào hěn dà.", exMalay: "Sekolah ini sangat besar." },
+      { id: 14, hanzi: "大学", pinyin: "dàxué", malay: "universiti", topic: "Tempat", exHanzi: "我在大学读书。", exPinyin: "Wǒ zài dàxué dúshū.", exMalay: "Saya belajar di universiti." },
+      { id: 15, hanzi: "电脑", pinyin: "diànnǎo", malay: "komputer", topic: "Barangan", exHanzi: "这是新的电脑。", exPinyin: "Zhè shì xīn de diànnǎo.", exMalay: "Ini komputer baharu." },
+      { id: 16, hanzi: "高兴", pinyin: "gāoxìng", malay: "gembira", topic: "Perasaan", exHanzi: "认识你很高兴。", exPinyin: "Rènshi nǐ hěn gāoxìng.", exMalay: "Gembira dapat berkenalan dengan anda." },
+      { id: 17, hanzi: "汉语", pinyin: "Hànyǔ", malay: "Bahasa Mandarin", topic: "Bahasa", exHanzi: "我学习汉语。", exPinyin: "Wǒ xuéxí Hànyǔ.", exMalay: "Saya belajar Bahasa Mandarin." },
+      { id: 18, hanzi: "猫", pinyin: "māo", malay: "kucing", topic: "Haiwan", exHanzi: "我有两只猫。", exPinyin: "Wǒ yǒu liǎng zhī māo.", exMalay: "Saya ada dua ekor kucing." },
+      { id: 19, hanzi: "苹果", pinyin: "píngguǒ", malay: "epal", topic: "Buah", exHanzi: "你想吃苹果吗？", exPinyin: "Nǐ xiǎng chī píngguǒ ma?", exMalay: "Adakah anda mahu makan epal?" },
+      { id: 20, hanzi: "谢谢", pinyin: "xièxie", malay: "terima kasih", topic: "Sebutan", exHanzi: "谢谢你的帮助。", exPinyin: "Xièxie nǐ de bāngzhù.", exMalay: "Terima kasih atas bantuan anda." }
+    ];
+
+    // SENARAI LATIHAN AYAT (HSK LEVEL 1 v3.0)
+    const hskSentencePractice = [
+      {
+        id: "s1",
+        mandarin: "我是学生",
+        pinyin: "Wǒ shì xuéshēng.",
+        malay: "Saya ialah seorang pelajar.",
+        words: ["学生", "我", "是"],
+        correctOrder: ["我", "是", "学生"]
+      },
+      {
+        id: "s2",
+        mandarin: "我不喝茶",
+        pinyin: "Wǒ bù hē chá.",
+        malay: "Saya tidak minum teh.",
+        words: ["茶", "不", "我", "喝"],
+        correctOrder: ["我", "不", "喝", "茶"]
+      },
+      {
+        id: "s3",
+        mandarin: "爸爸去超市",
+        pinyin: "Bàba qù chāoshì.",
+        malay: "Ayah pergi ke pasar raya.",
+        words: ["超市", "爸爸", "去"],
+        correctOrder: ["爸爸", "去", "超市"]
+      },
+      {
+        id: "s4",
+        mandarin: "认识你很高兴",
+        pinyin: "Rènshi nǐ hěn gāoxìng.",
+        malay: "Gembira dapat berkenalan dengan awak.",
+        words: ["很高兴", "你", "认识"],
+        correctOrder: ["认识", "你", "很高兴"]
+      },
+      {
+        id: "s5",
+        mandarin: "他想买苹果",
+        pinyin: "Tā xiǎng mǎi píngguǒ.",
+        malay: "Dia mahu membeli epal.",
+        words: ["苹果", "买", "他", "想"],
+        correctOrder: ["他", "想", "买", "苹果"]
+      }
     ];
 
     const grammarPoints = [
@@ -234,10 +283,7 @@
         explanation: "Gunakan '是' (shì) untuk menyatakan 'adalah' atau 'ialah'. Sama seperti 'is/am/are' dalam Bahasa Inggeris.",
         exHanzi: "我是学生。",
         exPinyin: "Wǒ shì xuéshēng.",
-        exMalay: "Saya ialah seorang pelajar.",
-        quizQ: "Saya ___ guru (老师).",
-        options: ["是 (shì)", "不 (bù)", "很 (hěn)"],
-        ans: 0
+        exMalay: "Saya ialah seorang pelajar."
       },
       {
         id: "g2",
@@ -246,19 +292,16 @@
         explanation: "Perkataan '不' (bù) digunakan untuk menafikan perbuatan atau sifat (maksud: tidak / bukan).",
         exHanzi: "我不喝茶。",
         exPinyin: "Wǒ bù hē chá.",
-        exMalay: "Saya tidak minum teh.",
-        quizQ: "Pilih ayat 'Saya tidak pergi':",
-        options: ["我不去 (Wǒ bù qù)", "我是去 (Wǒ shì qù)", "我好去 (Wǒ hǎo qù)"],
-        ans: 0
+        exMalay: "Saya tidak minum teh."
       }
     ];
 
     // ----------------------------------------------------
-    // 4. AUDIO TEXT-TO-SPEECH SYSTEM
+    // 4. AUDIO SYSTEM
     // ----------------------------------------------------
     function speakMandarin(text, speed = audioSpeed) {
       if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel(); // Stop ongoing speech
+        window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'zh-CN';
         utterance.rate = speed;
@@ -269,10 +312,9 @@
     }
 
     // ----------------------------------------------------
-    // 5. NAVIGATION & ROUTING
+    // 5. NAVIGATION
     // ----------------------------------------------------
     function switchTab(tabName) {
-      // Update UI buttons styling
       document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.classList.remove('text-red-600');
         btn.classList.add('text-gray-400');
@@ -282,8 +324,6 @@
         activeBtn.classList.remove('text-gray-400');
         activeBtn.classList.add('text-red-600');
       }
-
-      const mainContent = document.getElementById('mainContent');
 
       if (!currentUser.name && tabName !== 'onboarding') {
         renderOnboarding();
@@ -313,7 +353,7 @@
     }
 
     // ----------------------------------------------------
-    // 6. SCREEN RENDERING FUNCTIONS
+    // 6. SCREEN RENDERING
     // ----------------------------------------------------
 
     // --- ONBOARDING SCREEN ---
@@ -345,9 +385,9 @@
             <div>
               <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-1">Matlamat Utama</label>
               <select id="obGoal" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
-                <option value="Lulus HSK 1">Saya nak lulus HSK 1</option>
-                <option value="Asas Mandarin">Saya nak belajar asas Mandarin</option>
-                <option value="Perbualan Harian">Saya nak boleh berbuah harian</option>
+                <option value="Saya nak lulus HSK 1">Saya nak lulus HSK 1</option>
+                <option value="Saya nak belajar asas Mandarin">Saya nak belajar asas Mandarin</option>
+                <option value="Saya nak boleh mulakan perbualan harian" selected>Saya nak boleh mulakan perbualan harian</option>
               </select>
             </div>
 
@@ -392,11 +432,11 @@
               <p class="text-red-100 text-sm">"Mandarin nampak susah. Tapi kalau belajar step-by-step, anda boleh!"</p>
               
               <div class="pt-2 flex items-center space-x-3">
-                <button onclick="startZeroBasicLesson()" class="bg-white text-red-600 px-5 py-2.5 rounded-xl font-bold text-sm shadow hover:bg-gray-50">
+                <button onclick="renderZeroBasicHub()" class="bg-white text-red-600 px-5 py-2.5 rounded-xl font-bold text-sm shadow hover:bg-gray-50">
                   <i class="fa-solid fa-play mr-1"></i> Sambung Belajar
                 </button>
                 <button onclick="switchTab('practice')" class="bg-red-700/50 hover:bg-red-700 text-white px-4 py-2.5 rounded-xl font-bold text-sm backdrop-blur-sm">
-                  ⚡ Latihan 10 Min
+                  ⚡ Latihan Ayat
                 </button>
               </div>
             </div>
@@ -438,7 +478,13 @@
               <button onclick="renderFlashcards()" class="p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/50 rounded-2xl text-left space-y-1 hover:border-blue-300">
                 <span class="text-2xl">🎴</span>
                 <h4 class="font-bold text-gray-900 dark:text-white text-sm">Kad Perkataan</h4>
-                <p class="text-[11px] text-blue-700 dark:text-blue-400">Flashcards HSK 1</p>
+                <p class="text-[11px] text-blue-700 dark:text-blue-400">Flashcards HSK 1 v3.0</p>
+              </button>
+
+              <button onclick="startSentencePractice()" class="p-4 bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/50 rounded-2xl text-left space-y-1 hover:border-indigo-300">
+                <span class="text-2xl">✍️</span>
+                <h4 class="font-bold text-gray-900 dark:text-white text-sm">Latihan Ayat</h4>
+                <p class="text-[11px] text-indigo-700 dark:text-indigo-400">Susun ayat HSK 1</p>
               </button>
 
               <button onclick="renderGrammarBank()" class="p-4 bg-purple-50 dark:bg-purple-950/30 border border-purple-100 dark:border-purple-900/50 rounded-2xl text-left space-y-1 hover:border-purple-300">
@@ -446,19 +492,13 @@
                 <h4 class="font-bold text-gray-900 dark:text-white text-sm">Tatabahasa Mudahnya</h4>
                 <p class="text-[11px] text-purple-700 dark:text-purple-400">Struktur S+V+O</p>
               </button>
-
-              <button onclick="renderMistakeNotebook()" class="p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900/50 rounded-2xl text-left space-y-1 hover:border-amber-300">
-                <span class="text-2xl">📝</span>
-                <h4 class="font-bold text-gray-900 dark:text-white text-sm">Buku Nota Kesalahan</h4>
-                <p class="text-[11px] text-amber-700 dark:text-amber-400">${currentUser.mistakes.length} soalan untuk diulang</p>
-              </button>
             </div>
           </div>
         </div>
       `;
     }
 
-    // --- ZERO BASIC HUB & PINYIN LESSON ---
+    // --- ZERO BASIC HUB ---
     function renderZeroBasicHub() {
       const main = document.getElementById('mainContent');
       main.innerHTML = `
@@ -471,14 +511,12 @@
             </div>
           </div>
 
-          <!-- PINYIN & TONES EXPLANATION CARD -->
           <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-4">
             <h3 class="font-bold text-red-600 flex items-center"><i class="fa-solid fa-volume-high mr-2"></i> APA ITU PINYIN & TONES?</h3>
             <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
               Dalam Bahasa Mandarin, kita menggunakan sistem <strong class="text-gray-900 dark:text-white">PINYIN</strong> (sebutan abjad) dan <strong class="text-gray-900 dark:text-white">4 NADA (TONES)</strong>. Maksud perkataan boleh berubah mengikut nada!
             </p>
 
-            <!-- TONES GUIDE GRID -->
             <div class="grid grid-cols-2 gap-3 pt-2">
               <div onclick="speakMandarin('ā')" class="p-3 bg-red-50 dark:bg-red-950/30 rounded-2xl border border-red-100 dark:border-red-900/50 cursor-pointer text-center">
                 <span class="text-2xl font-black text-red-600">ā</span>
@@ -513,7 +551,6 @@
       `;
     }
 
-    // --- TONE PRACTICE QUIZ ---
     function startTonePracticeQuiz() {
       const main = document.getElementById('mainContent');
       main.innerHTML = `
@@ -565,7 +602,6 @@
           </div>
 
           <div class="relative pl-6 space-y-6 before:absolute before:left-2.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-gray-200 dark:before:bg-gray-700">
-            <!-- STAGE 0 -->
             <div class="relative">
               <span class="absolute -left-6 top-0 w-6 h-6 bg-emerald-500 text-white rounded-full text-xs flex items-center justify-center font-bold">0</span>
               <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-2">
@@ -576,25 +612,23 @@
               </div>
             </div>
 
-            <!-- STAGE 1 -->
             <div class="relative">
               <span class="absolute -left-6 top-0 w-6 h-6 bg-red-600 text-white rounded-full text-xs flex items-center justify-center font-bold">1</span>
               <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-2">
                 <span class="text-[10px] bg-red-100 text-red-700 font-bold px-2 py-0.5 rounded-full">STAGE 1</span>
-                <h3 class="font-bold text-gray-900 dark:text-white text-sm">🧩 Essential HSK Vocabulary</h3>
-                <p class="text-xs text-gray-500">Salam, Nombor, Ahli Keluarga & Diri Sendiri.</p>
+                <h3 class="font-bold text-gray-900 dark:text-white text-sm">🧩 Essential HSK Vocabulary (v3.0)</h3>
+                <p class="text-xs text-gray-500">Kosa Kata Rasmi dari PDF HSK Level 1.</p>
                 <button onclick="renderFlashcards()" class="text-xs font-bold text-red-600 hover:underline">Buka Flashcards →</button>
               </div>
             </div>
 
-            <!-- STAGE 2 -->
             <div class="relative">
-              <span class="absolute -left-6 top-0 w-6 h-6 bg-purple-600 text-white rounded-full text-xs flex items-center justify-center font-bold">2</span>
+              <span class="absolute -left-6 top-0 w-6 h-6 bg-indigo-600 text-white rounded-full text-xs flex items-center justify-center font-bold">2</span>
               <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-2">
-                <span class="text-[10px] bg-purple-100 text-purple-700 font-bold px-2 py-0.5 rounded-full">STAGE 2</span>
-                <h3 class="font-bold text-gray-900 dark:text-white text-sm">🧱 HSK 1 Grammar Made Easy</h3>
-                <p class="text-xs text-gray-500">Membina ayat lengkap S + V + O.</p>
-                <button onclick="renderGrammarBank()" class="text-xs font-bold text-purple-600 hover:underline">Belajar Tatabahasa →</button>
+                <span class="text-[10px] bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded-full">STAGE 2</span>
+                <h3 class="font-bold text-gray-900 dark:text-white text-sm">✍️ Latihan Pembinaan Ayat</h3>
+                <p class="text-xs text-gray-500">Aplikasi tatabahasa & kosa kata HSK 1 v3.0.</p>
+                <button onclick="startSentencePractice()" class="text-xs font-bold text-indigo-600 hover:underline">Mula Latihan →</button>
               </div>
             </div>
           </div>
@@ -617,7 +651,6 @@
               <span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded-full">${item.topic}</span>
             </div>
 
-            <!-- CARD ITEM -->
             <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-lg text-center space-y-4 relative min-h-[280px] flex flex-col justify-center">
               <h2 class="text-5xl font-black text-gray-900 dark:text-white">${item.hanzi}</h2>
               <p class="text-xl font-bold text-red-600">${item.pinyin}</p>
@@ -640,7 +673,6 @@
               </div>
             </div>
 
-            <!-- CARD CONTROLS -->
             <div class="flex space-x-3">
               <button id="prevBtn" class="flex-1 py-3 bg-gray-100 dark:bg-gray-700 font-bold rounded-2xl text-gray-700 dark:text-gray-200">
                 ← Sebelumnya
@@ -657,11 +689,111 @@
         };
         document.getElementById('nextBtn').onclick = () => {
           if (currentIndex < hskVocab.length - 1) { currentIndex++; updateCardView(); }
-          else { alert("🎉 Anda telah melihat semua kad perkataan dalam set ini!"); switchTab('home'); }
+          else { alert("🎉 Anda telah melihat semua kad perkataan!"); switchTab('home'); }
         };
       }
 
       updateCardView();
+    }
+
+    // --- NEW: LATIHAN AYAT (HSK LEVEL 1 v3.0) ---
+    let currentSentenceIdx = 0;
+    let userSentenceArr = [];
+
+    function startSentencePractice() {
+      currentSentenceIdx = 0;
+      renderSentenceQuiz();
+    }
+
+    function renderSentenceQuiz() {
+      const item = hskSentencePractice[currentSentenceIdx];
+      userSentenceArr = [];
+      const main = document.getElementById('mainContent');
+
+      main.innerHTML = `
+        <div class="space-y-6 max-w-md mx-auto">
+          <div class="flex justify-between items-center">
+            <button onclick="switchTab('practice')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-arrow-left text-xl"></i></button>
+            <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full">LATIHAN AYAT (${currentSentenceIdx + 1}/${hskSentencePractice.length})</span>
+          </div>
+
+          <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-4">
+            <p class="text-xs text-gray-500 font-medium">Susun perkataan berikut supaya menjadi ayat yang betul:</p>
+            <div class="p-3 bg-indigo-50 dark:bg-indigo-950/40 rounded-2xl">
+              <p class="text-xs text-indigo-700 dark:text-indigo-300 font-bold">Maksud Bahasa Melayu:</p>
+              <p class="text-base font-bold text-gray-800 dark:text-gray-100">${item.malay}</p>
+            </div>
+
+            <!-- JAWAPAN PENGGUNA -->
+            <div class="min-h-[60px] p-3 border-2 border-dashed border-indigo-200 dark:border-indigo-800 rounded-2xl flex flex-wrap gap-2 items-center bg-gray-50 dark:bg-gray-900/50" id="userAnswerBox">
+              <span class="text-xs text-gray-400">Tekan perkataan di bawah...</span>
+            </div>
+
+            <!-- PILIHAN PERKATAAN -->
+            <div class="flex flex-wrap gap-2 justify-center pt-2" id="wordBankBox">
+              ${item.words.map((w, idx) => `
+                <button id="word-btn-${idx}" onclick="selectWord('${w}', ${idx})" class="px-4 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-sm rounded-xl font-bold text-sm text-gray-800 dark:text-gray-100 hover:border-indigo-500">
+                  ${w}
+                </button>
+              `).join('')}
+            </div>
+
+            <div class="pt-2 flex space-x-2">
+              <button onclick="resetSentenceSelection()" class="w-1/3 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold rounded-xl text-xs">
+                Sifar Semula 🔄
+              </button>
+              <button onclick="checkSentenceAnswer()" class="w-2/3 py-3 bg-indigo-600 text-white font-bold rounded-xl text-xs shadow-md">
+                Semak Jawapan ✅
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function selectWord(word, idx) {
+      userSentenceArr.push(word);
+      document.getElementById(`word-btn-${idx}`).classList.add('hidden');
+      updateUserAnswerUI();
+    }
+
+    function updateUserAnswerUI() {
+      const box = document.getElementById('userAnswerBox');
+      if (userSentenceArr.length === 0) {
+        box.innerHTML = `<span class="text-xs text-gray-400">Tekan perkataan di bawah...</span>`;
+      } else {
+        box.innerHTML = userSentenceArr.map(w => `
+          <span class="px-3 py-1.5 bg-indigo-600 text-white font-bold rounded-xl text-sm shadow-sm">${w}</span>
+        `).join('');
+      }
+    }
+
+    function resetSentenceSelection() {
+      userSentenceArr = [];
+      renderSentenceQuiz();
+    }
+
+    function checkSentenceAnswer() {
+      const item = hskSentencePractice[currentSentenceIdx];
+      const isCorrect = JSON.stringify(userSentenceArr) === JSON.stringify(item.correctOrder);
+
+      if (isCorrect) {
+        currentUser.xp += 20;
+        currentUser.hskReadiness = Math.min(100, currentUser.hskReadiness + 3);
+        saveUserState();
+        speakMandarin(item.mandarin);
+        alert(`Tepat sekali! 🎉\n\n${item.mandarin} (${item.pinyin})`);
+        
+        if (currentSentenceIdx < hskSentencePractice.length - 1) {
+          currentSentenceIdx++;
+          renderSentenceQuiz();
+        } else {
+          alert("🎉 Tahniah! Anda telah menamatkan semua latihan ayat HSK 1 v3.0!");
+          switchTab('practice');
+        }
+      } else {
+        alert("Jawapan belum tepat. Cuba susun semula perkataan tersebut.");
+      }
     }
 
     // --- GRAMMAR BANK ---
@@ -696,30 +828,30 @@
       `;
     }
 
-    // --- PRACTICE CENTER & QUIZ ---
+    // --- PRACTICE CENTER ---
     function renderPracticeCenter() {
       const main = document.getElementById('mainContent');
       main.innerHTML = `
         <div class="space-y-6">
           <div>
             <h2 class="text-xl font-black text-gray-900 dark:text-white">✍️ Pusat Latihan</h2>
-            <p class="text-xs text-gray-500">Uji kefahaman pendengaran, pinyin dan maksud</p>
+            <p class="text-xs text-gray-500">Uji kefahaman pendengaran, pinyin dan pembinaan ayat</p>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button onclick="startSentencePractice()" class="p-5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-3xl shadow-sm text-left flex items-center space-x-4 hover:border-indigo-500 transition-all">
+              <span class="p-4 bg-indigo-100 text-indigo-600 rounded-2xl text-2xl">✍️</span>
+              <div>
+                <h3 class="font-bold text-gray-900 dark:text-white">Latihan Ayat HSK 1 (v3.0)</h3>
+                <p class="text-xs text-gray-500">Susun perkataan membentuk ayat lengkap</p>
+              </div>
+            </button>
+
             <button onclick="startVocabularyQuiz()" class="p-5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-3xl shadow-sm text-left flex items-center space-x-4 hover:border-red-500 transition-all">
               <span class="p-4 bg-red-100 text-red-600 rounded-2xl text-2xl">📝</span>
               <div>
                 <h3 class="font-bold text-gray-900 dark:text-white">Kuiz Kosakata HSK 1</h3>
-                <p class="text-xs text-gray-500">Soalan aneka pilihan kosa kata</p>
-              </div>
-            </button>
-
-            <button onclick="renderMistakeNotebook()" class="p-5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-3xl shadow-sm text-left flex items-center space-x-4 hover:border-amber-500 transition-all">
-              <span class="p-4 bg-amber-100 text-amber-600 rounded-2xl text-2xl">📓</span>
-              <div>
-                <h3 class="font-bold text-gray-900 dark:text-white">Buku Nota Kesalahan</h3>
-                <p class="text-xs text-gray-500">Ulang kaji ${currentUser.mistakes.length} soalan salah</p>
+                <p class="text-xs text-gray-500">Soalan aneka pilihan kosa kata PDF</p>
               </div>
             </button>
           </div>
@@ -770,51 +902,7 @@
       startVocabularyQuiz();
     }
 
-    // --- MISTAKE NOTEBOOK ---
-    function renderMistakeNotebook() {
-      const main = document.getElementById('mainContent');
-      main.innerHTML = `
-        <div class="space-y-6">
-          <div class="flex items-center space-x-3">
-            <button onclick="switchTab('home')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-arrow-left text-xl"></i></button>
-            <div>
-              <h2 class="text-xl font-black text-gray-900 dark:text-white">📝 Buku Nota Kesalahan</h2>
-              <p class="text-xs text-gray-500">Senarai soalan yang perlu anda ulang kaji</p>
-            </div>
-          </div>
-
-          ${currentUser.mistakes.length === 0 ? `
-            <div class="p-8 text-center bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700">
-              <span class="text-4xl">🎉</span>
-              <p class="font-bold text-gray-800 dark:text-gray-200 mt-2">Tiada Kesalahan Disimpan!</p>
-              <p class="text-xs text-gray-500">Anda telah menjawab semua soalan dengan baik.</p>
-            </div>
-          ` : `
-            <div class="space-y-3">
-              ${currentUser.mistakes.map((m, idx) => `
-                <div class="p-4 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 flex justify-between items-center shadow-sm">
-                  <div>
-                    <h4 class="font-black text-lg text-gray-900 dark:text-white">${m.word}</h4>
-                    <p class="text-xs text-red-600 font-semibold">Maksud Betul: ${m.correctMalay}</p>
-                  </div>
-                  <button onclick="clearMistake(${idx})" class="text-xs bg-emerald-50 text-emerald-600 font-bold px-3 py-1.5 rounded-xl border border-emerald-200">
-                    Selesai / Mastered ✅
-                  </button>
-                </div>
-              `).join('')}
-            </div>
-          `}
-        </div>
-      `;
-    }
-
-    function clearMistake(index) {
-      currentUser.mistakes.splice(index, 1);
-      saveUserState();
-      renderMistakeNotebook();
-    }
-
-    // --- SIMULATED AI TUTOR ---
+    // --- AI TUTOR ---
     function renderAITutor() {
       const main = document.getElementById('mainContent');
       main.innerHTML = `
@@ -823,19 +911,17 @@
             <span class="text-2xl">🤖</span>
             <div>
               <h2 class="text-xl font-black text-gray-900 dark:text-white">AI Guru Mandarin</h2>
-              <p class="text-xs text-gray-500">Tanya soalan berkaitan HSK 1 & Mandarin</p>
+              <p class="text-xs text-gray-500">Tanya soalan berkaitan HSK 1 v3.0 & Mandarin</p>
             </div>
           </div>
 
-          <!-- CHAT BOX -->
           <div id="chatBox" class="flex-1 bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 p-4 overflow-y-auto space-y-3 shadow-inner">
             <div class="bg-red-50 dark:bg-red-950/40 p-3 rounded-2xl max-w-[85%] text-xs space-y-1">
               <p class="font-bold text-red-700 dark:text-red-300">🤖 AI Guru:</p>
-              <p class="text-gray-800 dark:text-gray-200">Ni hao! Saya guru AI anda. Ada sebarang soalan tentang perkataan Mandarin atau HSK 1?</p>
+              <p class="text-gray-800 dark:text-gray-200">Ni hao! Saya guru AI anda. Ada sebarang soalan tentang pembinaan ayat atau kosa kata HSK 1?</p>
             </div>
           </div>
 
-          <!-- INPUT -->
           <form onsubmit="handleAIChat(event)" class="flex space-x-2">
             <input type="text" id="aiInput" placeholder="Taip soalan anda di sini..." class="flex-1 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
             <button type="submit" class="px-5 py-3 bg-red-600 text-white font-bold rounded-2xl">Hantar</button>
@@ -852,7 +938,6 @@
 
       const chatBox = document.getElementById('chatBox');
       
-      // User Message
       chatBox.innerHTML += `
         <div class="ml-auto bg-gray-100 dark:bg-gray-700 p-3 rounded-2xl max-w-[85%] text-xs text-right">
           <p class="text-gray-900 dark:text-white">${text}</p>
@@ -862,13 +947,10 @@
       input.value = '';
       chatBox.scrollTop = chatBox.scrollHeight;
 
-      // Simulated AI response
       setTimeout(() => {
-        let reply = "Perkataan ini sangat kerap digunakan dalam HSK 1! Belajar membaca Pinyin dan mengamalkan sebutan audio setiap hari.";
-        if (text.toLowerCase().includes("suka") || text.toLowerCase().includes("喜欢")) {
-          reply = "Perkataan 'suka' dalam Mandarin ialah 喜欢 (xǐhuan). Contoh: 我喜欢喝茶 (Wǒ xǐhuan hē chá - Saya suka minum teh).";
-        } else if (text.toLowerCase().includes("terima kasih")) {
-          reply = "'Terima kasih' ialah 谢谢 (xièxie). Anda boleh membalas dengan 不客气 (bú kèqi - sama-sama).";
+        let reply = "Sistem tatabahasa HSK 1 versi 3.0 mengandungi susunan asas Subjek + Kata Kerja + Objek. Teruskan latihan setiap hari!";
+        if (text.toLowerCase().includes("suka") || text.toLowerCase().includes("爱")) {
+          reply = "Perkataan 'suka/cinta' dalam HSK 1 ialah 爱 (ài). Contoh: 我爱吃包子 (Wǒ ài chī bāozi - Saya suka makan pau).";
         }
 
         chatBox.innerHTML += `
@@ -896,7 +978,6 @@
             </div>
           </div>
 
-          <!-- SETTINGS -->
           <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-100 dark:border-gray-700 space-y-4 shadow-sm">
             <h3 class="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Tetapan Aplikasi</h3>
 
